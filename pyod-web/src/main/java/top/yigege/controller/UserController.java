@@ -1,5 +1,6 @@
 package top.yigege.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -65,6 +66,14 @@ public class UserController {
         return ApiResultUtil.success(user);
     }
 
+
+    public ResultBean queryUserList(int page , int pageSize) {
+
+        IPage<User> iPage = iUserService.queryUserList(page,pageSize);
+        return ApiResultUtil.success(iPage);
+    }
+
+
     @ApiOperation(value = "获取用户详情信息", notes = "获取用户详情信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "id", value = "用户ID", required = true, dataType = "int")
@@ -92,12 +101,11 @@ public class UserController {
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "Int"),
             @ApiImplicitParam(paramType = "query", name = "roleId", value = "角色ID,多个用逗号分隔", required = true, dataType = "Int")
     })
-    @PostMapping("/loadUserByNickname}")
+    @PostMapping("/bindRole}")
     public ResultBean bindRole(@NotNull(message = "用户ID不能为空") Integer userId,
                                @NotNull(message = "角色ID不能为空")String roleId) {
 
-        iUserService.bindUserRoles(Utils.parseIntegersList(Utils.splitStringToList(roleId)));
-
+        iUserService.bindUserRoles(userId, Utils.parseIntegersList(Utils.splitStringToList(roleId)));
         return ApiResultUtil.success();
     }
 }

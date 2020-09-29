@@ -2,6 +2,7 @@ package top.yigege.model;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -22,7 +23,7 @@ public class Permission extends Model<Permission> {
     /**
      * 权限ID
      */
-    @TableId("permission_id")
+    @TableId(value = "permission_id", type = IdType.AUTO)
     private Integer permissionId;
 
     /**

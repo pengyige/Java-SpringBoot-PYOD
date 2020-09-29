@@ -2,6 +2,7 @@ package top.yigege.global;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -81,7 +82,7 @@ public class GlobalExceptionHandler {
      * @param methodArgumentNotValidException
      * @return
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     public ResultBean paramValidExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
         LOGGER.info("paramValidExceptionHandler");
 

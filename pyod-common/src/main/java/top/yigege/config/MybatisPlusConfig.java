@@ -1,7 +1,10 @@
 package top.yigege.config;
 
 import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import org.springframework.context.annotation.Bean;
+
+import java.util.Properties;
 
 /**
  * @ClassName: MybatisPlusConfig
@@ -18,4 +21,6 @@ public class MybatisPlusConfig {
     public PaginationInterceptor paginationInterceptor() {
         return new PaginationInterceptor();
     }
+
+
 }

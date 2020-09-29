@@ -18,10 +18,12 @@ import top.yigege.model.User;
 import top.yigege.service.IGenerateIDService;
 import top.yigege.service.IRoleService;
 import top.yigege.util.ApiResultUtil;
+import top.yigege.util.Utils;
 import top.yigege.vo.ResultBean;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -52,8 +54,21 @@ public class RoleController {
     })
     @PostMapping("/addRole")
     public ResultBean addRole(@Valid @ApiIgnore Role role) {
-        iGenerateIDService.getNo(BusinessFlagEnum.ROLE.getMsg());
+        role.setRoleNo(iGenerateIDService.getNo(BusinessFlagEnum.ROLE.getMsg()));;
         iRoleService.insert(role);
         return ApiResultUtil.success(role);
+    }
+
+    @ApiOperation(value = "绑定权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "roleId", value = "角色ID", required = true, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "permissionId", value = "权限ID,多个用逗号分隔", required = true, dataType = "Int")
+    })
+    @PostMapping("/bindPermission}")
+    public ResultBean bindPermission(@NotNull(message = "角色ID不能为空") Integer roleId,
+                               @NotNull(message = "权限ID不能为空")String permissionId) {
+
+        iRoleService.bindRolePermission(roleId, Utils.parseIntegersList(Utils.splitStringToList(permissionId)));
+        return ApiResultUtil.success(iRoleService.queryRoleInfo(roleId));
     }
 }

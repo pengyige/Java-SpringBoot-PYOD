@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface PermissionMapper extends BaseMapper<Permission> {
 
+
 }

@@ -44,9 +44,8 @@
         <pyod-service.version>1.0</pyod-service.version>
         <pyod-web.version>1.0</pyod-web.version>
 
-        <mybatis-plus.version>2.2.0</mybatis-plus.version>
-        <mybatis-plus-core.version>2.2.0</mybatis-plus-core.version>
-        <mybatis-plus-generate.version>2.2.0</mybatis-plus-generate.version>
+        <mybatis-plus.version>3.3.0</mybatis-plus.version>
+        <mybatis-plus-core.version>3.3.0</mybatis-plus-core.version>
         <mybatis-plus-generate.version>2.2.0</mybatis-plus-generate.version>
         <mybatis-plus-support.version>2.3</mybatis-plus-support.version>
         <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>

@@ -1,5 +1,6 @@
 package top.yigege.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.service.IService;
 import top.yigege.model.User;
 
@@ -29,6 +30,18 @@ public interface IUserService extends IService<User> {
      */
     User queryUserRoles(String no);
 
-    void bindUserRoles(List<Integer> roleIds);
+    /**
+     * 绑定用户角色
+     * @param userId
+     * @param roleIds
+     */
+    void bindUserRoles(Integer userId,List<Integer> roleIds);
 
+    /**
+     * 查询用户列表
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    IPage<User> queryUserList(int page, int pageSize);
 }

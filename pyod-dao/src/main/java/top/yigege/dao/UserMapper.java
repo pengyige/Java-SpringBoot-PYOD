@@ -19,6 +19,9 @@ public interface UserMapper extends BaseMapper<User> {
 
     List<User> queryUserByNickname(List<String> nickname);
 
-
     User queryUserRoles(String no);
+
+    void deleteUserRoles(Integer userId);
+
+    void addUserRoleRecord(Integer userId,List<Integer> roleIds);
 }

@@ -103,6 +103,7 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
 
+
     </dependencies>
 
     <!--多模块打包：只需在启动类所在模块的POM文件：指定打包插件 -->

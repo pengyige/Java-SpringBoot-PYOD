@@ -1,5 +1,7 @@
 package top.yigege.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author astupidcoder
@@ -44,5 +46,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //2. 绑定现有角色
         userMapper.addUserRoleRecord(userId, roleIds);
+    }
+
+    @Override
+    public IPage<User> queryUserList(int page, int pageSize) {
+        Page<User> userPage = new Page<>(page, pageSize == 0 ? 10 : pageSize);
+        return null;
     }
 }

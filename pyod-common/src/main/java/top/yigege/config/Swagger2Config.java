@@ -27,12 +27,12 @@ import java.util.Set;
 
 /**
  * @ClassName: Swagger2Config
- * @Description:TODO
+ * @Description:swagger配置
  * @author: yigege
  * @date: 2020年09月26日 16:46
  */
-/*@Configuration
-@EnableSwagger2*/
+@Configuration
+@EnableSwagger2
 public class Swagger2Config {
 // "application/json","application/xml"
     //配置content type
@@ -48,21 +48,21 @@ public class Swagger2Config {
         }
 
         //公共参数
-        ParameterBuilder aParameterBuilder = new ParameterBuilder();
-        /*aParameterBuilder.name("Content-Type")
+      /*  ParameterBuilder aParameterBuilder = new ParameterBuilder();
+        *//*aParameterBuilder.name("Content-Type")
                 .description("请求类型")
                 .defaultValue("application/x-www-form-urlencoded;charset=UTF-8")
                 .modelRef
-                        (new ModelRef("string")).parameterType("header").required(true).build();*/
+                        (new ModelRef("string")).parameterType("header").required(true).build();*//*
 
         List<Parameter> aParameters = Lists.newArrayList();
-        aParameters.add(aParameterBuilder.build());
+        aParameters.add(aParameterBuilder.build());*/
 
 
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .globalResponseMessage(RequestMethod.POST, responseMessageList)
-                .globalOperationParameters(aParameters)
+                //.globalOperationParameters(aParameters)
    /*             .consumes(DEFAULT_PRODUCES_AND_CONSUMES)
                 .produces(DEFAULT_PRODUCES_AND_CONSUMES)*/
                 .apiInfo(apiInfo())

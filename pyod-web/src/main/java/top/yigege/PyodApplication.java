@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
@@ -15,7 +16,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date: 2020年09月17日 11:18
  */
 @SpringBootApplication
-
 @MapperScan("top.yigege.dao.**")
 public class PyodApplication {
 

@@ -64,4 +64,26 @@
         where
           u.no = #{value}
     </select>
+
+
+    <delete id="deleteUserRoles" parameterType="java.lang.Integer">
+        DELETE
+        FROM
+            user_role
+        WHERE
+            user_id = #{value}
+    </delete>
+
+
+    <insert id="addUserRoleRecord" parameterType="java.util.Map">
+        INSERT INTO user_role ( user_id, role_id ) SELECT
+        user_id,
+        role_id
+        FROM
+        <foreach collection="roleIds" item="item"  open="("  separator="union all" close=")">
+            SELECT
+            #{userId} user_id,
+            #{item} role_id
+        </foreach> t
+    </insert>
 </mapper>

@@ -3,6 +3,7 @@ package top.yigege.model;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,7 +25,7 @@ public class Role extends Model<Role> {
     /**
      * 角色ID
      */
-    @TableId("role_id")
+    @TableId(value = "role_id", type = IdType.AUTO)
     private Integer roleId;
 
     /**
