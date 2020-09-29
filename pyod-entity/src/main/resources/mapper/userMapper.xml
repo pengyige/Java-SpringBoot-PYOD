@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.UserMapper">
+
+    <!-- 用户角色映射 -->
+    <resultMap id="userRolesMap"  type="top.yigege.model.User">
+        <id column="user_id" property="userId"/>
+        <result column="nickname" property="nickname" />
+        <result column="no" property="no"/>
+        <result column="sex" property="sex"/>
+        <result column="tel" property="tel"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+
+        <!--用户对应角色-->
+        <collection property="roleList" ofType="top.yigege.model.Role">
+            <id column="role_id" property="roleId"/>
+            <result column="role_no" property="roleNo"/>
+            <result column="r_name" property="name"/>
+            <result column="r_remark" property="remark"/>
+
+            <collection property="permissionList" ofType="top.yigege.model.Permission">
+                <id column="permission_id" property="permissionId"/>
+                <result column="p_name" property="name"/>
+                <result column="p_remark" property="remark"/>
+            </collection>
+        </collection>
+
+    </resultMap>
+
+
+    <select id="queryUserByNickname"  resultType="top.yigege.model.User">
+        SELECT * FROM user t where
+        1  = 1
+        <foreach collection="list" item="item" open=" and ( " separator="or" close=")">
+            nickname = '#{item}'
+        </foreach>
+    </select>
+
+    <select id="queryUserRoles" parameterType="java.lang.String" resultMap="userRolesMap">
+        SELECT
+            u.user_id,
+            u.nickname,
+            u.NO,
+            u.sex,
+            u.tel,
+            u.PASSWORD,
+            u.STATUS,
+            u.last_login_time,
+            r.role_id,
+            r.role_no,
+            r.NAME r_name,
+            r.remark r_remark,
+            p.permission_id,
+            p.NAME p_name,
+            p.remark p_remark
+        FROM
+            user u
+          left join user_role ur on u.user_id = ur.user_id
+          left join role r on ur.role_id = r.role_no
+            left join role_permission rp on rp.role_id = r.role_id
+            left join permission p on rp.permission_id = p.permission_id
+        where
+          u.no = #{value}
+    </select>
+</mapper>

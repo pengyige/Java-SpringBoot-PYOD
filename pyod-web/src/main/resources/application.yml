@@ -1,0 +1,45 @@
+pyod:
+  name: pyod
+  version: 1.0
+
+# server配置
+server:
+  port: 8443
+  servlet:
+    context-path: /pyod
+
+
+# Spring配置
+spring:
+  profiles:
+    active: dev
+
+# mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: top.yigege.model
+  global-config:
+    db-config:
+      id-type: auto
+      field-strategy: not_empty
+      #驼峰下划线转换
+      column-underline: true
+      #逻辑删除配置
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+      db-type: mysql
+    refresh: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+# 日志
+logging:
+  config: classpath:logback-spring.xml
+  level:
+      com.chz.mapper: debug
+
+
+#swagger2
+swagger:
+  enable: true
