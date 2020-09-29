@@ -3,6 +3,7 @@ package top.yigege.service.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.yigege.model.User;
 import top.yigege.service.IUserService;
 import top.yigege.dao.*;
@@ -34,13 +35,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return userMapper.queryUserRoles(no);
     }
 
+
+    @Transactional
     @Override
-    public void bindUserRoles(List<Integer> roleIds) {
-        //TODO 1.先解绑所有角色
-
-
-
+    public void bindUserRoles(Integer userId, List<Integer> roleIds) {
+        //1.先解绑所有角色
+        userMapper.deleteUserRoles(userId);
 
         //2. 绑定现有角色
+        userMapper.addUserRoleRecord(userId, roleIds);
     }
 }
