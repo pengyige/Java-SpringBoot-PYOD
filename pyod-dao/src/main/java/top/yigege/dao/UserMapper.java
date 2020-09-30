@@ -1,10 +1,13 @@
 package top.yigege.dao;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
 import org.apache.ibatis.annotations.Mapper;
 import top.yigege.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,10 +17,11 @@ import java.util.List;
  * @author astupidcoder
  * @since 2020-09-23
  */
-@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
     List<User> queryUserByNickname(List<String> nickname);
+
+    List<User> queryAllUser(Map paramMap, IPage iPage);
 
     User queryUserRoles(String no);
 

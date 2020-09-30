@@ -47,14 +47,14 @@
         <!--commons-lang3-->
 
 
-        <dependency>
+      <!--  <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generate</artifactId>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-support</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!-- db start-->
         <dependency>

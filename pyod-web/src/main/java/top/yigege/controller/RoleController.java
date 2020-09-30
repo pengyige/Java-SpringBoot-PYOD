@@ -55,7 +55,7 @@ public class RoleController {
     @PostMapping("/addRole")
     public ResultBean addRole(@Valid @ApiIgnore Role role) {
         role.setRoleNo(iGenerateIDService.getNo(BusinessFlagEnum.ROLE.getMsg()));;
-        iRoleService.insert(role);
+        iRoleService.save(role);
         return ApiResultUtil.success(role);
     }
 

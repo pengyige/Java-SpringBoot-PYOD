@@ -30,6 +30,11 @@
     </resultMap>
 
 
+    <select id="queryAllUser"  resultType="top.yigege.model.User" parameterType="java.util.Map">
+        SELECT * FROM user t
+    </select>
+
+
     <select id="queryUserByNickname"  resultType="top.yigege.model.User">
         SELECT * FROM user t where
         1  = 1

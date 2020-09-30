@@ -1,5 +1,7 @@
 package top.yigege.test.user;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import top.yigege.service.IRoleService;
 import top.yigege.service.IUserService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.util.JsonUtil;
+import top.yigege.vo.PageBean;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -69,7 +72,7 @@ public class UserServiceTest {
         userService.bindUserRoles(userId,roleIds);
     }
 
-    @Test
+
     public void bindRolePermissionTest() {
         Integer roleId = 10;
 
@@ -81,11 +84,16 @@ public class UserServiceTest {
         roleService.bindRolePermission(roleId,permissionIds);
     }
 
-    @Test
-    public void queryRoleInfoTest() {
 
+    public void queryRoleInfoTest() {
         Role role = roleService.queryRoleInfo(1);
         LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(role)));
+    }
+
+    @Test
+    public void queryUserListByPageTest() {
+        PageBean userPage = userService.queryUserList(1,10,null);
+        LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(userPage)));
     }
 
 }

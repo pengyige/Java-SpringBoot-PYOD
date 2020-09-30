@@ -29,6 +29,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.transform.Transformer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -61,16 +63,24 @@ public class UserController {
     @WebLog
     @PostMapping("/addUser")
     public ResultBean addUser(@Valid @ApiIgnore User user) {
-        user.setNo(UUID.randomUUID().toString());
-        iUserService.insert(user);
+        user.setNo();
+        iUserService.save(user);
         return ApiResultUtil.success(user);
     }
 
 
-    public ResultBean queryUserList(int page , int pageSize) {
-
-        IPage<User> iPage = iUserService.queryUserList(page,pageSize);
-        return ApiResultUtil.success(iPage);
+    @ApiOperation("查询用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "page", value = "用户昵称", required = false, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "用户性别", required = false, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "tel", value = "用户手机号", required = false, dataType = "String"),
+    })
+    @PostMapping("/queryUserList")
+    public ResultBean queryUserList(@ApiIgnore int page , @ApiIgnore int pageSize,
+                                    String tel) {
+        Map paramMap = new HashMap();
+        paramMap.put("tel", tel);
+        return ApiResultUtil.success( iUserService.queryUserList(page,pageSize,paramMap));
     }
 
 
@@ -82,7 +92,7 @@ public class UserController {
     @PostMapping()
     @RequestMapping(value = "/loadUserDetail", method = {RequestMethod.POST, RequestMethod.GET})
     public ResultBean<User> loadUserDetail(@RequestParam("userid") @ApiIgnore Integer userid) {
-        return ApiResultUtil.success(iUserService.selectById(userid));
+        return ApiResultUtil.success(iUserService.getById(userid));
     }
 
     @ApiOperation(value = "通过昵称获取用户详情信息", notes = "通过昵称获取用户详情信息")

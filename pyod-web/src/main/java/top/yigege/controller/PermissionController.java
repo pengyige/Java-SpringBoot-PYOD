@@ -48,7 +48,7 @@ public class PermissionController {
     })
     @PostMapping("/addPermission")
     public ResultBean addPermission(@Valid @ApiIgnore Permission permission) {
-        iPermissionService.insert(permission);
+        iPermissionService.save(permission);
         return ApiResultUtil.success(permission);
     }
 

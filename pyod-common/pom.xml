@@ -47,7 +47,7 @@
 
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-core</artifactId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
         <!-- spring-boot end-->
 
@@ -83,6 +83,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+
 
 
     </dependencies>

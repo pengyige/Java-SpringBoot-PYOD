@@ -1,17 +1,22 @@
 package top.yigege.service.impl;
 
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.yigege.model.User;
 import top.yigege.service.IUserService;
 import top.yigege.dao.*;
+import top.yigege.util.PageUtil;
+import top.yigege.vo.PageBean;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -49,8 +54,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public IPage<User> queryUserList(int page, int pageSize) {
-        Page<User> userPage = new Page<>(page, pageSize == 0 ? 10 : pageSize);
-        return null;
+    public PageBean queryUserList(int page, int pageSize, Map paramMap) {
+
+        Page pageInfo = new Page(page, pageSize == 0 ? 10 : pageSize);
+        List<User> userList = userMapper.queryAllUser(paramMap, pageInfo);
+        return PageUtil.getPageBean(pageInfo, userList);
     }
 }

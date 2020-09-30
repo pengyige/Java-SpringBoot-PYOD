@@ -1,8 +1,9 @@
 package top.yigege.model;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.enums.IdType;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;

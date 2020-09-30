@@ -1,7 +1,8 @@
 package top.yigege.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import top.yigege.model.Permission;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
  * <p>
