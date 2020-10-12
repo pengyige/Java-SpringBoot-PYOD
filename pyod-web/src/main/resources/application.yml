@@ -33,8 +33,6 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
-
-
 # 日志
 logging:
   config: classpath:logback-spring.xml

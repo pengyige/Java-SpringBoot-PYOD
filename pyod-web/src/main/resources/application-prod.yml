@@ -1,5 +1,9 @@
 # Spring配置
 spring:
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/templates/,classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://yigege.top:3306/portal?useUnicode=true&characterEncoding=UTF-8&useSSL=false

@@ -1,11 +1,15 @@
 package top.yigege.controller;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
@@ -19,12 +23,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 import top.yigege.annotation.WebLog;
+import top.yigege.constant.BusinessFlagEnum;
 import top.yigege.model.User;
+import top.yigege.service.IGenerateIDService;
 import top.yigege.service.IUserService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.util.Utils;
 import top.yigege.vo.ResultBean;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -51,6 +58,9 @@ public class UserController {
     @Autowired
     IUserService iUserService;
 
+    @Autowired
+    IGenerateIDService iGenerateIDService;
+
 
     @ApiOperation(value = "添加用户", notes = "添加一个新的用户", response = ResultBean.class)
     @ApiImplicitParams({
@@ -63,7 +73,8 @@ public class UserController {
     @WebLog
     @PostMapping("/addUser")
     public ResultBean addUser(@Valid @ApiIgnore User user) {
-        user.setNo();
+        user.setNo(iGenerateIDService.getNo(BusinessFlagEnum.USER.getMsg()));
+        user.setPassword(DigestUtil.md5Hex(user.getPassword()));
         iUserService.save(user);
         return ApiResultUtil.success(user);
     }
@@ -118,4 +129,24 @@ public class UserController {
         iUserService.bindUserRoles(userId, Utils.parseIntegersList(Utils.splitStringToList(roleId)));
         return ApiResultUtil.success();
     }
+
+
+    @ApiOperation(value = "用户登入")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userNo", value = "用户编号", required = true, dataType = "string"),
+            @ApiImplicitParam(paramType = "query", name = "psw", value = "密码", required = true, dataType = "string")
+    })
+    @PostMapping("/login")
+    public ResultBean login(@NotNull(message = "用户编号不能为空")String userNo,
+                            @NotNull(message = "用户密码不能为空")String psw) {
+        // 根据用户名和密码创建 Token
+        UsernamePasswordToken token = new UsernamePasswordToken(userNo, psw);
+        // 获取 subject 认证主体
+        Subject subject = SecurityUtils.getSubject();
+            // 开始认证，这一步会跳到我们自定义的 Realm 中
+        subject.login(token);
+
+        return ApiResultUtil.success();
+    }
+
 }
