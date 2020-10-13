@@ -19,6 +19,7 @@ import top.yigege.model.Permission;
 import top.yigege.model.Role;
 import top.yigege.model.User;
 import top.yigege.service.IUserService;
+import top.yigege.util.SessionUtil;
 import top.yigege.util.SpringUtil;
 
 import java.util.HashSet;
@@ -76,6 +77,7 @@ public class CustomRealm extends AuthorizingRealm {
         } else if (!DigestUtil.md5Hex(userPwd).equals(user.getPassword())) {
             throw new AccountException("密码不正确");
         }
+        SessionUtil.setUser(user);
         return new SimpleAuthenticationInfo(userName, userPwd,getName());
     }
 }

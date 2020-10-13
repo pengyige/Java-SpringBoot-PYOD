@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="assets/css/layui.css">
     <link rel="stylesheet" href="assets/css/login.css">
-    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_lehbxlfl2f.css">
     <title>管理后台</title>
 </head>
 <body class="login-wrap">
@@ -24,16 +24,26 @@
                     <span class="label-title">密码</span>
                 </label>
             </div>
-            <button id="login" type="button" class="login-button">登录<i class="ai ai-enter"></i></button>
+            <button id="login" type="button" class="login-button">登录<i id="btnIcon"></i></button>
         </form>
     </div>
 </body>
-<script src="assets/layui.js"></script>
+<script src="assets/layui.all.js"></script>
 <script src="assets/jquery.js"></script>
-<script src="assets/util.js"></script>
-<script src="index.js" data-main="login"></script>
+<script src="assets/common.js"></script>
 <script>
     $(function(){
+
+        $('.input-field').on('change',function(){
+            var $this = $(this),
+                value = $.trim($this.val()),
+                $parent = $this.parent();
+            if(value !== '' && !$parent.hasClass('field-focus')){
+                $parent.addClass('field-focus');
+            }else{
+                $parent.removeClass('field-focus');
+            }
+        });
 
 
         $('#login').click(function (){
@@ -51,16 +61,23 @@
                 data:requqestParam,
                 dataType:'json',
                 beforeSend:function(){
-                    console.log("beforeSend()...");
+                    $("#login").attr("disabled","true");
+                    $("#btnIcon").addClass("icon iconfont iconjiazaizhong");
+
                 },
                 complete:function() {
-                    console.log("complete()...");
+                    $("#login").removeAttr("disabled");
+                    $("#btnIcon").removeClass("icon iconfont iconjiazaizhong");
                 },
                 success:function (res) {
-                    console.log("success()...");
+                    if (200 == res.code) {
+                        window.location.href = getBaseUrl();
+                    }else {
+                        layer.msg(res.message);
+                    }
                 },
                 error:function () {
-                    console.log("error()...");
+                    layer.msg("网络错误");
                 }
             });
         });

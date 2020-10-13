@@ -1,10 +1,13 @@
 package top.yigege.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.service.IService;
+;
+import com.baomidou.mybatisplus.extension.service.IService;
 import top.yigege.model.User;
+import top.yigege.vo.PageBean;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -41,7 +44,8 @@ public interface IUserService extends IService<User> {
      * 查询用户列表
      * @param page
      * @param pageSize
+     * @param paramMap
      * @return
      */
-    IPage<User> queryUserList(int page, int pageSize);
+    PageBean queryUserList(int page, int pageSize, Map paramMap);
 }

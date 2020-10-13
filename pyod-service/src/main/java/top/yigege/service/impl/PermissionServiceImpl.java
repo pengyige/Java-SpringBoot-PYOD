@@ -3,7 +3,7 @@ package top.yigege.service.impl;
 import top.yigege.model.Permission;
 import top.yigege.dao.PermissionMapper;
 import top.yigege.service.IPermissionService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

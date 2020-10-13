@@ -4,7 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.yigege.model.Role;
 import top.yigege.dao.RoleMapper;
 import top.yigege.service.IRoleService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

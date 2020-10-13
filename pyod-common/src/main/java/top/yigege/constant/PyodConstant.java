@@ -17,6 +17,11 @@ public class PyodConstant {
          * session 验证码
          */
         String SESSION_RANDOM_CODE = "session_random_code";
+
+        /**
+         * session 用户
+         */
+        String SESSION_USER_KEY = "session_user_key";
     }
 
     public interface Common {

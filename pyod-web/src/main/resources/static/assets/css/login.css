@@ -137,12 +137,12 @@ body{
     transition: opacity .4s ease;
 }
 
-.login-button:hover{
+/*.login-button:hover{
     padding-right: 30px;
 }
 .login-button:hover i{
     opacity: .9;
-}
+}*/
 
 .login-button:focus{
     outline: none;

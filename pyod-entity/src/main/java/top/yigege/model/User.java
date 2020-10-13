@@ -82,7 +82,7 @@ public class User extends Model<User> {
     @TableField("last_login_time")
     private Date lastLoginTime;
 
-
+    @TableField(exist = false)
     private List<Role> roleList;
 
     public List<Role> getRoleList() {

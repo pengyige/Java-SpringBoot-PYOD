@@ -46,6 +46,7 @@ public class Role extends Model<Role> {
      */
     private String remark;
 
+    @TableField(exist = false)
     private List<Permission> permissionList;
 
     public List<Permission> getPermissionList() {

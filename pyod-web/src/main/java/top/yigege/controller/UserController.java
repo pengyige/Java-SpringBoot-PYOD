@@ -28,6 +28,7 @@ import top.yigege.model.User;
 import top.yigege.service.IGenerateIDService;
 import top.yigege.service.IUserService;
 import top.yigege.util.ApiResultUtil;
+import top.yigege.util.SessionUtil;
 import top.yigege.util.Utils;
 import top.yigege.vo.ResultBean;
 
@@ -147,6 +148,12 @@ public class UserController {
         subject.login(token);
 
         return ApiResultUtil.success();
+    }
+
+    @ApiOperation(value = "通过获取当前用户信息")
+    @PostMapping("/queryUserInfo")
+    public ResultBean queryUserInfo() {
+        return ApiResultUtil.success(SessionUtil.getUser());
     }
 
 }

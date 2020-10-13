@@ -1,23 +1,51 @@
 package top.yigege.config;
+
+
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
- * @ClassName: fastJsonConfig
+ * @ClassName: WebMcv
  * @Description:TODO
  * @author: yigege
- * @date: 2020年09月29日 11:02
+ * @date: 2020年09月25日 17:53
  */
 @Configuration
-public class fastJsonConfig extends WebMvcConfigurationSupport {
+public class WebMvcConfig implements WebMvcConfigurer {
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebMvcConfig.class);
+
+    @Override
+    public void addViewControllers( ViewControllerRegistry registry ) {
+        //设置启动默认访问index.html
+        registry.addViewController( "/" ).setViewName( "forward:/index.html" );
+        registry.setOrder( Ordered.HIGHEST_PRECEDENCE );
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //swagger资源映射
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        //默认找static目录
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+    }
 
     /**
      * 使用阿里 fastjson 作为 JSON MessageConverter
@@ -49,4 +77,7 @@ public class fastJsonConfig extends WebMvcConfigurationSupport {
         converter.setSupportedMediaTypes(mediaTypeList);
         converters.add(converter);
     }
+
+
+
 }

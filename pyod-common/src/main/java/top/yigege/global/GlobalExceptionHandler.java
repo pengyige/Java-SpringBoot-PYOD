@@ -1,5 +1,6 @@
 package top.yigege.global;
 
+import org.apache.shiro.authc.AccountException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -14,6 +15,7 @@ import top.yigege.exception.BusinessException;
 import top.yigege.exception.NoPermissionException;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.vo.ResultBean;
+
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -41,6 +43,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResultBean exceptionHandler(Exception exception) {
         if (exception instanceof MissingServletRequestParameterException) {
+            return ApiResultUtil.paramError(exception.getMessage());
+        }else if (exception instanceof AccountException){
+            //shiro 认证失败
             return ApiResultUtil.paramError(exception.getMessage());
         }
         LOGGER.info("exceptionHandler");

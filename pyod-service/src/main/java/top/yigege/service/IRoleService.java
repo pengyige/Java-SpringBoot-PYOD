@@ -1,7 +1,7 @@
 package top.yigege.service;
 
 import top.yigege.model.Role;
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 

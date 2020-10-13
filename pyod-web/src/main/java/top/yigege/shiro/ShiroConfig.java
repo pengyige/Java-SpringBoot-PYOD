@@ -28,6 +28,7 @@ public class ShiroConfig {
         /* filterChainDefinitionMap.put("/role/**", "authc");
         filterChainDefinitionMap.put("/user/**", "authc");
         filterChainDefinitionMap.put("/permission/**", "authc");*/
+        filterChainDefinitionMap.put("/", "authc");
         filterChainDefinitionMap.put("/index.html", "authc");
 
 
