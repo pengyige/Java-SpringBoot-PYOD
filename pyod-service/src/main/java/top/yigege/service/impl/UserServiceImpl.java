@@ -17,6 +17,7 @@ import top.yigege.vo.PageBean;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -68,17 +69,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public List<Menu> queryMenusByUserNo(String userNo) {
 
-        List<Menu> menuList = userMapper.queryMenusByUserNo(userNo);
-
+        List<Menu> totalMenuList = userMapper.queryMenusByUserNo(userNo);
 
         List<Menu> menuTree = new ArrayList<>();
-        for (Menu menu : menuList) {
+        for (Menu menu : totalMenuList) {
             if (PARENT_MENU_FLAG == menu.getPid()) {
-                menuTree.add(findChildren(menu, menuList));
+                menuTree.add(findChildren(menu, totalMenuList));
             }
         }
 
-        return menuList;
+
+        return menuTree;
     }
 
     /**
@@ -92,12 +93,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         for (Menu menuItem : menuList) {
             //是否存在menu的子节点
             if (menu.getId() == menuItem.getPid()) {
-                if (menu.getSubMenu() == null) {
-                    //第一次添加子节点时初始化一下list
-                    menu.setSubMenu(new ArrayList<>());
-                }
                 menu.getSubMenu().add(findChildren(menuItem, menuList));
             }
+        }
+
+        if (!menu.getSubMenu().isEmpty()) {
+            //对该菜单的所有子节点按照sort排序
+            Collections.sort(menu.getSubMenu());
         }
 
         return menu;
