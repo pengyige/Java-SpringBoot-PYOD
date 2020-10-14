@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.yigege.PyodApplication;
 import top.yigege.constant.BusinessFlagEnum;
+import top.yigege.model.Menu;
 import top.yigege.model.Role;
 import top.yigege.model.User;
 import top.yigege.service.IGenerateIDService;
@@ -90,10 +91,15 @@ public class UserServiceTest {
         LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(role)));
     }
 
-    @Test
     public void queryUserListByPageTest() {
         PageBean userPage = userService.queryUserList(1,10,null);
         LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(userPage)));
+    }
+
+    @Test
+    public void queryUserMenuTest() {
+        List<Menu> menuList = userService.queryMenusByUserNo("admin");
+        LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(menuList)));
     }
 
 }

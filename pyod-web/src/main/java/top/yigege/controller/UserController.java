@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 import top.yigege.annotation.WebLog;
 import top.yigege.constant.BusinessFlagEnum;
+import top.yigege.model.Menu;
 import top.yigege.model.User;
 import top.yigege.service.IGenerateIDService;
 import top.yigege.service.IUserService;
@@ -38,6 +39,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.transform.Transformer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -154,6 +156,14 @@ public class UserController {
     @PostMapping("/queryUserInfo")
     public ResultBean queryUserInfo() {
         return ApiResultUtil.success(SessionUtil.getUser());
+    }
+
+    @ApiOperation(value = "获取用户菜单")
+    @PostMapping("/queryUserMenu")
+    public ResultBean queryUserMenu() {
+        String userNo = SessionUtil.getUser().getNo();
+        List<Menu> menuList = iUserService.queryMenusByUserNo(userNo);
+        return ApiResultUtil.success(menuList);
     }
 
 }

@@ -124,12 +124,15 @@
             return getDevice() == label;
         }
 
+        /**
+         * 是否是手机
+         */
         var isMobile = function(){
             return isDevice('mobile');
         }
 
         /**
-         * Tab 对象
+         * Tab 对象,扩展layui tabs属性和方法
          * @param el
          * @constructor
          */
@@ -182,10 +185,16 @@
             });
         };
 
-        //当前登入用户信息
-        var user = null;
+        //当前登入用户信息,菜单列表
+        var user = null,menuList = [];
+        var tabs = new Tab('tabs'), navItems = [];
 
         $(function(){
+
+
+
+            loadMenu();
+
             //初始化导航
             init();
 
@@ -194,7 +203,6 @@
         });
 
         function init() {
-            var tabs = new Tab('tabs'), navItems = [];
 
             //左侧菜单栏点击处理
             $('#Nav a').on('click',function(event){
@@ -285,6 +293,37 @@
             }
         }
 
+
+        /**
+         * 加载菜单
+         */
+        function loadMenu() {
+            $.ajax({
+                url:getMenuInfoUrl(),
+                method:'post',
+                data:{},
+                dataType:'json',
+                beforeSend:function(){
+
+                },
+                complete:function() {
+                },
+                success:function (res) {
+                    if (200 == res.code) {
+                        menuList = res.data;
+                    }else {
+                        layer.msg(res.message);
+                    }
+                },
+                error:function () {
+                    layer.msg("网络错误");
+                }
+            });
+        }
+
+        /**
+         * 加载用户信息
+         */
         function loadUserInfo(){
             $.ajax({
                 url:getUserInfoUrl(),

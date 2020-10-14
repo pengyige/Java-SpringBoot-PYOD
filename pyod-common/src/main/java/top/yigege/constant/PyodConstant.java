@@ -32,6 +32,11 @@ public class PyodConstant {
          * 批量分割符
          */
         String BATCH_SPLIT_FLAG = ",";
+
+        /**
+         * 根菜单标识
+         */
+        int PARENT_MENU_FLAG = -1;
     }
 
 }

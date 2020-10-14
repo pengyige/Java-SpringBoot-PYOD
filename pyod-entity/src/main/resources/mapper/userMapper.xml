@@ -91,4 +91,16 @@
             #{item} role_id
         </foreach> t
     </insert>
+
+
+    <select id="queryMenusByUserNo" parameterType="java.lang.String" resultType="top.yigege.model.Menu">
+        SELECT
+         m.*
+        FROM
+            user u
+            LEFT JOIN user_role ur ON u.user_id = ur.user_id
+            LEFT JOIN role_menu rm ON ur.role_id = rm.role_id
+            LEFT JOIN menu m ON m.id = rm.menu_id
+            where u.no = #{value}
+    </select>
 </mapper>

@@ -24,3 +24,11 @@ function getUserInfoUrl() {
     return getBaseUrl() + "/user/queryUserInfo";
 }
 
+/**
+ * 查询菜单信息
+ * @returns {string}
+ */
+function getMenuInfoUrl() {
+    return getBaseUrl() + "/user/queryUserMenu";
+}
+

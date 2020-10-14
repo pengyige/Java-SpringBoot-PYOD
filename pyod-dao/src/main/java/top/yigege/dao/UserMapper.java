@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import org.apache.ibatis.annotations.Mapper;
+import top.yigege.model.Menu;
 import top.yigege.model.User;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface UserMapper extends BaseMapper<User> {
     void deleteUserRoles(Integer userId);
 
     void addUserRoleRecord(Integer userId,List<Integer> roleIds);
+
+    List<Menu> queryMenusByUserNo(String no);
 }

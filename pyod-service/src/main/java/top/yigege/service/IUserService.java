@@ -3,6 +3,7 @@ package top.yigege.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 ;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.yigege.model.Menu;
 import top.yigege.model.User;
 import top.yigege.vo.PageBean;
 
@@ -48,4 +49,12 @@ public interface IUserService extends IService<User> {
      * @return
      */
     PageBean queryUserList(int page, int pageSize, Map paramMap);
+
+
+    /**
+     * 通过用户编号查询菜单
+     * @param userNo
+     * @return
+     */
+    List<Menu> queryMenusByUserNo(String userNo);
 }
