@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../assets/css/layui.css">
+    <link rel="stylesheet" href="../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_3h32j1hvbk.css">
+    <title>管理后台</title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+                <span class="layui-breadcrumb">
+                  <a href="">系统设置</a>
+                  <a><cite>用户管理</cite></a>
+                </span>
+            <h2 class="title">用户管理</h2>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="form-box">
+                    <div class="layui-form layui-form-item">
+                        <div class="layui-inline">
+                            <div class="layui-form-mid">用户ID:</div>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <input id="userId" type="text" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">编号:</div>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <input id="no" type="text" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">昵称:</div>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <input id="nickname" type="text" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">电话:</div>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <input id="tel" type="text" autocomplete="off" class="layui-input">
+                            </div>
+
+                            <div class="layui-form-mid">性别:</div>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <select name="sex">
+                                    <option value="-1" selected="selected">全部</option>
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                </select>
+                            </div>
+                            <div class="layui-form-mid">状态:</div>
+                            <div class="layui-input-inline" style="width: 100px;">
+                                <select name="status">
+                                    <option value="-1" selected="selected">全部</option>
+                                    <option value="1">正常</option>
+                                    <option value="2">异常</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <button id="queryBtn" class="layui-btn layui-btn-blue">查询</button>
+                    <button id="resetBtn" class="layui-btn layui-btn-primary">重置</button>
+                    <button id="addBtn" class="layui-btn layui-btn-blue"><i class="layui-icon">&#xe654;</i>新增</button>
+                    <table id="demo"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/layui.all.js"></script>
+<script src="../assets/jquery.js"></script>
+<script src="../assets/common.js"></script>
+<script>
+
+    var table = layui.table;
+    var layer = layui.layer;
+
+    /**
+     * 初始化表格
+     */
+    function initTable() {
+        //展示已知数据
+        table.render({
+            elem: '#demo'
+            , id: 'demo'
+            , url: getQueryUserListUrl()
+            , method: 'post'
+            , request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , cols: [[ //标题栏
+                {field: 'userId', title: 'ID', width: 80, sort: true}
+                , {field: 'no', title: '编号', width: 80}
+                , {field: 'nickname', title: '昵称', minWidth: 80}
+                , {field: 'tel', title: '电话', minWidth: 80}
+                , {
+                    field: 'sex', title: '性别', width: 80, templet: function (d) {
+                        return d.sex == 0 ? '男' : '女';
+                    }
+                }
+                , {
+                    field: 'status', title: '状态', width: 80, templet: function (d) {
+                        return d.status == 1 ? '正常' : '异常';
+                    }
+                }
+            ]]
+            , skin: 'line' //表格风格
+            , even: true
+            , page: true //是否显示分页
+            , limits: [10, 20, 50]
+            , limit: 10 //每页默认显示的数量
+        });
+    }
+
+    /**
+     * 重新加载
+     */
+    function reloadTable() {
+
+        table.reload('demo', {
+            page: {
+                curr: 1 //重新从第 1 页开始
+            }
+            , where: {
+                userId: $("#userId").val(),
+                no: $("#no").val(),
+                nickname: $("#nickname").val(),
+                tel: $("#tel").val(),
+                sex: $("select[name=sex]").val(),
+                status: $("select[name=status]").val()
+            }
+        }, 'data');
+    }
+
+    /**
+     * 重置
+     */
+    function clearConditionInput() {
+        $("#userId").val("");
+        $("#no").val("");
+        $("#nickname").val("");
+        $("#tel").val("");
+
+        var select = 'dd[lay-value=' + -1 + ']';
+        $("select[name=sex]").siblings("div.layui-form-select").find('dl').find(select).click();
+        $("select[name=status]").siblings("div.layui-form-select").find('dl').find(select).click();
+
+    }
+
+    $(function () {
+        initTable();
+
+        //查询
+        $("#queryBtn").click(function () {
+            reloadTable();
+        });
+
+        //重置
+        $("#resetBtn").click(function () {
+            clearConditionInput()
+            reloadTable();
+        });
+
+        //添加
+        $("#addBtn").click(function () {
+            layer.open({
+                type: 2,
+                title:'',
+                area:['500px'],
+                maxmin:true,
+                content: './user/add-user-form.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                //btn: ['添加', '取消'],
+                yes: function (index, layero) {
+                    //TODO 发送添加用户请求
+                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                }
+                , btn2: function (index, layero) {
+
+                    //return false 开启该代码可禁止点击该按钮关闭
+                },
+                cancel: function () {
+                    //右上角关闭回调
+                    /*layer.confirm('您还没有保存，是否放弃添加?', {icon: 3, title:'提示'}, function(index){
+                        //do something
+
+                        layer.close(index);
+                    });*/
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    });
+
+
+</script>
+</body>
+</html>

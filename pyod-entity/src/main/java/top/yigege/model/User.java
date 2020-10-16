@@ -82,11 +82,24 @@ public class User extends Model<User> {
     @TableField("last_login_time")
     private Date lastLoginTime;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
     @TableField(exist = false)
     private List<Role> roleList;
 
     public List<Role> getRoleList() {
         return roleList;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public void setRoleList(List<Role> roleList) {

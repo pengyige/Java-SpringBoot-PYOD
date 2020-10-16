@@ -37,6 +37,14 @@ public class PyodConstant {
          * 根菜单标识
          */
         int PARENT_MENU_FLAG = -1;
+
+        /**
+         * 全部
+         */
+        int ALL = -1;
     }
+
+
+
 
 }

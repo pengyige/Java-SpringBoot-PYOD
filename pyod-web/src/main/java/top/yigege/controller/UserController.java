@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiResponse;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 import top.yigege.annotation.WebLog;
 import top.yigege.constant.BusinessFlagEnum;
+import top.yigege.constant.PyodConstant;
+import top.yigege.constant.ResultCodeEnum;
+import top.yigege.global.GlobalExceptionHandler;
 import top.yigege.model.Menu;
 import top.yigege.model.User;
 import top.yigege.service.IGenerateIDService;
@@ -31,6 +36,8 @@ import top.yigege.service.IUserService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.util.SessionUtil;
 import top.yigege.util.Utils;
+import top.yigege.vo.LayuiTableResultBean;
+import top.yigege.vo.PageBean;
 import top.yigege.vo.ResultBean;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,11 +65,15 @@ import java.util.UUID;
 @Validated
 public class UserController {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     IUserService iUserService;
 
     @Autowired
     IGenerateIDService iGenerateIDService;
+
+
 
 
     @ApiOperation(value = "添加用户", notes = "添加一个新的用户", response = ResultBean.class)
@@ -85,16 +96,45 @@ public class UserController {
 
     @ApiOperation("查询用户列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "page", value = "用户昵称", required = false, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "用户性别", required = false, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "tel", value = "用户手机号", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "page", value = "当前页", required = false, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "分页大小", required = false, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "nickname", value = "昵称", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "no", value = "编号", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "sex", value = "性别", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "tel", value = "手机号", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "status", value = "状态", required = false, dataType = "String"),
+
     })
     @PostMapping("/queryUserList")
-    public ResultBean queryUserList(@ApiIgnore int page , @ApiIgnore int pageSize,
-                                    String tel) {
-        Map paramMap = new HashMap();
-        paramMap.put("tel", tel);
-        return ApiResultUtil.success( iUserService.queryUserList(page,pageSize,paramMap));
+    public LayuiTableResultBean queryUserList(int page,
+                                              @RequestParam(required = false) Integer pageSize,
+                                              @RequestParam(required = false) Integer userId,
+                                              @RequestParam(required = false) String nickname,
+                                              @RequestParam(required = false) String no,
+                                              @RequestParam(required = false, defaultValue = PyodConstant.Common.ALL+"") Integer sex,
+                                              @RequestParam(required = false) String tel,
+                                              @RequestParam(required = false, defaultValue = PyodConstant.Common.ALL+"") Integer status) {
+        Map<String ,Object> paramMap = new HashMap<>();
+        paramMap.put("userId",userId);
+        paramMap.put("nickname",nickname);
+        paramMap.put("no",no);
+        paramMap.put("sex",sex);
+        paramMap.put("tel",tel);
+        paramMap.put("status",status);
+
+        PageBean pageBean = new PageBean();
+
+        int code = 0;
+        String msg = ResultCodeEnum.SUCCESS.getMsg();
+        try {
+            pageBean = iUserService.queryUserList(page,pageSize,paramMap);
+        }catch (Exception e) {
+            code = ResultCodeEnum.ERROR.getCode();
+            msg = ResultCodeEnum.ERROR.getMsg();
+            LOGGER.error(e.getMessage(), e);
+        }
+        return new LayuiTableResultBean(code, msg, pageBean.getTotalCount(), pageBean.getData());
     }
 
 

@@ -31,7 +31,35 @@
 
 
     <select id="queryAllUser"  resultType="top.yigege.model.User" parameterType="java.util.Map">
-        SELECT * FROM user t
+        SELECT
+            *
+        FROM
+            user t
+        WHERE
+            1 = 1
+            <if test="null != paramMap.userId">
+                AND t.user_id = #{paramMap.userId}
+            </if>
+
+            <if test="null != paramMap.no and '' != paramMap.no">
+                AND t.no = #{paramMap.no}
+            </if>
+
+            <if test="null != paramMap.nickname and '' != paramMap.nickname">
+                AND t.nickname LIKE "%"#{paramMap.nickname}"%"
+            </if>
+
+            <if test="null != paramMap.tel and '' != paramMap.tel">
+                AND t.tel = #{paramMap.tel}
+            </if>
+
+            <if test="-1 != paramMap.sex">
+                AND t.sex = #{paramMap.sex}
+            </if>
+
+            <if test="-1 != paramMap.status">
+                AND t.status = #{paramMap.status}
+            </if>
     </select>
 
 

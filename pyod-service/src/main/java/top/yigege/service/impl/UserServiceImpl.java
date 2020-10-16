@@ -78,6 +78,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             }
         }
 
+        if (!menuTree.isEmpty()) {
+            //对该菜单按照sort排序
+            Collections.sort(menuTree);
+        }
+
 
         return menuTree;
     }

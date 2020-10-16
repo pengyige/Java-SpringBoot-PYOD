@@ -32,3 +32,12 @@ function getMenuInfoUrl() {
     return getBaseUrl() + "/user/queryUserMenu";
 }
 
+
+/**
+ * 查询用户列表信息
+ * @returns {string}
+ */
+function getQueryUserListUrl() {
+    return getBaseUrl() + "/user/queryUserList";
+}
+
