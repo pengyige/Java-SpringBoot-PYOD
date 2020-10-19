@@ -81,11 +81,12 @@ public class UserController {
             @ApiImplicitParam(paramType = "query", name = "nickname", value = "用户昵称", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "sex", value = "用户性别", required = true, dataType = "Int"),
             @ApiImplicitParam(paramType = "query", name = "tel", value = "用户手机号", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, dataType = "String")
+            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "remark", value = "备注", required = false, dataType = "String")
 
     })
     @WebLog
-    @PostMapping("/addUser")
+    @RequestMapping("/addUser")
     public ResultBean addUser(@Valid @ApiIgnore User user) {
         user.setNo(iGenerateIDService.getNo(BusinessFlagEnum.USER.getMsg()));
         user.setPassword(DigestUtil.md5Hex(user.getPassword()));

@@ -41,7 +41,7 @@ public class User extends Model<User> {
      */
     @ApiModelProperty("用户昵称")
     @NotBlank(message = "用户昵称不能为空")
-    @Length(min = 2,max = 6,message = "长度最小2位，最大6位")
+    @Length(min = 2,max = 6,message = "用户昵称长度最小2位，最大6位")
     private String nickname;
 
     @ApiModelProperty("用户编号")

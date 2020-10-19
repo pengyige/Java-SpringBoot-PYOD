@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../../assets/css/layui.css">
     <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
     <title></title>
 </head>
 <body class="layui-view-body">
@@ -12,18 +13,18 @@
     <div class="layui-row">
         <div class="layui-card">
             <div class="layui-card-header">添加用户</div>
-            <form class="layui-form layui-card-body" action="">
+            <form id="addUserForm" class="layui-form layui-card-body" action="">
                 <div class="layui-form-item">
                     <label class="layui-form-label">用户名:</label>
                     <div class="layui-input-block">
-                        <input id="nickname" type="text" required lay-verify="required" placeholder="请输入用户名"
+                        <input id="nickname" name="nickname" type="text" required lay-verify="required" placeholder="请输入用户名"
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">密码</label>
                     <div class="layui-input-inline">
-                        <input type="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off"
+                        <input type="password" id="password" name="password" lay-verify="confirmPassword" placeholder="请输入密码" autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
@@ -31,7 +32,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">确认密码</label>
                     <div class="layui-input-inline">
-                        <input type="confirmPassword" required lay-verify="required" placeholder="请再输入一次密码" autocomplete="off"
+                        <input type="confirmPassword" id="confirmPassword" name="confirmPassword" lay-verify="confirmPassword" placeholder="请再输入一次密码" autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
@@ -39,7 +40,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">联系方式:</label>
                     <div class="layui-input-block">
-                        <input id="tel" type="text" required lay-verify="required" placeholder="请输入手机号"
+                        <input id="tel" name="tel" type="text" required lay-verify="required" placeholder="请输入手机号"
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
@@ -48,42 +49,103 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">性别</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="sex" value="男" title="男">
-                        <input type="radio" name="sex" value="女" title="女" checked>
+                        <input type="radio" name="sex" value="0" title="男">
+                        <input type="radio" name="sex" value="1" title="女" checked>
                     </div>
-                    <input type="checkbox" name="" title="写作" lay-skin="primary" checked>
                 </div>
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">备注</label>
                     <div class="layui-input-block">
-                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        <textarea id="remark" name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">开关</label>
                     <div class="layui-input-block">
-                        <input type="checkbox" name="switch" lay-skin="switch">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">单选框</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="sex" value="男" title="男">
-                        <input type="radio" name="sex" value="女" title="女" checked>
-                    </div>
-                    <input type="checkbox" name="" title="写作" lay-skin="primary" checked>
-                </div>
-
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button id="submitBtn" class="layui-btn layui-btn-blue"  >提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue"  >提交<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+    <script src="../../assets/layui.all.js"></script>
+    <script src="../../assets/jquery.js"></script>
+    <script src="../../assets/common.js"></script>
+
+    <script>
+        var form = layui.form;
+        var layer = layui.layer;
+
+        form.verify({
+            confirmPassword:function(value, item){
+                if (value == null || value == "") {
+                    return "此项不能为空";
+                }
+
+                if (value != $("#password").val()) {
+                    return "两次输入的密码不一致";
+                }
+
+            }
+        });
+
+        form.on('submit(submitBtn)', function(data){
+
+            submit();
+
+            return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+        });
+
+        $(function (){
+
+        });
+
+
+        function submit(){
+
+            $.ajax({
+                url:getAddUserUrl(),
+                method:'post',
+                data:$('#addUserForm').serialize(),
+                dataType:'json',
+                beforeSend:function(){
+                    $("#submitBtn").attr("disabled","true");
+                    $("#btnIcon").addClass("iconjiazaizhong");
+
+                },
+                complete:function() {
+                    $("#submitBtn").removeAttr("disabled");
+                    $("#btnIcon").removeClass("iconjiazaizhong");
+                },
+                success:function (res) {
+                    if (200 == res.code) {
+                        //获取窗口索引
+                        var outIndex = parent.layer.getFrameIndex(window.name);
+                        layer.confirm("添加成功,用户编号:"+res.data.no+"。是否继续添加用户？", {
+                            btn: ['继续添加', '不了'] //可以无限个按钮
+                            ,
+                        }, function(index, layero){
+                            $("#resetBtn").click();
+                            layer.close(index);
+                        }, function(index){
+                            //按钮【按钮二】的回调
+                            parent.layer.close(outIndex);
+                        });
+
+                    }else {
+                        layer.msg(res.message);
+                    }
+                },
+                error:function () {
+                    layer.msg("网络错误");
+                }
+            });
+        }
+    </script>
+
 </body>
 </html>

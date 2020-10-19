@@ -34,6 +34,8 @@ public class GlobalExceptionHandler {
 
     private static Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+
+
     /**
      * 全局异常处理 包含所有500状态的错误。404单独在ErrorController处理
      *
@@ -51,6 +53,19 @@ public class GlobalExceptionHandler {
         LOGGER.info("exceptionHandler");
         LOGGER.error(exception.getMessage(), exception);
         return ApiResultUtil.fail();
+    }
+
+    @ExceptionHandler(org.springframework.validation.BindException.class)
+    public ResultBean bindException(org.springframework.validation.BindException exception) {
+        LOGGER.info("bindException");
+        BindingResult bindingResult = exception.getBindingResult();
+        List<ObjectError> errors = bindingResult.getAllErrors();
+
+        StringBuffer buffer = new StringBuffer();
+        for (ObjectError error : errors) {
+            buffer.append(error.getDefaultMessage()).append(";");
+        }
+        return ApiResultUtil.paramError(buffer.toString());
     }
 
     /**
@@ -87,7 +102,7 @@ public class GlobalExceptionHandler {
      * @param methodArgumentNotValidException
      * @return
      */
-    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResultBean paramValidExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
         LOGGER.info("paramValidExceptionHandler");
 

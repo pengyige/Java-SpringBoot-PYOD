@@ -17,6 +17,15 @@ function getUserLoginUrl() {
 }
 
 /**
+ * 新增用户
+ * @returns {string}
+ */
+function getAddUserUrl() {
+    return getBaseUrl() + "/user/addUser";
+}
+
+
+/**
  * 查询用户信息
  * @returns {string}
  */
