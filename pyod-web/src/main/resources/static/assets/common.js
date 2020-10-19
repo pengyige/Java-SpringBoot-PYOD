@@ -50,3 +50,28 @@ function getQueryUserListUrl() {
     return getBaseUrl() + "/user/queryUserList";
 }
 
+
+/**
+ * 查询树形菜单信息
+ * @returns {string}
+ */
+function getTreeMenuUrl() {
+    return getBaseUrl() + "/menu/queryTreeMenu";
+}
+
+/**
+ * 查询菜单详情信息
+ * @returns {string}
+ */
+function getQueryMenuDetailUrl() {
+    return getBaseUrl() + "/menu/queryMenuDetail";
+}
+
+/**
+ * 添加或更新菜单
+ * @returns {string}
+ */
+function getAddOrUpdateMenuUrl() {
+    return getBaseUrl() + "/menu/addOrUpdateMenu";
+}
+

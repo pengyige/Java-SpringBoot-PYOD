@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../assets/css/layui.css">
+    <link rel="stylesheet" href="../assets/css/view.css"/>
+    <style type="text/css">
+        #dept_main, #dept_particulars {
+            width: 48.5%;
+            display: inline-block;
+            vertical-align: top;
+            padding: 20px;
+            background: white;
+            box-sizing: border-box;
+        }
+
+        #dept_tree {
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_3h32j1hvbk.css">
+    <title>管理后台</title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+                <span class="layui-breadcrumb">
+                  <a href="">系统设置</a>
+                  <a><cite>菜单管理</cite></a>
+                </span>
+            <h2 class="title">菜单管理</h2>
+        </div>
+    </div>
+
+    <div id="dept_main" style="margin-right: 2%;">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>菜单列表</legend>
+        </fieldset>
+       <!-- <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" lay-demo="addDept"><i
+                class="layui-icon">&#xe654;</i>添加部门
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" lay-demo="gain">获取选中节点</button>-->
+        <div id="dept_tree">
+
+        </div>
+    </div>
+    <div id="dept_particulars">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>菜单详情</legend>
+        </fieldset>
+        <div id="dept_home">
+            <form id="menuForm" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单ID:</label>
+                    <div class="layui-input-block">
+                        <input id="id" name="id" type="text" placeholder="" readonly
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单名称:</label>
+                    <div class="layui-input-block">
+                        <input id="name" name="name" type="text" required lay-verify="required" placeholder="请输入菜单名称"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">父ID:</label>
+                    <div class="layui-input-block">
+                        <input id="pid" name="pid" type="text" required lay-verify="required" placeholder="请输入父菜单ID"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图标:</label>
+                    <div class="layui-input-block">
+                        <input id="icon" name="icon" type="text" required lay-verify="required"
+                               placeholder="请输入图标:eg:icontongji"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">路径:</label>
+                    <div class="layui-input-block">
+                        <input id="url" name="url" type="text" required lay-verify="required" placeholder="请输入路径"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">排序:</label>
+                    <div class="layui-input-block">
+                        <input id="sort" name="sort" type="text" required lay-verify="required" placeholder="请输入顺序"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="0" checked title="启用">
+                        <input type="radio" name="status" value="1" title="禁用" >
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注:</label>
+                    <div class="layui-input-block">
+                        <input id="remark" name="remark" type="text" placeholder="请输入备注"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue">
+                            提交<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="../assets/layui.all.js"></script>
+<script src="../assets/jquery.js"></script>
+<script src="../assets/common.js"></script>
+<script>
+
+    var tree = layui.tree;
+    var util = layui.util;
+    var form = layui.form;
+    var layer = layui.layer;
+
+    form.on('submit(submitBtn)', function (data) {
+
+        submit();
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+
+    /**
+     * 初始化tree
+     */
+    function initTree() {
+        tree.render({
+            elem: '#dept_tree',
+            data: getData(),
+            id: 'menuTreeId',
+            click: function (obj) {
+                /*console.log(obj.data); //得到当前点击的节点数据
+                console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+                console.log(obj.elem); //得到当前节点元素
+
+
+                console.log(obj.data.children); //当前节点下是否有子节点*/
+                loadMenuDetail(obj.data.id);
+            }
+
+        });
+    }
+
+    /**
+     * 提交
+     */
+    function submit() {
+
+        $.ajax({
+            url: getAddOrUpdateMenuUrl(),
+            method: 'post',
+            data: $('#menuForm').serialize(),
+            dataType: 'json',
+            beforeSend: function () {
+                $("#submitBtn").attr("disabled", "true");
+                $("#btnIcon").addClass("iconjiazaizhong");
+
+            },
+            complete: function () {
+                $("#submitBtn").removeAttr("disabled");
+                $("#btnIcon").removeClass("iconjiazaizhong");
+            },
+            success: function (res) {
+                if (200 == res.code) {
+                    layer.msg("操作成功");
+                    fillData(res.data);
+                    reloadTree();
+                } else {
+                    layer.msg(res.message);
+                }
+            },
+            error: function () {
+                layer.msg("网络错误");
+            }
+        });
+    }
+
+    /**
+     * 填充表单
+     */
+    function fillData(data) {
+        $("#id").val(data.id);
+        $("#name").val(data.name);
+        $("#pid").val(data.pid);
+        $("#icon").val(data.icon);
+        $("#url").val(data.url);
+        $("#sort").val(data.sort);
+        if (0 == data.status) {
+            $("input[name=status]").eq(1).attr("checked", 'checked');
+        } else {
+            $("input[name=status]").eq(0).attr("checked", 'checked');
+        }
+    }
+
+    /**
+     *加载菜单详情
+     */
+    function loadMenuDetail(id) {
+        $.ajax({
+            url: getQueryMenuDetailUrl() + "?id=" + id,    //后台数据请求地址
+            type: "post",
+            async: false,
+            success: function (res) {
+                if (200 == res.code) {
+                    var data = res.data;
+                    fillData(data);
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取树形菜单
+     */
+    function getData() {
+        var data = [];
+        $.ajax({
+            url: getTreeMenuUrl(),    //后台数据请求地址
+            type: "post",
+            async: false,
+            success: function (resut) {
+                data = resut;
+            }
+        });
+        return data;
+    }
+
+    /**
+     * 重新加载
+     */
+    function reloadTree() {
+        tree.reload('menuTreeId', {
+            data: getData()
+        });
+    }
+
+
+    $(function () {
+        initTree();
+    });
+
+
+</script>
+</body>
+</html>

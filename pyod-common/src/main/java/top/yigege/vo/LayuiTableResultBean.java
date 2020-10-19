@@ -19,6 +19,7 @@ public class LayuiTableResultBean {
     private List data;
 
 
+
     public LayuiTableResultBean(int code, String msg, int count, List data) {
         this.code = code;
         this.msg = msg;
