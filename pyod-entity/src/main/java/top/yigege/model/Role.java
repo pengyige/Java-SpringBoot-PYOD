@@ -38,7 +38,6 @@ public class Role extends Model<Role> {
     /**
      * 角色名称
      */
-    @NotBlank(message = "角色名称不能为空")
     private String name;
 
     /**

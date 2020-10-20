@@ -123,6 +123,7 @@
                         <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue">
                             提交<i id="btnIcon" class="icon iconfont"></i></button>
                         <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <button id="deleteBtn"  class="layui-btn layui-btn-danger">删除<i id="deleteBtnIcon" class="icon iconfont"></i></button>
                     </div>
                 </div>
             </form>
@@ -261,9 +262,53 @@
         });
     }
 
+    /**
+     * 发送删除菜单请求
+     * @param id
+     */
+    function sendDeleteMenuRequest(id) {
+        if (null == id || "" == id) {
+            layer.msg("菜单ID不能为空");
+            return;
+        }
+
+        $.ajax({
+            url: getDeleteMenuByIdUrl()+"?id="+id,
+            method: 'post',
+            dataType: 'json',
+            beforeSend: function () {
+                $("#deleteBtn").attr("disabled", "true");
+                $("#deleteBtnIcon").addClass("iconjiazaizhong");
+
+            },
+            complete: function () {
+                $("#deleteBtn").removeAttr("disabled");
+                $("#deleteBtnIcon").removeClass("iconjiazaizhong");
+            },
+            success: function (res) {
+                if (200 == res.code) {
+                    layer.msg("操作成功");
+                    $("#resetBtn").click();
+                    reloadTree();
+
+                } else {
+                    layer.msg(res.message);
+                }
+            },
+            error: function () {
+                layer.msg("网络错误");
+            }
+        });
+
+
+    }
 
     $(function () {
         initTree();
+
+        $("#deleteBtn").click(function (){
+            sendDeleteMenuRequest($("#id").val());
+        });
     });
 
 

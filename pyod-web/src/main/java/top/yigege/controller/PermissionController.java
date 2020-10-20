@@ -52,4 +52,10 @@ public class PermissionController {
         return ApiResultUtil.success(permission);
     }
 
+    @ApiOperation("查询所有权限")
+    @PostMapping("/queryPermissionList")
+    public ResultBean queryPermissionList() {
+        return ApiResultUtil.success(iPermissionService.list());
+    }
+
 }

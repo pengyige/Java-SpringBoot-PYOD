@@ -44,6 +44,14 @@
             role_id = #{value}
     </delete>
 
+    <delete id="deleteRoleMenuRecord" parameterType="java.lang.Integer">
+        DELETE
+        FROM
+            role_menu
+        WHERE
+            role_id = #{value}
+    </delete>
+
 
     <insert id="addRolePermissionRecord" parameterType="java.util.Map">
         INSERT INTO role_permission ( role_id, permission_id ) SELECT
@@ -56,4 +64,39 @@
             #{item} permission_id
         </foreach> t
     </insert>
+
+
+    <insert id="addRoleMenuRecord" parameterType="java.util.Map">
+        INSERT INTO role_menu ( role_id, menu_id ) SELECT
+        role_id,
+        menu_id
+        FROM
+        <foreach collection="menuIds" item="item"  open="("  separator="union all" close=")">
+            SELECT
+            #{roleId} role_id,
+            #{item} menu_id
+        </foreach> t
+    </insert>
+
+
+    <select id="queryRoleList"  resultType="top.yigege.model.Role" parameterType="java.util.Map">
+        SELECT
+        *
+        FROM
+        role t
+        WHERE
+        1 = 1
+        <if test="null != paramMap.role_id">
+            AND t.role_id = #{paramMap.role_id}
+        </if>
+
+        <if test="null != paramMap.role_no and '' != paramMap.role_no">
+            AND t.role_no = #{paramMap.role_no}
+        </if>
+
+        <if test="null != paramMap.name and '' != paramMap.name">
+            AND t.name LIKE "%"#{paramMap.name}"%"
+        </if>
+    </select>
+
 </mapper>

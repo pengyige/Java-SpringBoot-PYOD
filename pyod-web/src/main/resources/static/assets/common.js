@@ -75,3 +75,52 @@ function getAddOrUpdateMenuUrl() {
     return getBaseUrl() + "/menu/addOrUpdateMenu";
 }
 
+/**
+ * 删除菜单
+ * @returns {string}
+ */
+function getDeleteMenuByIdUrl() {
+    return getBaseUrl() + "/menu/deleteMenuById";
+}
+
+/**
+ * 查询角色列表信息
+ * @returns {string}
+ */
+function getQueryRoleListUrl() {
+    return getBaseUrl() + "/role/queryRoleList";
+}
+
+/**
+ * 查询角色详情信息
+ * @returns {string}
+ */
+function getQueryRoleDetailUrl() {
+    return getBaseUrl() + "/role/queryRoleDetail";
+}
+
+/**
+ * 删除角色
+ * @returns {string}
+ */
+function getDeleteRoleByIdsUrl() {
+    return getBaseUrl() + "/role/deleteRoleByIds";
+}
+
+/**
+ * 添加或更新角色
+ * @returns {string}
+ */
+function getAddOrUpdateRoleUrl() {
+    return getBaseUrl() + "/role/addOrUpdateRole";
+}
+
+/**
+ * 查询所有权限
+ * @returns {string}
+ */
+function getQueryPermissionListUrl() {
+    return getBaseUrl() + "/permission/queryPermissionList";
+}
+
+

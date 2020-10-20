@@ -73,4 +73,16 @@ public class MenuController {
     public ResultBean queryMenuDetail(@NotNull Integer id) {
         return ApiResultUtil.success(iMenuService.getById(id));
     }
+
+    @ApiOperation(value = "删除菜单", response = ResultBean.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "id", value = "菜单id", required = true, dataType = "Int")
+    }
+    )
+    @PostMapping("/deleteMenuById")
+    public ResultBean deleteMenuById(@NotNull Integer id) {
+        return ApiResultUtil.success(iMenuService.removeById(id));
+    }
+
+
 }

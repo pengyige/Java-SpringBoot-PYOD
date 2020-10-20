@@ -17,6 +17,7 @@ public class LayuiTreeBean implements Comparable<LayuiTreeBean>{
 
     private boolean spread = false;
 
+    private boolean checked = false;
 
     private int sort;
 
@@ -70,6 +71,14 @@ public class LayuiTreeBean implements Comparable<LayuiTreeBean>{
 
     public void setPid(int pid) {
         this.pid = pid;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     @Override

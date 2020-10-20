@@ -1,6 +1,8 @@
 package top.yigege.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.beans.Transient;
@@ -22,6 +24,7 @@ public class Menu extends Model implements Comparable<Menu>{
     /**
      * 菜单ID
      */
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**

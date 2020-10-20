@@ -130,5 +130,6 @@
             LEFT JOIN role_menu rm ON ur.role_id = rm.role_id
             LEFT JOIN menu m ON m.id = rm.menu_id
             where u.no = #{value}
+            and m.status = 1
     </select>
 </mapper>
