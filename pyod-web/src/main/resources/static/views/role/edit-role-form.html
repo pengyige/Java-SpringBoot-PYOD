@@ -12,7 +12,7 @@
 <div class="layui-content">
     <div class="layui-row">
         <div class="layui-card">
-            <div class="layui-card-header">添加角色</div>
+            <div class="layui-card-header">编辑角色</div>
             <form id="addUserForm" class="layui-form layui-card-body" action="">
                 <div class="layui-form-item">
                     <label class="layui-form-label">角色名称:</label>
@@ -54,7 +54,6 @@
                     <div class="layui-input-block">
                         <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue">
                             提交<i id="btnIcon" class="icon iconfont"></i></button>
-                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
             </form>
@@ -70,42 +69,13 @@
     var tree = layui.tree;
     var form = layui.form;
     var layer = layui.layer;
-
+    var id = null;
 
     form.on('submit(submitBtn)', function (data) {
         submit();
         return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
 
     });
-
-    /**
-     * 初始化菜单
-     */
-    function initMenuTree() {
-        tree.render({
-            elem: '#menuTree',
-            data: getData(),
-            id: 'menuTreeId',
-            showCheckbox: true
-
-        });
-    }
-
-    /**
-     * 获取树形菜单
-     */
-    function getData() {
-        var data = [];
-        $.ajax({
-            url: getTreeMenuUrl(),    //后台数据请求地址
-            type: "post",
-            async: false,
-            success: function (resut) {
-                data = resut;
-            }
-        });
-        return data;
-    }
 
     /**
      * 获取选中节点的id
@@ -115,8 +85,7 @@
         $.each(data, function (index, item) {
             if (id != "") {
                 id = id + "," + item.id;
-            }
-            else {
+            } else {
                 id = item.id;
             }
             var i = getCheckedId(item.children);
@@ -147,6 +116,7 @@
 
 
         var requestParam = {
+            "roleId":id,
             "name": $("#name").val(),
             "remark": $("#remark").val(),
             "menuIds": menuIds,
@@ -169,7 +139,7 @@
             },
             success: function (res) {
                 if (200 == res.code) {
-                    layer.msg("添加角色成功");
+                    layer.msg("修改角色成功");
                 } else {
                     layer.msg(res.message);
                 }
@@ -181,18 +151,77 @@
     }
 
     /**
+     * 初始化菜单
+     */
+    function initMenuTree() {
+        tree.render({
+            elem: '#menuTree',
+            data: getData(),
+            id: 'menuTreeId',
+            showCheckbox: true
+        });
+    }
+
+    /**
+     * 获取树形菜单
+     */
+    function getData() {
+        var data = [];
+        $.ajax({
+            url: getQueryAllMenuByRoleIdUrl() + "?id=" + id,    //后台数据请求地址
+            type: "post",
+            async: false,
+            success: function (resut) {
+                data = resut;
+            }
+        });
+        return data;
+    }
+
+    /**
      * 初始化权限数据
      */
     function initPermissionCheckBox() {
+        var currentRolePerimissionData = [];
+        $.ajax({
+            url: getQueryRoleDetailUrl() + "?id=" + id,    //后台数据请求地址
+            type: "post",
+            async: false,
+            success: function (res) {
+                if (200 == res.code) {
+                    $("#name").val(res.data.name);
+                    $('#remark').val(res.data.remark);
+
+                    var permissionBoxContent = "";
+                    currentRolePerimissionData = res.data.permissionList;
+                }
+            }
+        });
+
+
+        var totalPermissionData = [];
         $.ajax({
             url: getQueryPermissionListUrl(),    //后台数据请求地址
             type: "post",
+            async: false,
             success: function (res) {
                 if (200 == res.code) {
                     var permissionBoxContent = "";
-                    for (var i = 0 ; i < res.data.length; i++) {
+                    for (var i = 0; i < res.data.length; i++) {
+
+                        var isHas = false;
+                        currentRolePerimissionData.forEach(function (item, index) {
+                            if (item.permissionId == res.data[i].permissionId) {
+                                isHas = true;
+                            }
+                        });
                         var permission = res.data[i];
-                        var inputCheckBox = "<input type='checkbox' value='"+permission.permissionId+"' name='permission' title='"+permission.name+"' >";
+                        var inputCheckBox = "";
+                        if (isHas) {
+                            inputCheckBox = "<input type='checkbox' checked value='" + permission.permissionId + "' name='permission' title='" + permission.name + "' >";
+                        } else {
+                            inputCheckBox = "<input type='checkbox' value='" + permission.permissionId + "' name='permission' title='" + permission.name + "' >";
+                        }
                         permissionBoxContent += inputCheckBox;
                     }
                     $("#permissionBox").html(permissionBoxContent);
@@ -200,14 +229,16 @@
                 }
             }
         });
+
     }
 
     $(function () {
+        id = getUrlParam("id");
+
         initMenuTree();
 
         initPermissionCheckBox();
     });
-
 
 
 </script>

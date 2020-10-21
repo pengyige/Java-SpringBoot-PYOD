@@ -31,6 +31,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/", "authc");
         filterChainDefinitionMap.put("/index.html", "authc");
 
+        filterChainDefinitionMap.put("/swagger-ui.html", "authc");
+
 
         filterChainDefinitionMap.put("/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

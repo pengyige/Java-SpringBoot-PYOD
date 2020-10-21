@@ -3,7 +3,9 @@ package top.yigege.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
+import top.yigege.model.Permission;
 import top.yigege.model.Role;
+import top.yigege.vo.LayuiTreeBean;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +31,8 @@ public interface RoleMapper extends BaseMapper<Role> {
     void addRoleMenuRecord(Integer roleId, List<Integer> menuIds);
 
     List<Role> queryRoleList(Map<String, Object> paramMap, Page pageInfo);
+
+    List<LayuiTreeBean> queryTreeMenusByRoleId(Integer roleId);
+
+    List<Permission> queryAllPermissionByRoleId(Integer roleId);
 }

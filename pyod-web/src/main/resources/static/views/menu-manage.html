@@ -227,7 +227,6 @@
         $.ajax({
             url: getQueryMenuDetailUrl() + "?id=" + id,    //后台数据请求地址
             type: "post",
-            async: false,
             success: function (res) {
                 if (200 == res.code) {
                     var data = res.data;

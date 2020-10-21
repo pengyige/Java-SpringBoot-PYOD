@@ -25,6 +25,7 @@ import top.yigege.service.IRoleService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.util.Utils;
 import top.yigege.vo.LayuiTableResultBean;
+import top.yigege.vo.LayuiTreeBean;
 import top.yigege.vo.PageBean;
 import top.yigege.vo.ResultBean;
 
@@ -33,6 +34,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -58,7 +60,7 @@ public class RoleController {
 
     @ApiOperation(value = "添加或更新角色", notes = "添加一个新的角色", response = ResultBean.class)
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "id", value = "角色id", required = true, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "roleId", value = "角色id", required = true, dataType = "Int"),
             @ApiImplicitParam(paramType = "query", name = "name", value = "角色名称", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "remark", value = "备注", required = true, dataType = "String"),
     })
@@ -73,11 +75,11 @@ public class RoleController {
 
     @ApiOperation(value = "批量删除角色",  response = ResultBean.class)
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "ids", value = "角色ID,多个用,隔开", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "角色ID,多个用,隔开", required = true, dataType = "String"),
     })
     @PostMapping("/deleteRoleByIds")
-    public ResultBean deleteRoleByIds(@NotBlank(message = "角色ID不能为空") String ids) {
-        iRoleService.deleteRoleContainsRecord(Utils.parseIntegersList(Utils.splitStringToList(ids)));
+    public ResultBean deleteRoleByIds(@NotBlank(message = "角色ID不能为空") String id) {
+        iRoleService.deleteRoleContainsRecord(Utils.parseIntegersList(Utils.splitStringToList(id)));
         return ApiResultUtil.success();
     }
 
@@ -138,4 +140,27 @@ public class RoleController {
         iRoleService.bindRolePermission(roleId, Utils.parseIntegersList(Utils.splitStringToList(permissionId)));
         return ApiResultUtil.success(iRoleService.queryRoleInfo(roleId));
     }
+
+
+    @ApiOperation(value = "通过角色ID查询选中的菜单")
+    @ApiImplicitParam(paramType = "query", name = "id", value = "角色ID", required = true, dataType = "Int")
+    @PostMapping("/queryCheckedMenuByRoleId")
+    public List<LayuiTreeBean> queryCheckedMenuByRoleId(@NotNull Integer id) {
+        return iRoleService.queryCheckedMenusByRoleId(id);
+    }
+
+    @ApiOperation(value = "通过角色ID查询所有菜单")
+    @ApiImplicitParam(paramType = "query", name = "id", value = "角色ID", required = true, dataType = "Int")
+    @PostMapping("/queryAllMenuByRoleId")
+    public List<LayuiTreeBean> queryAllMenuByRoleId(@NotNull Integer id) {
+        return iRoleService.queryMenusByRoleId(id);
+    }
+
+    @ApiOperation(value = "通过角色ID查询选中权限")
+    @ApiImplicitParam(paramType = "query", name = "id", value = "角色ID", required = true, dataType = "Int")
+    @PostMapping("/queryCheckPermissionByRoleId")
+    public ResultBean queryCheckPermissionByRoleId(Integer id) {
+        return ApiResultUtil.success(iRoleService.queryAllPermissionByRoleId(id));
+    }
+
 }

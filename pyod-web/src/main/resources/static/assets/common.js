@@ -4,6 +4,7 @@ var config = {
     "contextPath":"/pyod"
 };
 
+
 function getBaseUrl() {
     return "http://" + config.ip + ":" + config.port  + config.contextPath;
 }
@@ -116,6 +117,23 @@ function getAddOrUpdateRoleUrl() {
 }
 
 /**
+ * 查询选中的角色菜单
+ * @returns {string}
+ */
+function getQueryCheckedMenuByRoleIdUrl() {
+    return getBaseUrl() + "/role/queryCheckedMenuByRoleId";
+}
+
+/**
+ * 查询角色下所有菜单
+ * @returns {string}
+ */
+function getQueryAllMenuByRoleIdUrl() {
+    return getBaseUrl() + "/role/queryAllMenuByRoleId";
+}
+
+
+/**
  * 查询所有权限
  * @returns {string}
  */
@@ -124,3 +142,13 @@ function getQueryPermissionListUrl() {
 }
 
 
+/**
+ * 获取url参数
+ * @param name
+ * @returns {*}
+ */
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg); //匹配目标参数
+    if (r != null) return unescape(r[2]); return null; //返回参数值
+}

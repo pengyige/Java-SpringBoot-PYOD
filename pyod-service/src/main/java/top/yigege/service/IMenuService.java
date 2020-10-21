@@ -18,5 +18,4 @@ public interface IMenuService extends IService<Menu> {
 
     List<LayuiTreeBean> queryTreeMenu();
 
-
 }

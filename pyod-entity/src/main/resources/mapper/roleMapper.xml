@@ -99,4 +99,28 @@
         </if>
     </select>
 
+    <select id="queryTreeMenusByRoleId" parameterType="java.lang.Integer" resultType="top.yigege.vo.LayuiTreeBean">
+        SELECT
+         m.id id , m.name title , m.pid pid,m.sort sort
+        FROM
+            role r
+            LEFT JOIN role_menu rm ON r.role_id = rm.role_id
+            LEFT JOIN menu m ON m.id = rm.menu_id
+            where r.role_id = #{value}
+            and m.status = 1
+    </select>
+
+    <select id="queryAllPermissionByRoleId" parameterType="java.lang.Integer" resultType="top.yigege.model.Permission">
+        SELECT
+        p.*
+        FROM
+        role r
+        LEFT JOIN role_permission rp ON r.role_id = rp.role_id
+        LEFT JOIN permission p ON rp.permission_id = p.permission_id
+        WHERE
+        r.role_id = #{value}
+    </select>
+
+
+
 </mapper>

@@ -1,7 +1,9 @@
 package top.yigege.service;
 
+import top.yigege.model.Permission;
 import top.yigege.model.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.yigege.vo.LayuiTreeBean;
 import top.yigege.vo.PageBean;
 
 import java.util.List;
@@ -61,4 +63,25 @@ public interface IRoleService extends IService<Role> {
      * @return
      */
     Role addOrUpdateRole(Role role, List<Integer> menuIds, List<Integer> permissionIds);
+
+    /**
+     * 查询选中的菜单
+     * @param roleId
+     * @return
+     */
+    List<LayuiTreeBean> queryCheckedMenusByRoleId(Integer roleId);
+
+    /**
+     * 查询所有菜单，同时添加选中
+     * @param roleId
+     * @return
+     */
+    List<LayuiTreeBean> queryMenusByRoleId(Integer roleId);
+
+    /**
+     * 通过角色ID获取权限
+     * @param roleId
+     * @return
+     */
+    List<Permission> queryAllPermissionByRoleId(Integer roleId);
 }

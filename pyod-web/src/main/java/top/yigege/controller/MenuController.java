@@ -40,7 +40,7 @@ public class MenuController {
     @Resource
     IMenuService iMenuService;
 
-    @ApiOperation(value = "获取用户菜单")
+    @ApiOperation(value = "获取所有菜单")
     @PostMapping("/queryTreeMenu")
     public  List<LayuiTreeBean> queryTreeMenu() {
         List<LayuiTreeBean> menuList = iMenuService.queryTreeMenu();

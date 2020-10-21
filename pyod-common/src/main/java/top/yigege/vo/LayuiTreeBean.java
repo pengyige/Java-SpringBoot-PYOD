@@ -85,4 +85,10 @@ public class LayuiTreeBean implements Comparable<LayuiTreeBean>{
     public int compareTo(LayuiTreeBean menu) {
         return this.sort - menu.sort;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.id == ((LayuiTreeBean)obj).id;
+    }
 }
