@@ -72,7 +72,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">父ID:</label>
                     <div class="layui-input-block">
-                        <input id="pid" name="pid" type="text" required lay-verify="required" placeholder="请输入父菜单ID"
+                        <input id="pid" name="pid" type="text" required lay-verify="required" placeholder="请输入父ID"
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
@@ -105,8 +105,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">状态</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="status" value="0" checked title="启用">
-                        <input type="radio" name="status" value="1" title="禁用" >
+                        <input type="radio" name="status" value="1" checked title="启用">
+                        <input type="radio" name="status" value="0" title="禁用" >
                     </div>
                 </div>
 
@@ -139,6 +139,7 @@
     var util = layui.util;
     var form = layui.form;
     var layer = layui.layer;
+    var autocomplete = layui.autocomplete;
 
     form.on('submit(submitBtn)', function (data) {
 
@@ -213,11 +214,14 @@
         $("#icon").val(data.icon);
         $("#url").val(data.url);
         $("#sort").val(data.sort);
-        if (0 == data.status) {
+        $("#remark").val(data.remark);
+        if (1 == data.status) {
             $("input[name=status]").eq(1).attr("checked", 'checked');
         } else {
             $("input[name=status]").eq(0).attr("checked", 'checked');
         }
+
+        form.render();
     }
 
     /**

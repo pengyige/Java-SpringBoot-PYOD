@@ -31,6 +31,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     void addUserRoleRecord(Integer userId,List<Integer> roleIds);
 
+
     List<Menu> queryMenusByUserNo(String no);
 
 }

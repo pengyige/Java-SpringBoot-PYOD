@@ -1,6 +1,7 @@
 package top.yigege.service.impl;
 
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
@@ -8,8 +9,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.yigege.constant.BusinessFlagEnum;
 import top.yigege.model.Menu;
 import top.yigege.model.User;
+import top.yigege.service.IGenerateIDService;
 import top.yigege.service.IUserService;
 import top.yigege.dao.*;
 import top.yigege.util.PageUtil;
@@ -37,6 +40,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     UserMapper userMapper;
 
+    @Autowired
+    IGenerateIDService iGenerateIDService;
+
     @Override
     public List<User> queryUserByNickname(List<String> nickname) {
         return userMapper.queryUserByNickname(nickname);
@@ -52,10 +58,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void bindUserRoles(Integer userId, List<Integer> roleIds) {
         //1.先解绑所有角色
-        userMapper.deleteUserRoles(userId);
-
+        if (null != userId) {
+             userMapper.deleteUserRoles(userId);
+        }
         //2. 绑定现有角色
-        userMapper.addUserRoleRecord(userId, roleIds);
+        if (!roleIds.isEmpty()) {
+            userMapper.addUserRoleRecord(userId, roleIds);
+        }
     }
 
     @Override
@@ -85,6 +94,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
 
         return menuTree;
+    }
+
+
+    @Transactional
+    @Override
+    public User addUser(User user, List<Integer> roleIds) {
+        //为新增时、添加NO
+        user.setNo(iGenerateIDService.getNo(BusinessFlagEnum.USER.getMsg()));
+        user.setPassword(DigestUtil.md5Hex(user.getPassword()));
+        save(user);
+
+        if (null != user.getUserId()) {
+            bindUserRoles(user.getUserId(), roleIds);
+        }
+
+        return queryUserRoles(user.getNo());
+    }
+
+    @Transactional
+    @Override
+    public void deleteUserById(Integer id) {
+        removeById(id);
+
+        //清空该用户的角色记录
+        userMapper.deleteUserRoles(id);
     }
 
     /**

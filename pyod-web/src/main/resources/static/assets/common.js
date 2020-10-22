@@ -9,6 +9,8 @@ function getBaseUrl() {
     return "http://" + config.ip + ":" + config.port  + config.contextPath;
 }
 
+
+/************用户模块API*************/
 /**
  * 用户登入
  * @returns {string}
@@ -18,10 +20,18 @@ function getUserLoginUrl() {
 }
 
 /**
+ * 通过ID删除用户
+ * @returns {string}
+ */
+function getDeleteUserByIdUrl() {
+    return getBaseUrl() + "/user/deleteUserById";
+}
+
+/**
  * 新增用户
  * @returns {string}
  */
-function getAddUserUrl() {
+function getAdduserUrl() {
     return getBaseUrl() + "/user/addUser";
 }
 
@@ -33,6 +43,20 @@ function getAddUserUrl() {
 function getUserInfoUrl() {
     return getBaseUrl() + "/user/queryUserInfo";
 }
+
+/**
+ * 查询用户信息
+ * @returns {string}
+ */
+function getLoadUserDetailUrl() {
+    return getBaseUrl() + "/user/loadUserDetail";
+}
+
+
+
+
+
+/************菜单模块API*************/
 
 /**
  * 查询菜单信息
@@ -84,6 +108,8 @@ function getDeleteMenuByIdUrl() {
     return getBaseUrl() + "/menu/deleteMenuById";
 }
 
+
+/************角色模块API*************/
 /**
  * 查询角色列表信息
  * @returns {string}
@@ -133,6 +159,8 @@ function getQueryAllMenuByRoleIdUrl() {
 }
 
 
+
+/************权限模块API*************/
 /**
  * 查询所有权限
  * @returns {string}
@@ -140,6 +168,35 @@ function getQueryAllMenuByRoleIdUrl() {
 function getQueryPermissionListUrl() {
     return getBaseUrl() + "/permission/queryPermissionList";
 }
+
+
+/**
+ * 查询权限详情
+ * @returns {string}
+ */
+function getQueryPermissionDetailUrl() {
+    return getBaseUrl() + "/permission/queryPermissionDetail";
+}
+
+/**
+ * 删除权限
+ * @returns {string}
+ */
+function getDeletePermissionByIdUrl() {
+    return getBaseUrl() + "/permission/deletePermissionById";
+}
+
+/**
+ * 添加或修改权限
+ * @returns {string}
+ */
+function getAddOrUpdatePermissionUrl() {
+    return getBaseUrl() + "/permission/addOrUpdatePermission";
+}
+
+
+
+
 
 
 /**

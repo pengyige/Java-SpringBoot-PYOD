@@ -7,13 +7,14 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,28 +71,35 @@ public class UserController {
     @Autowired
     IUserService iUserService;
 
-    @Autowired
-    IGenerateIDService iGenerateIDService;
-
-
-
-
-    @ApiOperation(value = "添加用户", notes = "添加一个新的用户", response = ResultBean.class)
+    @ApiOperation(value = "添加或更新用户", notes = "添加一个新的用户", response = ResultBean.class)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "nickname", value = "用户昵称", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "sex", value = "用户性别", required = true, dataType = "Int"),
             @ApiImplicitParam(paramType = "query", name = "tel", value = "用户手机号", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "remark", value = "备注", required = false, dataType = "String")
+            @ApiImplicitParam(paramType = "query", name = "remark", value = "备注", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "roleIds", value = "角色ID，多个ID用逗号隔开", required = false, dataType = "String")
 
     })
     @WebLog
     @RequestMapping("/addUser")
-    public ResultBean addUser(@Valid @ApiIgnore User user) {
-        user.setNo(iGenerateIDService.getNo(BusinessFlagEnum.USER.getMsg()));
-        user.setPassword(DigestUtil.md5Hex(user.getPassword()));
-        iUserService.save(user);
-        return ApiResultUtil.success(user);
+    public ResultBean addUser(@Valid @ApiIgnore User user, String roleIds) {
+        return ApiResultUtil.success(iUserService.addOrUpdateUser(user, Utils.parseIntegersList(Utils.splitStringToList(roleIds))));
+    }
+
+
+    public ResultBean updateUser(
+            Integer userId, String nickname,
+            Integer sex,
+            String tel,
+            String password,
+            String roleIds) {
+        User dbUser = iUserService.getById(userId);
+        if (StringUtils.isNotBlank(nickname)){
+
+        }
+
+            return ApiResultUtil.success(dbUser);
     }
 
 
@@ -113,24 +121,24 @@ public class UserController {
                                               @RequestParam(required = false) Integer userId,
                                               @RequestParam(required = false) String nickname,
                                               @RequestParam(required = false) String no,
-                                              @RequestParam(required = false, defaultValue = PyodConstant.Common.ALL+"") Integer sex,
+                                              @RequestParam(required = false, defaultValue = PyodConstant.Common.ALL + "") Integer sex,
                                               @RequestParam(required = false) String tel,
-                                              @RequestParam(required = false, defaultValue = PyodConstant.Common.ALL+"") Integer status) {
-        Map<String ,Object> paramMap = new HashMap<>();
-        paramMap.put("userId",userId);
-        paramMap.put("nickname",nickname);
-        paramMap.put("no",no);
-        paramMap.put("sex",sex);
-        paramMap.put("tel",tel);
-        paramMap.put("status",status);
+                                              @RequestParam(required = false, defaultValue = PyodConstant.Common.ALL + "") Integer status) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("userId", userId);
+        paramMap.put("nickname", nickname);
+        paramMap.put("no", no);
+        paramMap.put("sex", sex);
+        paramMap.put("tel", tel);
+        paramMap.put("status", status);
 
         PageBean pageBean = new PageBean();
 
         int code = 0;
         String msg = ResultCodeEnum.SUCCESS.getMsg();
         try {
-            pageBean = iUserService.queryUserList(page,pageSize,paramMap);
-        }catch (Exception e) {
+            pageBean = iUserService.queryUserList(page, pageSize, paramMap);
+        } catch (Exception e) {
             code = ResultCodeEnum.ERROR.getCode();
             msg = ResultCodeEnum.ERROR.getMsg();
             LOGGER.error(e.getMessage(), e);
@@ -146,8 +154,8 @@ public class UserController {
     @WebLog
     @PostMapping()
     @RequestMapping(value = "/loadUserDetail", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResultBean<User> loadUserDetail(@RequestParam("userid") @ApiIgnore Integer userid) {
-        return ApiResultUtil.success(iUserService.getById(userid));
+    public ResultBean<User> loadUserDetail(@RequestParam("id") @ApiIgnore Integer id) {
+        return ApiResultUtil.success(iUserService.getById(id));
     }
 
     @ApiOperation(value = "通过昵称获取用户详情信息", notes = "通过昵称获取用户详情信息")
@@ -168,7 +176,7 @@ public class UserController {
     })
     @PostMapping("/bindRole}")
     public ResultBean bindRole(@NotNull(message = "用户ID不能为空") Integer userId,
-                               @NotNull(message = "角色ID不能为空")String roleId) {
+                               @NotNull(message = "角色ID不能为空") String roleId) {
 
         iUserService.bindUserRoles(userId, Utils.parseIntegersList(Utils.splitStringToList(roleId)));
         return ApiResultUtil.success();
@@ -181,13 +189,13 @@ public class UserController {
             @ApiImplicitParam(paramType = "query", name = "psw", value = "密码", required = true, dataType = "string")
     })
     @PostMapping("/login")
-    public ResultBean login(@NotNull(message = "用户编号不能为空")String userNo,
-                            @NotNull(message = "用户密码不能为空")String psw) {
+    public ResultBean login(@NotNull(message = "用户编号不能为空") String userNo,
+                            @NotNull(message = "用户密码不能为空") String psw) {
         // 根据用户名和密码创建 Token
         UsernamePasswordToken token = new UsernamePasswordToken(userNo, psw);
         // 获取 subject 认证主体
         Subject subject = SecurityUtils.getSubject();
-            // 开始认证，这一步会跳到我们自定义的 Realm 中
+        // 开始认证，这一步会跳到我们自定义的 Realm 中
         subject.login(token);
 
         return ApiResultUtil.success();
@@ -205,6 +213,15 @@ public class UserController {
         String userNo = SessionUtil.getUser().getNo();
         List<Menu> menuList = iUserService.queryMenusByUserNo(userNo);
         return ApiResultUtil.success(menuList);
+    }
+
+
+    @ApiOperation(value = "通过ID删除用户")
+    @ApiImplicitParam(paramType = "query", name = "id", value = "用户ID", required = true, dataType = "Int")
+    @PostMapping("/deleteUserById")
+    public ResultBean deleteUserById(@NotNull(message = "用户ID不能为空") Integer id) {
+        iUserService.deleteUserById(id);
+        return ApiResultUtil.success();
     }
 
 }

@@ -13,6 +13,7 @@ import top.yigege.constant.UserStatus;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class User extends Model<User> {
     private String remark;
 
     @TableField(exist = false)
-    private List<Role> roleList;
+    private List<Role> roleList = new ArrayList<>();
 
     public List<Role> getRoleList() {
         return roleList;

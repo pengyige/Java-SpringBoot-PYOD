@@ -121,6 +121,7 @@
     </insert>
 
 
+
     <select id="queryMenusByUserNo" parameterType="java.lang.String" resultType="top.yigege.model.Menu">
         SELECT
          m.*

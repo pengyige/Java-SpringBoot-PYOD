@@ -35,13 +35,6 @@ public interface IUserService extends IService<User> {
     User queryUserRoles(String no);
 
     /**
-     * 绑定用户角色
-     * @param userId
-     * @param roleIds
-     */
-    void bindUserRoles(Integer userId,List<Integer> roleIds);
-
-    /**
      * 查询用户列表
      * @param page
      * @param pageSize
@@ -57,4 +50,28 @@ public interface IUserService extends IService<User> {
      * @return
      */
     List<Menu> queryMenusByUserNo(String userNo);
+
+
+    /**
+     * 添加用户
+     * @param user
+     * @param roleIds
+     * @return
+     */
+    User addUser(User user, List<Integer> roleIds);
+
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
+    void deleteUserById(Integer id);
+
+    /**
+     * 绑定用户角色
+     * @param userId
+     * @param roleIds
+     */
+    void bindUserRoles(Integer userId,List<Integer> roleIds);
+
 }

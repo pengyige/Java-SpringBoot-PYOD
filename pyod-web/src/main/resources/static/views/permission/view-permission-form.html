@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">查看权限</div>
+            <form id="addUserForm" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权限名称:</label>
+                    <div class="layui-input-block">
+                        <input id="name" name="name" type="text" required lay-verify="required" placeholder="请输入角色名称"
+                              readonly  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注:</label>
+                    <div class="layui-input-block">
+                        <input id="remark" name="remark" type="text" required placeholder="请输入角色备注"
+                               readonly autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var tree = layui.tree;
+    var form = layui.form;
+    var layer = layui.layer;
+    var id = null;
+
+
+
+
+
+    /**
+     * 初始化权限数据
+     */
+    function initPermissionData() {
+        $.ajax({
+            url: getQueryPermissionDetailUrl()+"?id="+id,    //后台数据请求地址
+            type: "post",
+            success: function (res) {
+                if (200 == res.code) {
+                    $("#name").val(res.data.name);
+                    $('#remark').val(res.data.remark);
+                }
+            }
+        });
+    }
+
+
+
+    $(function () {
+        id = getUrlParam("id");
+
+        initPermissionData();
+    });
+
+
+
+</script>
+
+</body>
+</html>

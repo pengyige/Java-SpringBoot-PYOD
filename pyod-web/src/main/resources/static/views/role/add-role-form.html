@@ -188,7 +188,7 @@
             url: getQueryPermissionListUrl(),    //后台数据请求地址
             type: "post",
             success: function (res) {
-                if (200 == res.code) {
+                if (0 == res.code) {
                     var permissionBoxContent = "";
                     for (var i = 0 ; i < res.data.length; i++) {
                         var permission = res.data[i];

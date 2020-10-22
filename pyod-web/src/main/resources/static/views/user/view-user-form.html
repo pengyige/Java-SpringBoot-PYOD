@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">查看用户</div>
+            <form id="addUserForm" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名:</label>
+                    <div class="layui-input-block">
+                        <input id="nickname" name="nickname" type="text" required lay-verify="required"
+                               placeholder="请输入用户名"
+                               readonly autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系方式:</label>
+                    <div class="layui-input-block">
+                        <input id="tel" name="tel" type="text" required lay-verify="required" placeholder="请输入手机号"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="0" title="男" checked>
+                        <input type="radio" name="sex" value="1" title="女" >
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <textarea id="remark" name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>角色绑定</legend>
+                </fieldset>
+
+                <div style="text-align: center">
+                    <button id="bindRoleBtn" class="layui-btn layui-btn-blue">立即绑定</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var form = layui.form;
+    var layer = layui.layer;
+    var id = null;
+    var currentUser = {};
+
+    form.on('submit()', function(data){
+
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+    /**
+     * 加载用户详情
+     */
+    function loadUserDetail() {
+        $.ajax({
+            url: getLoadUserDetailUrl() + "?id=" + id,
+            method: 'post',
+            success: function (res) {
+                if (200 == res.code) {
+                    currentUser = res.data;
+                    $("#nickname").val(currentUser.nickname);
+                    $("#tel").val(currentUser.tel);
+
+                    if (0 == currentUser.sex) {
+                        $("input[name=sex]").eq(0).attr("checked", 'checked');
+                    } else {
+                        $("input[name=sex]").eq(1).attr("checked", 'checked');
+                    }
+
+                    $("#remark").val(currentUser.remark);
+
+                    if (null != currentUser.roleList) {
+                        var text = "";
+                        currentUser.roleList.forEach(function (item, index) {
+                            text += item.name+" ";
+                        });
+                        if ("" == text) {
+                            text = "暂未绑定任何角色";
+                        }
+                        $("#bindRoleBtn").html(text);
+                    }
+
+                    form.render();
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+
+    $(function () {
+        id = getUrlParam("id");
+
+        loadUserDetail();
+    });
+
+</script>
+
+</body>
+</html>

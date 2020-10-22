@@ -15,9 +15,9 @@
         <div class="pagewrap">
                 <span class="layui-breadcrumb">
                   <a href="">系统设置</a>
-                  <a><cite>用户管理</cite></a>
+                  <a><cite>权限管理</cite></a>
                 </span>
-            <h2 class="title">用户管理</h2>
+            <h2 class="title">权限管理</h2>
         </div>
     </div>
     <div class="layui-row">
@@ -26,38 +26,13 @@
                 <div class="form-box">
                     <div class="layui-form layui-form-item">
                         <div class="layui-inline">
-                            <div class="layui-form-mid">用户ID:</div>
+                            <div class="layui-form-mid">权限ID:</div>
                             <div class="layui-input-inline" style="width: 100px;">
-                                <input id="userId" type="text" autocomplete="off" class="layui-input">
+                                <input id="id" type="text" autocomplete="off" class="layui-input">
                             </div>
-                            <div class="layui-form-mid">编号:</div>
+                            <div class="layui-form-mid">权限昵称:</div>
                             <div class="layui-input-inline" style="width: 100px;">
-                                <input id="no" type="text" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-form-mid">昵称:</div>
-                            <div class="layui-input-inline" style="width: 100px;">
-                                <input id="nickname" type="text" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-form-mid">电话:</div>
-                            <div class="layui-input-inline" style="width: 100px;">
-                                <input id="tel" type="text" autocomplete="off" class="layui-input">
-                            </div>
-
-                            <div class="layui-form-mid">性别:</div>
-                            <div class="layui-input-inline" style="width: 100px;">
-                                <select name="sex">
-                                    <option value="-1" selected="selected">全部</option>
-                                    <option value="0">男</option>
-                                    <option value="1">女</option>
-                                </select>
-                            </div>
-                            <div class="layui-form-mid">状态:</div>
-                            <div class="layui-input-inline" style="width: 100px;">
-                                <select name="status">
-                                    <option value="-1" selected="selected">全部</option>
-                                    <option value="1">正常</option>
-                                    <option value="2">异常</option>
-                                </select>
+                                <input id="name" type="text" autocomplete="off" class="layui-input">
                             </div>
 
                         </div>
@@ -86,32 +61,60 @@
     var table = layui.table;
     var layer = layui.layer;
 
+    /**
+     * 初始化表格
+     */
+    function initTable() {
+        //展示已知数据
+        table.render({
+            elem: '#demo'
+            , id: 'demo'
+            , url: getQueryPermissionListUrl()
+            , method: 'post'
+            , request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , cols: [[ //标题栏
+                //{type:'radio'},
+                {field: 'permissionId', title: 'permissionId', sort: true}
+                , {field: 'name', title: '角色名称'}
+                , {field: 'remark', title: '备注'}
+                , {fixed: 'right', title:'操作', toolbar: '#barDemo'}
+            ]]
+            , skin: 'line' //表格风格
+            , even: true
+            , page: false //是否显示分页
+      /*      , limits: [10, 20, 50]
+            , limit: 10 //每页默认显示的数量*/
+        });
+    }
+
     //监听工具条
     table.on('tool()', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
         var data = obj.data; //获得当前行数据
         var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
         var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
 
-        var id = data.userId;
+        var id = data.permissionId;
         if(layEvent === 'view'){ //查看
             layer.open({
                 type: 2,
                 title:'',
-                area:['700px','500px'],
+                area:['500px','500px'],
                 maxmin:true,
-                content: './user/view-user-form.html?id='+id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                content: './permission/view-permission-form.html?id='+id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             });
             //do somehing
         } else if(layEvent === 'del'){ //删除
-            layer.confirm('确定删除'+data.name+'用户吗?', function(index){
+            layer.confirm('确定删除'+data.name+'权限吗?', function(index){
                 var loading = null;
                 $.ajax({
-                    url:getDeleteUserByIdUrl()+"?id="+id,
+                    url:getDeletePermissionByIdUrl()+"?id="+id,
                     method:'post',
                     dataType:'json',
                     beforeSend:function(){
                         loading = layer.msg('加载中...', {icon: 16, shade: 0.3, time:0});
-
                     },
                     complete:function() {
                         layer.close(loading);
@@ -135,52 +138,12 @@
             layer.open({
                 type: 2,
                 title:'',
-                area:['700px','500px'],
+                area:['500px','500px'],
                 maxmin:true,
-                content: './user/edit-user-form.html?id='+id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                content: './permission/edit-permission-form.html?id='+id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             });
         }
     });
-
-    /**
-     * 初始化表格
-     */
-    function initTable() {
-        //展示已知数据
-        table.render({
-            elem: '#demo'
-            , id: 'demo'
-            , url: getQueryUserListUrl()
-            , method: 'post'
-            , request: {
-                pageName: 'page' //页码的参数名称，默认：page
-                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            }
-            , cols: [[ //标题栏
-                {field: 'userId', title: 'ID', width: 80, sort: true}
-                , {field: 'no', title: '编号', width: 80}
-                , {field: 'nickname', title: '昵称', minWidth: 80}
-                , {field: 'tel', title: '电话', minWidth: 80}
-                , {
-                    field: 'sex', title: '性别', width: 80, templet: function (d) {
-                        return d.sex == 0 ? '男' : '女';
-                    }
-                }
-                , {
-                    field: 'status', title: '状态', width: 80, templet: function (d) {
-                        return d.status == 1 ? '正常' : '异常';
-                    }
-                }
-                , {fixed: 'right', title:'操作', toolbar: '#barDemo'}
-            ]]
-            , skin: 'line' //表格风格
-            , even: true
-            , page: true //是否显示分页
-            , limits: [10, 20, 50]
-            , limit: 10 //每页默认显示的数量
-        });
-    }
-
 
 
     /**
@@ -189,16 +152,9 @@
     function reloadTable() {
 
         table.reload('demo', {
-            page: {
-                curr: 1 //重新从第 1 页开始
-            }
-            , where: {
-                userId: $("#userId").val(),
-                no: $("#no").val(),
-                nickname: $("#nickname").val(),
-                tel: $("#tel").val(),
-                sex: $("select[name=sex]").val(),
-                status: $("select[name=status]").val()
+            where: {
+                permissionId: $("#id").val(),
+                name: $("#name").val()
             }
         }, 'data');
     }
@@ -207,15 +163,9 @@
      * 重置
      */
     function clearConditionInput() {
-        $("#userId").val("");
+        $("#id").val("");
         $("#no").val("");
-        $("#nickname").val("");
-        $("#tel").val("");
-
-        var select = 'dd[lay-value=' + -1 + ']';
-        $("select[name=sex]").siblings("div.layui-form-select").find('dl').find(select).click();
-        $("select[name=status]").siblings("div.layui-form-select").find('dl').find(select).click();
-
+        $("#name").val("");
     }
 
     $(function () {
@@ -237,9 +187,9 @@
             layer.open({
                 type: 2,
                 title:'',
-                area:['700px','500px'],
+                area:['500px','500px'],
                 maxmin:true,
-                content: './user/add-user-form.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                content: './permission/add-permission-form.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 //btn: ['添加', '取消'],
                 yes: function (index, layero) {
                     //TODO 发送添加用户请求
