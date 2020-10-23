@@ -71,7 +71,7 @@ public class UserController {
     @Autowired
     IUserService iUserService;
 
-    @ApiOperation(value = "添加或更新用户", notes = "添加一个新的用户", response = ResultBean.class)
+    @ApiOperation(value = "添加用户", notes = "添加一个新的用户", response = ResultBean.class)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "nickname", value = "用户昵称", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "sex", value = "用户性别", required = true, dataType = "Int"),
@@ -84,22 +84,49 @@ public class UserController {
     @WebLog
     @RequestMapping("/addUser")
     public ResultBean addUser(@Valid @ApiIgnore User user, String roleIds) {
-        return ApiResultUtil.success(iUserService.addOrUpdateUser(user, Utils.parseIntegersList(Utils.splitStringToList(roleIds))));
+        return ApiResultUtil.success(iUserService.addUser(user, Utils.parseIntegersList(Utils.splitStringToList(roleIds))));
     }
 
 
+    @ApiOperation(value = "更新用户",  response = ResultBean.class)
+    @ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
+    @RequestMapping("/updateUser")
     public ResultBean updateUser(
-            Integer userId, String nickname,
+            @NotNull(message = "用户ID不能为空") Integer userId,
+            String nickname,
             Integer sex,
             String tel,
             String password,
+            String remark,
             String roleIds) {
         User dbUser = iUserService.getById(userId);
         if (StringUtils.isNotBlank(nickname)){
-
+            dbUser.setNickname(nickname);
         }
 
-            return ApiResultUtil.success(dbUser);
+        if (null != sex) {
+            dbUser.setSex(sex);
+        }
+
+        if (StringUtils.isNotBlank(tel)) {
+            dbUser.setTel(tel);
+        }
+
+        if (StringUtils.isNotBlank(password)) {
+            dbUser.setPassword(DigestUtil.md5Hex(password));
+        }
+
+        if (StringUtils.isNotEmpty(remark)) {
+            dbUser.setRemark(remark);
+        }
+
+        iUserService.updateById(dbUser);
+        if (StringUtils.isNotBlank(roleIds)) {
+            iUserService.bindUserRoles(userId, Utils.parseIntegersList(Utils.splitStringToList(roleIds)));
+            dbUser = iUserService.getById(userId);
+        }
+
+        return ApiResultUtil.success(dbUser);
     }
 
 

@@ -17,7 +17,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">用户名:</label>
                     <div class="layui-input-block">
-                        <input id="nickname" name="nickname" type="text" required lay-verify="required" placeholder="请输入用户名"
+                        <input id="nickname" name="nickname" type="text" required lay-verify="required"
+                               placeholder="请输入用户名"
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
@@ -50,7 +51,7 @@
                     <label class="layui-form-label">性别</label>
                     <div class="layui-input-block">
                         <input type="radio" name="sex" value="0" title="男" checked>
-                        <input type="radio" name="sex" value="1" title="女" >
+                        <input type="radio" name="sex" value="1" title="女">
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
@@ -65,14 +66,17 @@
                     <legend>角色绑定</legend>
                 </fieldset>
 
-                <div style="text-align: center">
-                    <button id="bindRoleBtn"  class="layui-btn layui-btn-blue"  >立即绑定</button>
+                <div class="layui-form-item" style="margin-top: 10px;text-align: center">
+                    <div class="layui-input-block">
+                        <button id="bindRoleBtn" class="layui-btn layui-btn-blue">立即绑定</button>
+                    </div>
                 </div>
 
 
                 <div class="layui-form-item" style="margin-top: 10px">
                     <div class="layui-input-block">
-                        <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue"  >提交<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue">
+                            提交<i id="btnIcon" class="icon iconfont"></i></button>
                         <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
@@ -93,7 +97,7 @@
     var currentUser = {};
 
     form.verify({
-        confirmPassword:function(value, item){
+        confirmPassword: function (value, item) {
             if (value == null || value == "") {
                 return "此项不能为空";
             }
@@ -105,7 +109,7 @@
         }
     });
 
-    form.on('submit(submitBtn)', function(data){
+    form.on('submit(submitBtn)', function (data) {
 
         submit();
 
@@ -114,25 +118,24 @@
     });
 
 
-
-    $(function (){
+    $(function () {
         id = getUrlParam("id");
+        top.chooseData = [];
 
         loadUserDetail();
 
 
-        $("#bindRoleBtn").click(function (){
-            layer.open({
+        $("#bindRoleBtn").click(function () {
+            top.layer.open({
                 type: 2,
-                title:'',
-                area:['600px','400px'],
-                maxmin:true,
-                content: './../../views/role/choose-role-form.html',
-                end:function(){
+                title: '',
+                area: ['600px', '500px'],
+                content: 'views/role/choose-role-form.html',
+                end: function () {
                     //处理选中的角色
                     var text = "";
-                    chooseData.forEach(function (item,index) {
-                        text += item.name+" ";
+                    top.chooseData.forEach(function (item, index) {
+                        text += item.name + " ";
 
                     });
 
@@ -143,7 +146,7 @@
                 }
             });
         });
-    });
+    })
 
 
     /**
@@ -167,10 +170,11 @@
 
                     $("#remark").val(currentUser.remark);
 
+                    top.chooseData = currentUser.roleList;
                     if (null != currentUser.roleList) {
                         var text = "";
                         currentUser.roleList.forEach(function (item, index) {
-                            text += item.name+" ";
+                            text += item.name + " ";
                         });
                         if ("" == text) {
                             text = "暂未绑定任何角色";
@@ -189,43 +193,43 @@
     /**
      * 提交
      */
-    function submit(){
+    function submit() {
 
         var roleIds = "";
-        chooseData.forEach(function (item,index){
+        top.chooseData.forEach(function (item, index) {
             roleIds += item.roleId + ",";
         });
 
         if ("" != roleIds) {
             roleIds = roleIds.substring(0, roleIds.length - 1);
-        };
+        }
+        ;
         $.ajax({
-            url:getAddOrUpdateUserUrl()+"?userId="+id+"&roleIds="+roleIds,
-            method:'post',
-            data:$('#addUserForm').serialize(),
-            dataType:'json',
-            beforeSend:function(){
-                $("#submitBtn").attr("disabled","true");
+            url: getUpdateUserUrl() + "?userId=" + id + "&roleIds=" + roleIds,
+            method: 'post',
+            data: $('#addUserForm').serialize(),
+            dataType: 'json',
+            beforeSend: function () {
+                $("#submitBtn").attr("disabled", "true");
                 $("#btnIcon").addClass("iconjiazaizhong");
 
             },
-            complete:function() {
+            complete: function () {
                 $("#submitBtn").removeAttr("disabled");
                 $("#btnIcon").removeClass("iconjiazaizhong");
             },
-            success:function (res) {
+            success: function (res) {
                 if (200 == res.code) {
-                    layer.confirm("修改成功");
-                }else {
+                    layer.msg("修改成功");
+                } else {
                     layer.msg(res.message);
                 }
             },
-            error:function () {
+            error: function () {
                 layer.msg("网络错误");
             }
         });
     }
-
 
 
 </script>

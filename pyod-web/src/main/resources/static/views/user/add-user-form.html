@@ -89,7 +89,6 @@
         var form = layui.form;
         var layer = layui.layer;
 
-        var chooseData = [];
 
         form.verify({
             confirmPassword:function(value, item){
@@ -113,17 +112,18 @@
         });
 
         $(function (){
+            top.chooseData  = [];
+
             $("#bindRoleBtn").click(function (){
-                layer.open({
+                top.layer.open({
                     type: 2,
                     title:'',
-                    area:['600px','400px'],
-                    maxmin:true,
-                    content: './../../views/role/choose-role-form.html',
+                    area:['600px','500px'],
+                    content: 'views/role/choose-role-form.html',
                     end:function(){
                         //处理选中的角色
                         var text = "";
-                        chooseData.forEach(function (item,index) {
+                        top.chooseData.forEach(function (item,index) {
                             text += item.name+" ";
 
                         });
@@ -141,7 +141,7 @@
         function submit(){
 
             var roleIds = "";
-            chooseData.forEach(function (item,index){
+            top.chooseData.forEach(function (item,index){
                 roleIds += item.roleId + ",";
             });
 
@@ -149,7 +149,7 @@
                 roleIds = roleIds.substring(0, roleIds.length - 1);
             };
             $.ajax({
-                url:getAddOrUpdateUserUrl()+"?roleIds="+roleIds,
+                url:getAddUserUrl()+"?roleIds="+roleIds,
                 method:'post',
                 data:$('#addUserForm').serialize(),
                 dataType:'json',
@@ -186,6 +186,8 @@
                 }
             });
         }
+
+
     </script>
 
 </body>

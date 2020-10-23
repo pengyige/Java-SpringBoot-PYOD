@@ -120,10 +120,10 @@
         //确定
         $("#okBtn").click(function() {
             var checkData = table.checkStatus('demo');
-            parent.chooseData = checkData.data;
+            top.chooseData = checkData.data;
 
-            var outIndex = parent.layer.getFrameIndex(window.name);
-            parent.layer.close(outIndex);
+            var outIndex = top.layer.getFrameIndex(window.name);
+            top.layer.close(outIndex);
         });
 
     });

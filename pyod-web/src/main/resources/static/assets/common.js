@@ -31,8 +31,16 @@ function getDeleteUserByIdUrl() {
  * 新增用户
  * @returns {string}
  */
-function getAdduserUrl() {
+function getAddUserUrl() {
     return getBaseUrl() + "/user/addUser";
+}
+
+/**
+ * 更新用户
+ * @returns {string}
+ */
+function getUpdateUserUrl() {
+    return getBaseUrl() + "/user//updateUser";
 }
 
 
