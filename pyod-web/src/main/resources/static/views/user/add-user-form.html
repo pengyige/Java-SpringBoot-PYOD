@@ -66,7 +66,7 @@
                 </fieldset>
 
                 <div style="text-align: center">
-                    <button id="bindRoleBtn"  class="layui-btn layui-btn-blue"  >立即绑定</button>
+                    <button id="bindRoleBtn" type="button" class="layui-btn layui-btn-blue"  >立即绑定</button>
                 </div>
 
 
@@ -116,6 +116,7 @@
 
             $("#bindRoleBtn").click(function (){
                 top.layer.open({
+                    id:"add-user-choose-role-diloag",
                     type: 2,
                     title:'',
                     area:['600px','500px'],

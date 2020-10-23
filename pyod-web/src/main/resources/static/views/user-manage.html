@@ -95,6 +95,7 @@
         var id = data.userId;
         if(layEvent === 'view'){ //查看
             layer.open({
+                id:"view-user-form",
                 type: 2,
                 title:'',
                 area:['700px','500px'],
@@ -132,6 +133,7 @@
         } else if(layEvent === 'edit'){ //编辑
             //do something
             layer.open({
+                id:"edit-user-form",
                 type: 2,
                 title:'',
                 area:['700px','500px'],
@@ -234,6 +236,7 @@
         //添加
         $("#addBtn").click(function () {
             layer.open({
+                id:"add-user-form",
                 type: 2,
                 title:'',
                 area:['700px','500px'],

@@ -68,7 +68,7 @@
 
                 <div class="layui-form-item" style="margin-top: 10px;text-align: center">
                     <div class="layui-input-block">
-                        <button id="bindRoleBtn" class="layui-btn layui-btn-blue">立即绑定</button>
+                        <button id="bindRoleBtn" type="button" class="layui-btn layui-btn-blue" onclick="openChooseRoleDialog()" >立即绑定</button>
                     </div>
                 </div>
 
@@ -118,6 +118,29 @@
     });
 
 
+    function openChooseRoleDialog(){
+        top.layer.open({
+            id:"edit-user-choose-role-form",
+            type: 2,
+            title: '',
+            area: ['600px', '500px'],
+            content: 'views/role/choose-role-form.html',
+            end: function () {
+                //处理选中的角色
+                var text = "";
+                top.chooseData.forEach(function (item, index) {
+                    text += item.name + " ";
+
+                });
+
+                if ("" == text) {
+                    text = "立即绑定";
+                }
+                $("#bindRoleBtn").html(text);
+            }
+        });
+    }
+
     $(function () {
         id = getUrlParam("id");
         top.chooseData = [];
@@ -125,27 +148,9 @@
         loadUserDetail();
 
 
-        $("#bindRoleBtn").click(function () {
-            top.layer.open({
-                type: 2,
-                title: '',
-                area: ['600px', '500px'],
-                content: 'views/role/choose-role-form.html',
-                end: function () {
-                    //处理选中的角色
-                    var text = "";
-                    top.chooseData.forEach(function (item, index) {
-                        text += item.name + " ";
+        /*$("#bindRoleBtn").click(function () {
 
-                    });
-
-                    if ("" == text) {
-                        text = "立即绑定";
-                    }
-                    $("#bindRoleBtn").html(text);
-                }
-            });
-        });
+        });*/
     })
 
 
