@@ -22,6 +22,11 @@ public class PyodConstant {
          * session 用户
          */
         String SESSION_USER_KEY = "session_user_key";
+
+        /**
+         * 当前用户选中角色
+         */
+        String SESSION_USER_CHECKED_ROLE = "session_user_checked_role";
     }
 
     public interface Common {

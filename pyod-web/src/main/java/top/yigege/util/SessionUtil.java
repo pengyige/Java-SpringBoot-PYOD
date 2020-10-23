@@ -1,6 +1,7 @@
 package top.yigege.util;
 
 import top.yigege.constant.PyodConstant;
+import top.yigege.model.Role;
 import top.yigege.model.User;
 
 import java.util.UUID;
@@ -45,6 +46,24 @@ public class SessionUtil {
      */
     public static void removeUser() {
         RequestHolder.removeSession(PyodConstant.PyodKey.SESSION_USER_KEY);
+    }
+
+
+    /**
+     * 添加角色session
+     *
+     * @param role
+     */
+    public static void setCurrentUserRole(Role role) {
+        RequestHolder.setSession(PyodConstant.PyodKey.SESSION_USER_CHECKED_ROLE, role);
+    }
+
+    /**
+     * 返回角色session
+     *
+     */
+    public static Role getCurrentUserRole() {
+       return (Role) RequestHolder.getSession(PyodConstant.PyodKey.SESSION_USER_CHECKED_ROLE);
     }
 
     /**

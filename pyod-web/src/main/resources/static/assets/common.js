@@ -20,6 +20,14 @@ function getUserLoginUrl() {
 }
 
 /**
+ * 设置当前用户角色
+ * @returns {string}
+ */
+function getSetCurrentUserRoleUrl() {
+    return getBaseUrl() + "/user/setCurrentUserRole";
+}
+
+/**
  * 通过ID删除用户
  * @returns {string}
  */
@@ -71,7 +79,7 @@ function getLoadUserDetailUrl() {
  * @returns {string}
  */
 function getMenuInfoUrl() {
-    return getBaseUrl() + "/user/queryUserMenu";
+    return getBaseUrl() + "/user/queryUserMenuByRole";
 }
 
 

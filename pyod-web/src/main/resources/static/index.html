@@ -21,7 +21,8 @@
 
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a id="name" href="javascript:;">BieJun</a>
+
+                <a  href="javascript:;"><div id="name"></div></a>
                 <dl class="layui-nav-child">
                     <dd><a href="">帮助中心</a></dd>
                     <dd><a href="login.html">退出</a></dd>
@@ -38,42 +39,42 @@
                 <h1>PYOD通用后台管理</h1>
             </div>
             <ul id="Nav" class="layui-nav layui-nav-tree">
-               <!-- <li class="layui-nav-item">
-                    <a href="javascript:;">
-                        <i class="layui-icon">&#xe609;</i>
-                        <em>主页</em>
-                    </a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="views/console.html">控制台</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">
-                        <i class="layui-icon">&#xe857;</i>
-                        <em>组件</em>
-                    </a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="views/form.html">表单</a></dd>
-                        <dd>
-                            <a href="javascript:;">页面</a>
-                            <dl class="layui-nav-child">
-                                <dd>
-                                    <a href="login.html">登录页</a>
-                                </dd>
-                            </dl>
-                        </dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">
-                        <i class="layui-icon">&#xe612;</i>
-                        <em>用户</em>
-                    </a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="views/users.html">用户组</a></dd>
-                        <dd><a href="views/operaterule.html">权限配置</a></dd>
-                    </dl>
-                </li>-->
+                <!-- <li class="layui-nav-item">
+                     <a href="javascript:;">
+                         <i class="layui-icon">&#xe609;</i>
+                         <em>主页</em>
+                     </a>
+                     <dl class="layui-nav-child">
+                         <dd><a href="views/console.html">控制台</a></dd>
+                     </dl>
+                 </li>
+                 <li class="layui-nav-item">
+                     <a href="javascript:;">
+                         <i class="layui-icon">&#xe857;</i>
+                         <em>组件</em>
+                     </a>
+                     <dl class="layui-nav-child">
+                         <dd><a href="views/form.html">表单</a></dd>
+                         <dd>
+                             <a href="javascript:;">页面</a>
+                             <dl class="layui-nav-child">
+                                 <dd>
+                                     <a href="login.html">登录页</a>
+                                 </dd>
+                             </dl>
+                         </dd>
+                     </dl>
+                 </li>
+                 <li class="layui-nav-item">
+                     <a href="javascript:;">
+                         <i class="layui-icon">&#xe612;</i>
+                         <em>用户</em>
+                     </a>
+                     <dl class="layui-nav-child">
+                         <dd><a href="views/users.html">用户组</a></dd>
+                         <dd><a href="views/operaterule.html">权限配置</a></dd>
+                     </dl>
+                 </li>-->
             </ul>
 
         </div>
@@ -99,7 +100,7 @@
     var $body = $('body'),
         element = layui.element,
         layer = layui.layer;
-        chooseData = [];
+    chooseData = [];
     var screen_size = {
         pc: [991, -1],
         pad: [768, 990],
@@ -186,7 +187,7 @@
     };
 
     //当前登入用户信息,菜单列表
-    var user = null, menuList = [];
+    var user = null, checkedRole = null, menuList = [];
     var tabs = new Tab('tabs'), navItems = [];
 
     $(function () {
@@ -326,7 +327,7 @@
      */
     function fillMenuData(menuList) {
         var liHtml = "";
-        for (var i = 0 ; i < menuList.length; i++) {
+        for (var i = 0; i < menuList.length; i++) {
             //添加到一级菜单
             liHtml += '<li class="layui-nav-item">';
             liHtml += getMenuAHtml(menuList[i]);
@@ -334,13 +335,13 @@
             if (menuList[i].subMenu.length != 0) {
                 //dl和ul一个性质 ,dd相当于li
                 liHtml += '<dl class="layui-nav-child">';
-                for (var j = 0 ; j < menuList[i].subMenu.length; j++) {
+                for (var j = 0; j < menuList[i].subMenu.length; j++) {
                     //添加到二级菜单里面
                     liHtml += '<dd>';
                     liHtml += getMenuAHtml(menuList[i].subMenu[j]);
                     if (menuList[i].subMenu[j].subMenu.length != 0) {
                         liHtml += '<dl class="layui-nav-child">'
-                        for (var k = 0 ; k < menuList[i].subMenu[j].subMenu.length; k++) {
+                        for (var k = 0; k < menuList[i].subMenu[j].subMenu.length; k++) {
                             //添加到三级菜单
                             liHtml += '<dd>';
                             liHtml += getMenuAHtml(menuList[i].subMenu[j].subMenu[k]);
@@ -357,11 +358,11 @@
         $("#Nav").html(liHtml);
     }
 
-    function getMenuAHtml (menu) {
-       return '<a href="'+menu.url+'">\n' +
-        '                        <i class="iconfont '+menu.icon+'"></i>\n' +
-        '                        <em>'+menu.name+'</em>\n' +
-        '                    </a>';
+    function getMenuAHtml(menu) {
+        return '<a href="' + menu.url + '">\n' +
+            '                        <i class="iconfont ' + menu.icon + '"></i>\n' +
+            '                        <em>' + menu.name + '</em>\n' +
+            '                    </a>';
     }
 
     /**
@@ -380,8 +381,11 @@
             },
             success: function (res) {
                 if (200 == res.code) {
-                    user = res.data;
-                    $("#name").text(user.nickname + "(" + user.no + ")");
+                    user = res.data.user;
+                    checkedRole = res.data.checkedRole;
+                    var content = "<span >"+user.nickname+"("+user.no +")</span>,";
+                    content += "<span >"+checkedRole.name+"("+checkedRole.roleNo +")</span>";
+                    $("#name").html(content);
                 } else {
                     layer.msg(res.message);
                 }

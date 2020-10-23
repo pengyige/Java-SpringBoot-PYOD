@@ -31,6 +31,7 @@ import top.yigege.constant.PyodConstant;
 import top.yigege.constant.ResultCodeEnum;
 import top.yigege.global.GlobalExceptionHandler;
 import top.yigege.model.Menu;
+import top.yigege.model.Role;
 import top.yigege.model.User;
 import top.yigege.service.IGenerateIDService;
 import top.yigege.service.IUserService;
@@ -89,7 +90,16 @@ public class UserController {
 
 
     @ApiOperation(value = "更新用户",  response = ResultBean.class)
-    @ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "String")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户ID", required = true, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "nickname", value = "昵称", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "sex", value = "性别", required = false, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "tel", value = "联系方式", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "remark", value = "备注", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "roleIds", value = "角色ID，多个ID用逗号隔开", required = false, dataType = "String")
+
+    })
     @RequestMapping("/updateUser")
     public ResultBean updateUser(
             @NotNull(message = "用户ID不能为空") Integer userId,
@@ -123,7 +133,7 @@ public class UserController {
         iUserService.updateById(dbUser);
         if (StringUtils.isNotBlank(roleIds)) {
             iUserService.bindUserRoles(userId, Utils.parseIntegersList(Utils.splitStringToList(roleIds)));
-            dbUser = iUserService.getById(userId);
+            dbUser = iUserService.queryUserRoles(dbUser.getNo());
         }
 
         return ApiResultUtil.success(dbUser);
@@ -182,7 +192,7 @@ public class UserController {
     @PostMapping()
     @RequestMapping(value = "/loadUserDetail", method = {RequestMethod.POST, RequestMethod.GET})
     public ResultBean<User> loadUserDetail(@RequestParam("id") @ApiIgnore Integer id) {
-        return ApiResultUtil.success(iUserService.getById(id));
+        return ApiResultUtil.success(iUserService.queryUserRolesById(id));
     }
 
     @ApiOperation(value = "通过昵称获取用户详情信息", notes = "通过昵称获取用户详情信息")
@@ -225,20 +235,38 @@ public class UserController {
         // 开始认证，这一步会跳到我们自定义的 Realm 中
         subject.login(token);
 
-        return ApiResultUtil.success();
+        return ApiResultUtil.success(SessionUtil.getUser());
     }
 
     @ApiOperation(value = "通过获取当前用户信息")
     @PostMapping("/queryUserInfo")
     public ResultBean queryUserInfo() {
-        return ApiResultUtil.success(SessionUtil.getUser());
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("user",SessionUtil.getUser());
+        returnMap.put("checkedRole",SessionUtil.getCurrentUserRole());
+        return ApiResultUtil.success(returnMap);
     }
 
-    @ApiOperation(value = "获取用户菜单")
-    @PostMapping("/queryUserMenu")
-    public ResultBean queryUserMenu() {
-        String userNo = SessionUtil.getUser().getNo();
-        List<Menu> menuList = iUserService.queryMenusByUserNo(userNo);
+    @ApiOperation(value = "设置当前用户选择的角色")
+    @PostMapping("/setCurrentUserRole")
+    public ResultBean setCurrentUserRole(@NotNull(message = "角色ID不能为空") Integer roleId) {
+
+        List<Role> roleList = SessionUtil.getUser().getRoleList();
+        for (Role role : roleList) {
+            if (role.getRoleId().equals(roleId)) {
+                SessionUtil.setCurrentUserRole(role);
+                break;
+            }
+        }
+
+        return ApiResultUtil.success();
+    }
+
+
+    @ApiOperation(value = "通过用户角色获取菜单")
+    @PostMapping("/queryUserMenuByRole")
+    public ResultBean queryUserMenuByRole() {
+        List<Menu> menuList = iUserService.queryMenusByRoleNo(SessionUtil.getCurrentUserRole().getRoleNo());
         return ApiResultUtil.success(menuList);
     }
 

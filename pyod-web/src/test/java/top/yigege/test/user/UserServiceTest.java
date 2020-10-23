@@ -98,7 +98,7 @@ public class UserServiceTest {
 
     @Test
     public void queryUserMenuTest() {
-        List<Menu> menuList = userService.queryMenusByUserNo("admin");
+        List<Menu> menuList = userService.queryMenusByRoleNo("admin");
         LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(menuList)));
     }
 

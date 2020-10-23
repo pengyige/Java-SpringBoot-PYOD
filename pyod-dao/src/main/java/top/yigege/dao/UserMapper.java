@@ -27,11 +27,15 @@ public interface UserMapper extends BaseMapper<User> {
 
     User queryUserRoles(String no);
 
+    User queryUserRolesById(Integer id);
+
+
     void deleteUserRoles(Integer userId);
 
     void addUserRoleRecord(Integer userId,List<Integer> roleIds);
 
 
-    List<Menu> queryMenusByUserNo(String no);
+    List<Menu> queryMenusByRoleNo(String no);
+
 
 }

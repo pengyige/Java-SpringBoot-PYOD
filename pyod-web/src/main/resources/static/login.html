@@ -10,64 +10,110 @@
     <title>管理后台</title>
 </head>
 <body class="login-wrap">
-    <div class="login-container">
-        <form class="login-form">
-            <div class="input-group">
-                <input type="text" lay-verify="required" id="username" class="input-field">
-                <label for="username"  class="input-label">
-                    <span class="label-title">用户名</span>
-                </label>
-            </div>
-            <div class="input-group">
-                <input type="password" lay-verify="required" id="password" class="input-field">
-                <label for="password" class="input-label">
-                    <span class="label-title">密码</span>
-                </label>
-            </div>
-            <button id="login" type="button" class="login-button">登录<i id="btnIcon" class="icon"></i></button>
-        </form>
-    </div>
+<div class="login-container">
+    <form class="login-form">
+        <div class="input-group">
+            <input type="text" lay-verify="required" id="username" class="input-field">
+            <label for="username" class="input-label">
+                <span class="label-title">用户名</span>
+            </label>
+        </div>
+        <div class="input-group">
+            <input type="password" lay-verify="required" id="password" class="input-field">
+            <label for="password" class="input-label">
+                <span class="label-title">密码</span>
+            </label>
+        </div>
+        <button id="login" type="button" class="login-button">登录<i id="btnIcon" class="icon"></i></button>
+    </form>
+</div>
 </body>
 <script src="assets/layui.all.js"></script>
 <script src="assets/jquery.js"></script>
 <script src="assets/common.js"></script>
 <script>
-    $(function(){
+    $(function () {
 
-        $('.input-field').on('change',function(){
+        $('.input-field').on('change', function () {
             var $this = $(this),
                 value = $.trim($this.val()),
                 $parent = $this.parent();
-            if(value !== '' && !$parent.hasClass('field-focus')){
+            if (value !== '' && !$parent.hasClass('field-focus')) {
                 $parent.addClass('field-focus');
-            }else{
+            } else {
                 $parent.removeClass('field-focus');
             }
         });
 
 
-        $('#login').click(function (){
+        $('#login').click(function () {
             var userNo = $("#username").val();
             var psw = $("#password").val();
 
             var requqestParam = {
-                "userNo":userNo,
-                "psw":psw
+                "userNo": userNo,
+                "psw": psw
             };
 
             $.ajax({
-                url:getUserLoginUrl(),
-                method:'post',
-                data:requqestParam,
-                dataType:'json',
-                beforeSend:function(){
-                    $("#login").attr("disabled","true");
+                url: getUserLoginUrl(),
+                method: 'post',
+                data: requqestParam,
+                dataType: 'json',
+                beforeSend: function () {
+                    $("#login").attr("disabled", "true");
                     $("#btnIcon").addClass("icon iconfont iconjiazaizhong");
 
                 },
-                complete:function() {
+                complete: function () {
                     $("#login").removeAttr("disabled");
                     $("#btnIcon").removeClass("icon iconfont iconjiazaizhong");
+                },
+                success: function (res) {
+                    if (200 == res.code) {
+                        if (res.data.roleList.length >= 2) {
+                            layer.open({
+                                title: '选择角色',
+                                type: 1,
+                                content: getSelectRoleHtml(res.data.roleList),
+                                btn: '确定',
+                                yes: function () {
+                                    var checkedRoleId = $("input[name=role]:checked").val();
+
+                                    setCurrentUserRole(checkedRoleId);
+                                }
+
+                            });
+
+                        } else {
+                            window.location.href = getBaseUrl();
+                        }
+                    } else {
+                        layer.msg(res.message);
+                    }
+                },
+                error: function () {
+                    layer.msg("网络错误");
+                }
+            });
+        });
+
+        /**
+         * 设置当前用户角色
+         * @param roleId
+         */
+        function setCurrentUserRole(roleId){
+            var loading = null;
+            $.ajax({
+                url:getSetCurrentUserRoleUrl()+"?roleId="+roleId,
+                method:'post',
+                dataType:'json',
+                beforeSend:function(){
+                    loading = layer.msg('加载中...', {icon: 16, shade: 0.3, time:0});
+
+                },
+                complete:function() {
+                    layer.close(loading);
                 },
                 success:function (res) {
                     if (200 == res.code) {
@@ -79,8 +125,24 @@
                 error:function () {
                     layer.msg("网络错误");
                 }
+
             });
-        });
+        }
+
+
+        function getSelectRoleHtml(roleList) {
+            var html = '';
+            roleList.forEach(function (item, index) {
+                if (index == 0) {
+                    html += '<input type="radio" name="role" value="' + item.roleId + '" title="' + item.name + '" checked>';
+                } else {
+                    html += '<input type="radio" name="role" value="' + item.roleId + '" title="' + item.name + '" >';
+                }
+            });
+
+            return html;
+
+        }
     });
 </script>
 </html>

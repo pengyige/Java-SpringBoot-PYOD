@@ -53,6 +53,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return userMapper.queryUserRoles(no);
     }
 
+    @Override
+    public User queryUserRolesById(Integer id) {
+        return userMapper.queryUserRolesById(id);
+    }
 
     @Transactional
     @Override
@@ -76,9 +80,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public List<Menu> queryMenusByUserNo(String userNo) {
+    public List<Menu> queryMenusByRoleNo(String roleNo) {
 
-        List<Menu> totalMenuList = userMapper.queryMenusByUserNo(userNo);
+        List<Menu> totalMenuList = userMapper.queryMenusByRoleNo(roleNo);
 
         List<Menu> menuTree = new ArrayList<>();
         for (Menu menu : totalMenuList) {

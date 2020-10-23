@@ -71,13 +71,19 @@ public class CustomRealm extends AuthorizingRealm {
         String userName = (String) authenticationToken.getPrincipal();
         String userPwd = new String((char[]) authenticationToken.getCredentials());
         //根据用户名从数据库获取密码
-        User user = iUserService.getOne(new QueryWrapper<User>().eq("no",userName));
+        User user = iUserService.queryUserRoles(userName);
         if (user == null) {
             throw new AccountException(userName+"用户不存在");
         } else if (!DigestUtil.md5Hex(userPwd).equals(user.getPassword())) {
             throw new AccountException("密码不正确");
+        } else if (user.getRoleList().isEmpty()) {
+            throw new AccountException("您还没有角色权限，请联系管理员");
         }
+
         SessionUtil.setUser(user);
+        if (user.getRoleList().size() == 1) {
+            SessionUtil.setCurrentUserRole(user.getRoleList().get(0));
+        }
         return new SimpleAuthenticationInfo(userName, userPwd,getName());
     }
 }
