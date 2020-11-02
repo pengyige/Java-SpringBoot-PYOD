@@ -24,8 +24,8 @@
 
                 <a  href="javascript:;"><div id="name"></div></a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">帮助中心</a></dd>
-                    <dd><a href="login.html">退出</a></dd>
+                    <dd><a href="javascript:;" onclick="viewMyProfile()">我的资料</a></dd>
+                    <dd><a href="javascript:;" onclick="layoutHanlder()">退出</a></dd>
                 </dl>
             </li>
         </ul>
@@ -396,6 +396,33 @@
         });
     }
 
+    /**
+     * 查看我的资料
+     */
+    function viewMyProfile() {
+        layer.open({
+            id:"view-user-form",
+            type: 2,
+            title:'',
+            area:['700px','500px'],
+            content: './views/user/view-user-form.html?id='+user.userId //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+        });
+    }
+
+    /**
+     * 注销
+     */
+    function layoutHanlder() {
+        $.ajax({
+            url:getUserLayoutUrl(),
+            method:'post',
+            dataType:'json',
+            success:function () {
+                window.location.href = getBaseUrl();
+            }
+        })
+
+    }
 </script>
 </body>
 </html>

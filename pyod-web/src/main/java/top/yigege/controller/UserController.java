@@ -279,4 +279,20 @@ public class UserController {
         return ApiResultUtil.success();
     }
 
+
+    @ApiOperation(value = "退出系统")
+    @PostMapping("/layout")
+    public ResultBean layout() {
+        //1. 得到当前主体
+        Subject subject = SecurityUtils.getSubject();
+
+        //2. 执行layout
+        subject.logout();
+
+        //3. 清除Session
+        SessionUtil.removeAllSession();
+
+        return ApiResultUtil.success();
+    }
+
 }

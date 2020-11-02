@@ -20,6 +20,16 @@ function getUserLoginUrl() {
 }
 
 /**
+ * 用户注销
+ * @returns {string}
+ */
+function getUserLayoutUrl() {
+    return getBaseUrl() + "/user/layout";
+}
+
+
+
+/**
  * 设置当前用户角色
  * @returns {string}
  */
