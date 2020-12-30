@@ -1,5 +1,6 @@
 package top.yigege.global;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -33,13 +34,13 @@ import java.util.UUID;
  */
 @Aspect
 @Component
+@Slf4j
 public class LogAspect {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogAspect.class);
 
     private static final ThreadLocal<Long> timeTreadLocal = new ThreadLocal<>();
 
-    @Pointcut("@annotation( top.yigege.annotation.WebLog)")
+    //@Pointcut("@annotation( top.yigege.annotation.WebLog)")
+    @Pointcut("execution(* top.yigege.controller.*.*(..))")
     public void logPointCut() {
 
     }
@@ -74,29 +75,30 @@ public class LogAspect {
 
 
         String UUID = java.util.UUID.randomUUID().toString();
-        LOGGER.info("\nno:{}\n" +
+        // 执行方法
+        Object result = joinPoint.proceed();
+
+        long startTime = timeTreadLocal.get();
+        double callTime = (System.currentTimeMillis() - startTime) / 1000.0;
+
+        log.info("\nno:{}\n" +
                         "method:{}\n" +
                         "url:{}\n" +
                         "requestMethod:{}\n" +
                         "contentType:{}\n" +
                         "uri:{}\n" +
-                        "param:{}",
+                        "param:{}\n"+
+                        "result:{}\n"+
+                        "time:{}s",
                 UUID,
                 method.getDeclaringClass() + "." + methodName + "()",
                 request.getRequestURL().toString(),
                 request.getMethod(),
                 contentType,
                 request.getRequestURI(),
-                keyValue);
-
-        // 执行方法
-        Object result = joinPoint.proceed();
-
-
-        long startTime = timeTreadLocal.get();
-        double callTime = (System.currentTimeMillis() - startTime) / 1000.0;
-        LOGGER.info("no:{},time:{}s",UUID,callTime);
-
+                keyValue,
+                JsonUtil.toJson(result),
+                callTime);
         return result;
 
     }

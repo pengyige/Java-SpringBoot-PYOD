@@ -28,6 +28,7 @@
         <module>pyod-service</module>
         <module>pyod-web</module>
         <module>pyod-dao</module>
+        <module>pyod-api</module>
     </modules>
 
 
@@ -43,6 +44,7 @@
         <pyod-entity.version>1.0</pyod-entity.version>
         <pyod-service.version>1.0</pyod-service.version>
         <pyod-web.version>1.0</pyod-web.version>
+        <pyod-api.version>1.0</pyod-api.version>
 
         <mybatis-plus-boot-starter.version>3.0.6</mybatis-plus-boot-starter.version>
         <!--<mybatis-plus.version>3.3.0</mybatis-plus.version>
@@ -72,6 +74,7 @@
         <springfox-swagger2.version>2.2.2</springfox-swagger2.version>
         <springfox-swagger-ui.version>2.2.2</springfox-swagger-ui.version>
 
+        <lombok.version>1.18.12</lombok.version>
     </properties>
 
     <!-- 版本说明：这里统一管理依赖的版本号 -->
@@ -196,6 +199,11 @@
                 <version>${springfox-swagger-ui.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

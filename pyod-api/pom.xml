@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>pyod-web</artifactId>
+    <artifactId>pyod-api</artifactId>
     <packaging>jar</packaging>
-    <version>${pyod-web.version}</version>
+    <version>${pyod-api.version}</version>
 
     <dependencies>
 

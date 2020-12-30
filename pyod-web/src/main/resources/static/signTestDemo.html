@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>呆租签名客服端测试</title>
+</head>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+
+<script>
+    var param = {
+        "key1":"value1",
+        "key2":"value2"
+    };
+
+    //add common param
+    param.timestamp = new Date().getTime();
+    param.nonce = Math.random().toString(36).substr(2, 15);
+    param.userType = 1;
+    param.openId = "testsefdsfsdfdsfsd";
+
+    //sort key
+    var sortKeyArr = [];
+    for(var item in param) {
+        sortKeyArr.push(item);
+    }
+    sortKeyArr.sort();
+
+    //append param
+    var signParamArr = [];
+    sortKeyArr.forEach(function (item,index){
+        signParamArr.push(item+"="+param[item]);
+    })
+    var signParamStr = signParamArr.join("&");
+    console.log("append result:"+signParamStr);
+    var baseSignParam = CryptoJS.enc.Base64.stringify( CryptoJS.enc.Utf8.parse(signParamStr));
+    console.log("base64 result:"+baseSignParam);
+    var hmacSHA1result =  CryptoJS.HmacSHA1(baseSignParam,param.openId);
+    console.log("hmacSHA1result result:"+hmacSHA1result);
+    var md5Result = CryptoJS.MD5(hmacSHA1result).toString();
+    console.log("md5 result:"+md5Result);
+    //add sign
+    param.sign = md5Result.toString();
+    console.log(param);
+
+    //send request
+    $.ajax({
+        url:"http://localhost:10001/api/banner/getBannerList",
+        method:'post',
+        data:param,
+        dataType:'json',
+        success: function (res) {
+            console.log(res);
+        }
+    });
+</script>
+
+
+<body>
+
+</body>
+</html>

@@ -49,6 +49,25 @@ public class PyodConstant {
         int ALL = -1;
     }
 
+    public interface  WeiXin {
+
+        /**
+         * 微信接口地址
+         */
+        public final static String CODE2SESSION_URL = "https://api.weixin.qq.com/sns/jscode2session?appid={appId}&secret={secret}" +
+                "&grant_type=authorization_code&js_code=";
+
+        /**
+         * 获取微信token
+         */
+        public final static String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appId}&secret={secret}";
+
+        /**
+         * 获取小程序二维码
+         */
+        public final static String GET_WX_ACODE = "https://api.weixin.qq.com/wxa/getwxacode?access_token={access_token}";
+    }
+
 
 
 

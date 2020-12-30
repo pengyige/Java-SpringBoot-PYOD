@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import top.yigege.constant.SexType;
 import top.yigege.constant.UserStatus;
@@ -25,6 +26,7 @@ import java.util.List;
  * @author astupidcoder
  * @since 2020-09-23
  */
+@Data
 @ApiModel("用户信息")
 public class User extends Model<User> {
 
@@ -91,97 +93,12 @@ public class User extends Model<User> {
     @TableField(exist = false)
     private List<Role> roleList = new ArrayList<>();
 
-    public List<Role> getRoleList() {
-        return roleList;
-    }
 
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-    public Integer getSex() {
-        return sex;
-    }
-
-    public void setSex(Integer sex) {
-        this.sex = sex;
-    }
-    public String getTel() {
-        return tel;
-    }
-
-    public void setTel(String tel) {
-        this.tel = tel;
-    }
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-    public Date getLastLoginTime() {
-        return lastLoginTime;
-    }
-
-    public void setLastLoginTime(Date lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getNo() {
-        return no;
-    }
-
-    public void setNo(String no) {
-        this.no = no;
-    }
 
     @Override
     protected Serializable pkVal() {
         return this.userId;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", nickname='" + nickname + '\'' +
-                ", no='" + no + '\'' +
-                ", sex=" + sex +
-                ", tel='" + tel + '\'' +
-                ", password='" + password + '\'' +
-                ", status=" + status +
-                ", lastLoginTime=" + lastLoginTime +
-                '}';
-    }
+
 }

@@ -19,4 +19,9 @@ public class BusinessException extends AbstractCommonException{
         this.code = ResultCodeEnum.ILLEGAL_BUSINESS.getCode();
         this.message = msg;
     }
+
+    public BusinessException(ResultCodeEnum resultCodeEnum) {
+        this.code = resultCodeEnum.getCode();
+        this.message = resultCodeEnum.getMsg();
+    }
 }

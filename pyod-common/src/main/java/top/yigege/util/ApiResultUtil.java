@@ -41,7 +41,7 @@ public class ApiResultUtil {
     }
 
     /**
-     * 非法参数
+     * 资源未找到
      * @return
      */
     public static ResultBean notFound() {
@@ -77,4 +77,12 @@ public class ApiResultUtil {
         return new ResultBean(code, data, msg);
     }
 
+    /**
+     * 自定义返回
+     * @param resultCodeEnum
+     * @return
+     */
+    public static ResultBean custom(ResultCodeEnum resultCodeEnum) {
+        return new ResultBean(resultCodeEnum);
+    }
 }

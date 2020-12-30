@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import java.util.List;
  * @author astupidcoder
  * @since 2020-09-27
  */
+@Data
 public class Role extends Model<Role> {
 
     private static final long serialVersionUID = 1L;
@@ -52,51 +54,4 @@ public class Role extends Model<Role> {
         return permissionList;
     }
 
-    public void setPermissionList(List<Permission> permissionList) {
-        this.permissionList = permissionList;
-    }
-
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
-    public String getRoleNo() {
-        return roleNo;
-    }
-
-    public void setRoleNo(String roleNo) {
-        this.roleNo = roleNo;
-    }
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    @Override
-    protected Serializable pkVal() {
-        return this.roleId;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-        "roleId=" + roleId +
-        ", roleNo=" + roleNo +
-        ", name=" + name +
-        ", remark=" + remark +
-        "}";
-    }
 }

@@ -4,6 +4,7 @@ package top.yigege.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -17,6 +18,7 @@ import java.io.Serializable;
  * @author astupidcoder
  * @since 2020-09-27
  */
+@Data
 public class Permission extends Model<Permission> {
 
     private static final long serialVersionUID = 1L;
@@ -38,39 +40,4 @@ public class Permission extends Model<Permission> {
      */
     private String remark;
 
-    public Integer getPermissionId() {
-        return permissionId;
-    }
-
-    public void setPermissionId(Integer permissionId) {
-        this.permissionId = permissionId;
-    }
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    @Override
-    protected Serializable pkVal() {
-        return this.permissionId;
-    }
-
-    @Override
-    public String toString() {
-        return "Permission{" +
-        "permissionId=" + permissionId +
-        ", name=" + name +
-        ", remark=" + remark +
-        "}";
-    }
 }

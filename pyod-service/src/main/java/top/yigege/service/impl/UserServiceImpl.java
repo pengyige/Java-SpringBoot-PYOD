@@ -135,7 +135,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         for (Menu menuItem : menuList) {
             //是否存在menu的子节点
-            if (menu.getId() == menuItem.getPid()) {
+            if (menu.getId().equals(menuItem.getPid())) {
                 menu.getSubMenu().add(findChildren(menuItem, menuList));
             }
         }

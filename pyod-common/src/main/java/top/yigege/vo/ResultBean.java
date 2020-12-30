@@ -24,6 +24,11 @@ public class ResultBean<T> {
         this.message = message;
     }
 
+    public ResultBean(ResultCodeEnum resultCodeEnum) {
+        this.code = resultCodeEnum.getCode();
+        this.message = resultCodeEnum.getMsg();
+    }
+
     public Integer getCode() {
         return code;
     }

@@ -4,16 +4,21 @@ package top.yigege.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import top.yigege.interceptor.HttpRequestInterceptor;
 
+import javax.annotation.Resource;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +30,12 @@ import java.util.List;
  * @date: 2020年09月25日 17:53
  */
 @Configuration
+@Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    @Resource
+    private HttpRequestInterceptor httpRequestInterceptor;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebMvcConfig.class);
 
     @Override
     public void addViewControllers( ViewControllerRegistry registry ) {
@@ -45,6 +52,26 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         //默认找static目录
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+    }
+
+    /**
+     * 支持CORS跨域访问
+     *
+     * @param registry
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins("*")
+                .allowedHeaders("*");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        //添加小程序端拦截器
+        registry.addInterceptor(httpRequestInterceptor).addPathPatterns("/api/**")
+                .excludePathPatterns("/static/**");
     }
 
     /**

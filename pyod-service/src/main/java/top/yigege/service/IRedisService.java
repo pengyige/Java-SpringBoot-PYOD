@@ -8,6 +8,8 @@ package top.yigege.service;
  */
 public interface IRedisService {
 
+    void setObj(String key, Object obj);
+
     void setObj(String key, Object obj, long timeout);
 
     Object getObj(String key);

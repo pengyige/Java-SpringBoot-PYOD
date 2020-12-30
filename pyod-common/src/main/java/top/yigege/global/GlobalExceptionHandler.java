@@ -1,5 +1,6 @@
 package top.yigege.global;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AccountException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +31,9 @@ import java.util.Set;
  */
 @CrossOrigin
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
-
-    private static Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
-
-
+    
     /**
      * 全局异常处理 包含所有500状态的错误。404单独在ErrorController处理
      *
@@ -50,14 +48,14 @@ public class GlobalExceptionHandler {
             //shiro 认证失败
             return ApiResultUtil.paramError(exception.getMessage());
         }
-        LOGGER.info("exceptionHandler");
-        LOGGER.error(exception.getMessage(), exception);
+        log.info("exceptionHandler");
+        log.error(exception.getMessage(), exception);
         return ApiResultUtil.fail();
     }
 
     @ExceptionHandler(org.springframework.validation.BindException.class)
     public ResultBean bindException(org.springframework.validation.BindException exception) {
-        LOGGER.info("bindException");
+        log.info("bindException");
         BindingResult bindingResult = exception.getBindingResult();
         List<ObjectError> errors = bindingResult.getAllErrors();
 
@@ -76,8 +74,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NoPermissionException.class)
     public ResultBean noPermissionExceptionHandler(NoPermissionException noPermissionException) {
-        LOGGER.info("noPermissionExceptionHandler");
-        LOGGER.error(noPermissionException.getMessage(), noPermissionException);
+        log.info("noPermissionExceptionHandler");
+        log.error(noPermissionException.getMessage(), noPermissionException);
         return noPermissionException.getResultBean();
     }
 
@@ -89,9 +87,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public ResultBean commonExceptionHandler(BusinessException businessException) {
-        LOGGER.info("commonExceptionHandler");
-        LOGGER.error(businessException.getMessage(), businessException);
-
+        log.info("commonExceptionHandler");
+        log.error(businessException.getMessage(), businessException);
         return businessException.getResultBean();
     }
 
@@ -104,7 +101,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResultBean paramValidExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
-        LOGGER.info("paramValidExceptionHandler");
+        log.info("paramValidExceptionHandler");
 
         BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
         List<ObjectError> errors = bindingResult.getAllErrors();
@@ -123,7 +120,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResultBean constraintViolationExceptionHandler(ConstraintViolationException constraintViolationException) {
-        LOGGER.info("constraintViolationExceptionHandler");
+        log.info("constraintViolationExceptionHandler");
         Set<ConstraintViolation<?>> cves = constraintViolationException.getConstraintViolations();
         StringBuffer errorMsg = new StringBuffer();
 
