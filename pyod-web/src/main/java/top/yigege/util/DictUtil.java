@@ -1,10 +1,9 @@
 package top.yigege.util;
 
 import org.apache.commons.lang3.StringUtils;
-import top.yigege.model.Dict;
-import top.yigege.service.IDictService;
+import top.yigege.model.SysDict;
+import top.yigege.service.ISysDictService;
 import top.yigege.service.IRedisService;
-import top.yigege.service.impl.RedisServiceImpl;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -19,7 +18,7 @@ import java.util.Map;
 public class DictUtil {
 
     @Resource
-    IDictService iDictService;
+    ISysDictService iDictService;
 
     @Resource
     IRedisService iRedisService;
@@ -49,7 +48,7 @@ public class DictUtil {
      */
     public String getValueByDB(String code) {
 
-        Dict dict = iDictService.queryDictByCode(code);
+        SysDict dict = iDictService.queryDictByCode(code);
         if (null != dict) {
             return dict.getCode();
         }else {

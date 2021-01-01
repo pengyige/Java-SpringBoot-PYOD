@@ -1,5 +1,6 @@
 package top.yigege;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +17,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @MapperScan("top.yigege.dao.**")
+@Slf4j
 public class PyodApplication {
 
 
 
-    private static final Logger LOG = LoggerFactory.getLogger(PyodApplication.class.getName());
 
     public static void main(String[] args) {
         SpringApplication.run(PyodApplication.class, args);
-        LOG.info("========================pyod start success!========================");
+        log.info("========================pyod start success!========================");
     }
 
 }

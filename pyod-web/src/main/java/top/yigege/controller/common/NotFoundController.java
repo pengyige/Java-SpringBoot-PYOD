@@ -24,7 +24,7 @@ public class NotFoundController implements ErrorController {
         return "/error";
     }
 
-    @GetMapping(value = {"/error"})
+    @RequestMapping(value = {"/error"})
     @ResponseBody
     public ResultBean error(HttpServletRequest request) {
         return ApiResultUtil.notFound();

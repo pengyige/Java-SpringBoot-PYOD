@@ -16,7 +16,7 @@ import javax.servlet.DispatcherType;
 @Configuration
 public class FilterConfig {
 
-    @Bean
+   /* @Bean
     public FilterRegistrationBean validateFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
@@ -25,5 +25,5 @@ public class FilterConfig {
         registration.setName("validateFilter");
         registration.setOrder(Integer.MAX_VALUE);
         return registration;
-    }
+    }*/
 }

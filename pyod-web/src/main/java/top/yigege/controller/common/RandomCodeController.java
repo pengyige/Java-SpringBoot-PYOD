@@ -1,7 +1,6 @@
 package top.yigege.controller.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +25,9 @@ import java.io.ByteArrayOutputStream;
  */
 @Controller
 @RequestMapping("/random")
+@Slf4j
 public class RandomCodeController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PyodApplication.class.getName());
 
     private static int WIDTH = 80;          //宽
     private static int HEIGHT = 25;         //高
@@ -70,7 +69,7 @@ public class RandomCodeController {
             String verifyCode = new String(rands);
             session.setAttribute(PyodConstant.PyodKey.SESSION_RANDOM_CODE, verifyCode);
         } catch (Exception e) {
-            LOG.error( e.getMessage(),e);
+            log.error( e.getMessage(),e);
         }
 
         return null;

@@ -13,6 +13,7 @@
     <packaging>jar</packaging>
     <version>${pyod-web.version}</version>
 
+
     <dependencies>
 
         <dependency>
@@ -26,6 +27,10 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>top.yigege</groupId>
+            <artifactId>pyod-api</artifactId>
+        </dependency>
 
 
         <dependency>
@@ -53,28 +58,6 @@
 
     </dependencies>
 
-    <!--多模块打包：只需在启动类所在模块的POM文件：指定打包插件 -->
-    <build>
-        <plugins>
-            <plugin>
-                <!--该插件主要用途：构建可执行的JAR -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/java</directory><!--所在的目录-->
-                <includes><!--包括目录下的.properties,.xml文件都会扫描到-->
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-    </build>
-
     <profiles>
         <profile>
             <id>dev</id>
@@ -98,4 +81,43 @@
             </properties>
         </profile>
     </profiles>
+
+    <!--多模块打包：只需在启动类所在模块的POM文件：指定打包插件 -->
+    <build>
+
+
+        <finalName>pyod-platform</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+        <!--配置静态-->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.yml</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <!--todo 必须要配置这个，配置的profiles中的参数才会生效-->
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering><!-- 就是这个 -->
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+
+
+    </build>
+
+
 </project>

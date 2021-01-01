@@ -1,9 +1,6 @@
 package top.yigege.shiro;
 
 import cn.hutool.crypto.digest.DigestUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
@@ -15,12 +12,11 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import top.yigege.model.Permission;
-import top.yigege.model.Role;
-import top.yigege.model.User;
-import top.yigege.service.IUserService;
+import top.yigege.model.SysPermission;
+import top.yigege.model.SysRole;
+import top.yigege.model.SysUser;
+import top.yigege.service.ISysUserService;
 import top.yigege.util.SessionUtil;
-import top.yigege.util.SpringUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,21 +33,21 @@ public class CustomRealm extends AuthorizingRealm {
 
 
     @Autowired
-    IUserService iUserService;
+    ISysUserService iUserService;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //根据用户编号查询对应的权限
         String username = (String) SecurityUtils.getSubject().getPrincipal();
-        //IUserService iUserService = SpringUtil.getBean(IUserService.class);
-        User user = iUserService.queryUserRoles(username);
+        //ISysUserService iUserService = SpringUtil.getBean(ISysUserService.class);
+        SysUser user = iUserService.queryUserRoles(username);
 
-        List<Role> roleList = user.getRoleList();
+        List<SysRole> roleList = user.getRoleList();
         Set<String> roleSet = new HashSet<>();
         Set<String> permissionSet = new HashSet<>();
-        for (Role role : roleList) {
+        for (SysRole role : roleList) {
             roleSet.add(role.getName());
-            for (Permission permission : role.getPermissionList()) {
+            for (SysPermission permission : role.getPermissionList()) {
                 permissionSet.add(permission.getName());
             }
         }
@@ -71,7 +67,7 @@ public class CustomRealm extends AuthorizingRealm {
         String userName = (String) authenticationToken.getPrincipal();
         String userPwd = new String((char[]) authenticationToken.getCredentials());
         //根据用户名从数据库获取密码
-        User user = iUserService.queryUserRoles(userName);
+        SysUser user = iUserService.queryUserRoles(userName);
         if (user == null) {
             throw new AccountException(userName+"用户不存在");
         } else if (!DigestUtil.md5Hex(userPwd).equals(user.getPassword())) {

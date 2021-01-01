@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.SysUserMapper">
+
+    <!-- 用户角色映射 -->
+    <resultMap id="userRolesMap"  type="top.yigege.model.SysUser">
+        <id column="user_id" property="userId"/>
+        <result column="nickname" property="nickname" />
+        <result column="no" property="no"/>
+        <result column="sex" property="sex"/>
+        <result column="tel" property="tel"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+
+        <!--用户对应角色-->
+        <collection property="roleList" ofType="top.yigege.model.SysRole">
+            <id column="role_id" property="roleId"/>
+            <result column="role_no" property="roleNo"/>
+            <result column="r_name" property="name"/>
+            <result column="r_remark" property="remark"/>
+
+            <collection property="permissionList" ofType="top.yigege.model.SysPermission">
+                <id column="permission_id" property="permissionId"/>
+                <result column="p_name" property="name"/>
+                <result column="p_remark" property="remark"/>
+            </collection>
+        </collection>
+
+    </resultMap>
+
+
+    <select id="queryAllUser"  resultType="top.yigege.model.SysUser" parameterType="java.util.Map">
+        SELECT
+            *
+        FROM
+            t_sys_user t
+        WHERE
+            1 = 1
+            <if test="null != paramMap.userId">
+                AND t.user_id = #{paramMap.userId}
+            </if>
+
+            <if test="null != paramMap.no and '' != paramMap.no">
+                AND t.no = #{paramMap.no}
+            </if>
+
+            <if test="null != paramMap.nickname and '' != paramMap.nickname">
+                AND t.nickname LIKE "%"#{paramMap.nickname}"%"
+            </if>
+
+            <if test="null != paramMap.tel and '' != paramMap.tel">
+                AND t.tel = #{paramMap.tel}
+            </if>
+
+            <if test="-1 != paramMap.sex">
+                AND t.sex = #{paramMap.sex}
+            </if>
+
+            <if test="-1 != paramMap.status">
+                AND t.status = #{paramMap.status}
+            </if>
+    </select>
+
+
+    <select id="queryUserByNickname"  resultType="top.yigege.model.SysUser">
+        SELECT * FROM t_sys_user t where
+        1  = 1
+        <foreach collection="list" item="item" open=" and ( " separator="or" close=")">
+            nickname = '#{item}'
+        </foreach>
+    </select>
+
+    <select id="queryUserRoles" parameterType="java.lang.String" resultMap="userRolesMap">
+        SELECT
+            u.user_id,
+            u.nickname,
+            u.NO,
+            u.sex,
+            u.tel,
+            u.PASSWORD,
+            u.STATUS,
+            u.last_login_time,
+            r.role_id,
+            r.role_no,
+            r.NAME r_name,
+            r.remark r_remark,
+            p.permission_id,
+            p.NAME p_name,
+            p.remark p_remark
+        FROM
+            t_sys_user u
+          left join t_sys_user_role_relation ur on u.user_id = ur.user_id
+          left join t_sys_role r on ur.role_id = r.role_id
+            left join t_sys_role_perm_relation rp on rp.role_id = r.role_id
+            left join t_sys_permission p on rp.permission_id = p.permission_id
+        where
+          u.no = #{value}
+    </select>
+
+    <select id="queryUserRolesById" parameterType="java.lang.Integer" resultMap="userRolesMap">
+        SELECT
+            u.user_id,
+            u.nickname,
+            u.NO,
+            u.sex,
+            u.tel,
+            u.PASSWORD,
+            u.STATUS,
+            u.last_login_time,
+            r.role_id,
+            r.role_no,
+            r.NAME r_name,
+            r.remark r_remark,
+            p.permission_id,
+            p.NAME p_name,
+            p.remark p_remark
+        FROM
+            t_sys_user u
+          left join t_sys_user_role_relation ur on u.user_id = ur.user_id
+          left join t_sys_role r on ur.role_id = r.role_id
+            left join t_sys_role_perm_relation rp on rp.role_id = r.role_id
+            left join t_sys_permission p on rp.permission_id = p.permission_id
+        where
+          u.user_id = #{value}
+    </select>
+
+    <delete id="deleteUserRoles" parameterType="java.lang.Integer">
+        DELETE
+        FROM
+            t_sys_user_role_relation
+        WHERE
+            user_id = #{value}
+    </delete>
+
+
+    <insert id="addUserRoleRecord" parameterType="java.util.Map">
+        INSERT INTO t_sys_user_role_relation ( user_id, role_id ) SELECT
+        user_id,
+        role_id
+        FROM
+        <foreach collection="roleIds" item="item"  open="("  separator="union all" close=")">
+            SELECT
+            #{userId} user_id,
+            #{item} role_id
+        </foreach> t
+    </insert>
+
+
+
+    <select id="queryMenusByRoleNo" parameterType="java.lang.String" resultType="top.yigege.model.SysMenu">
+        SELECT
+         m.*
+        FROM
+            t_sys_role r
+            LEFT JOIN t_sys_role_menu_relation rm ON r.role_id = rm.role_id
+            LEFT JOIN t_sys_menu m ON m.menu_id = rm.menu_id
+            where r.role_no = #{value}
+            and m.status = 1
+    </select>
+
+
+
+</mapper>

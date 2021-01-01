@@ -19,4 +19,9 @@ public class PageController {
         return "forward:index.html";
     }
 
+    @GetMapping("/web")
+    public String web()  {
+        return "forward:index.html";
+    }
+
 }

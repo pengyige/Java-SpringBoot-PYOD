@@ -1,7 +1,7 @@
 package top.yigege.controller.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +25,9 @@ import javax.validation.constraints.NotBlank;
 @RestController
 @RequestMapping("/hello-pyod")
 @Validated
+@Slf4j
 public class HelloPyodController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(HelloPyodController.class);
 
     /**
      * test 请求路径参数
@@ -36,7 +36,7 @@ public class HelloPyodController {
     @WebLog
     @PostMapping("/test/{userId}")
     public void test(@PathVariable @NotBlank String userId) {
-        LOGGER.info("test");
+        log.info("test");
     }
 
     /**

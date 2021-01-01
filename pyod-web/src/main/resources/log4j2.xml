@@ -6,7 +6,7 @@
 <Configuration monitorInterval="30">
 
     <Properties>
-        <Property name="log.basedir">./pyod/logs</Property>
+        <Property name="log.basedir">./pyod-platform/logs</Property>
         <Property name="log.layout">%d %-5p %t (%c:%L) - %m%n</Property>
     </Properties>
     <!--先定义所有的appender-->

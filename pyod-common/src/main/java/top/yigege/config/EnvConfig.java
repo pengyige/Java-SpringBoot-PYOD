@@ -15,12 +15,6 @@ import javax.annotation.PostConstruct;
 @Component
 public class EnvConfig {
 
-    private static EnvConfig ref;
-    @PostConstruct
-    public void init(){
-        ref = this;
-    }
-
     @Value("${spring.profiles.active}")
     String ENV;
 
@@ -28,7 +22,7 @@ public class EnvConfig {
      * 是否是开发环境
      * @return true 开发人员自己的环境
      */
-    public static boolean isDev() {
-        return EnvType.DEV.getCode().equals(ref.ENV);
+    public boolean isDev() {
+        return EnvType.DEV.getCode().equals(ENV);
     }
 }

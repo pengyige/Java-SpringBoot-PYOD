@@ -51,15 +51,15 @@ public class GeneratorCodeConfig {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://yigege.top:3306/pyod?useUnicode=true&characterEncoding=UTF-8&useSSL=false");
+        dsc.setUrl("jdbc:mysql://101.132.146.180:3306/pyod?useUnicode=true&characterEncoding=UTF-8&useSSL=false");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("root");
+        dsc.setPassword("Pyod@2020!");
         mpg.setDataSource(dsc);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-//        pc.setModuleName(scanner("模块名"));
+        //pc.setModuleName("t");
         pc.setParent("top.yigege");
         pc.setEntity("model");
         pc.setMapper("mapper");
@@ -69,8 +69,6 @@ public class GeneratorCodeConfig {
 
         // 配置模板
         TemplateConfig templateConfig = new TemplateConfig();
-
-
         templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
 
@@ -83,7 +81,7 @@ public class GeneratorCodeConfig {
 
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(pc.getModuleName() + "_");
+        strategy.setTablePrefix("t_");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();

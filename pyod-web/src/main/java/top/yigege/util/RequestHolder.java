@@ -1,5 +1,6 @@
 package top.yigege.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestAttributes;
@@ -17,9 +18,9 @@ import javax.servlet.http.HttpSession;
  * @author: yigege
  * @date: 2020年10月13日 16:10
  */
+@Slf4j
 public class RequestHolder {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RequestHolder.class.getName());
 
 
     /**
@@ -28,7 +29,7 @@ public class RequestHolder {
      * @return HttpServletRequest
      */
     public static HttpServletRequest getRequest() {
-        LOG.debug("getRequest -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+        log.debug("getRequest -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         if (null == servletRequestAttributes) {
             return null;
@@ -42,7 +43,7 @@ public class RequestHolder {
      * @return HttpServletRequest
      */
     public static HttpServletResponse getResponse() {
-        LOG.debug("getResponse -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+        log.debug("getResponse -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         if (null == servletRequestAttributes) {
             return null;
@@ -56,7 +57,7 @@ public class RequestHolder {
      * @return HttpSession
      */
     public static HttpSession getSession() {
-        LOG.debug("getSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+        log.debug("getSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
         HttpServletRequest request = null;
         if (null == (request = getRequest())) {
             return null;
@@ -71,7 +72,7 @@ public class RequestHolder {
      * @return Object
      */
     public static Object getSession(String name) {
-        LOG.debug("getSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+        log.debug("getSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         if (null == servletRequestAttributes) {
             return null;
@@ -86,7 +87,7 @@ public class RequestHolder {
      * @param value
      */
     public static void setSession(String name, Object value) {
-        LOG.debug("setSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+        log.debug("setSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         if (null == servletRequestAttributes) {
             return;
@@ -101,7 +102,7 @@ public class RequestHolder {
      * @return void
      */
     public static void removeSession(String name) {
-        LOG.debug("removeSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+        log.debug("removeSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         if (null == servletRequestAttributes) {
             return;
@@ -115,7 +116,7 @@ public class RequestHolder {
      * @return String[]
      */
     public static String[] getSessionKeys() {
-        LOG.debug("getSessionKeys -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+        log.debug("getSessionKeys -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         if (null == servletRequestAttributes) {
             return null;

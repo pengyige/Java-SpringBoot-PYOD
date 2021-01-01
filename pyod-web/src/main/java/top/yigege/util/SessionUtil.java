@@ -1,8 +1,9 @@
 package top.yigege.util;
 
 import top.yigege.constant.PyodConstant;
-import top.yigege.model.Role;
-import top.yigege.model.User;
+import top.yigege.model.SysRole;
+import top.yigege.model.SysUser;
+
 
 import java.util.UUID;
 
@@ -28,8 +29,8 @@ public class SessionUtil {
      *
      * @return User
      */
-    public static User getUser() {
-        return (User) RequestHolder.getSession(PyodConstant.PyodKey.SESSION_USER_KEY);
+    public static SysUser getUser() {
+        return (SysUser) RequestHolder.getSession(PyodConstant.PyodKey.SESSION_USER_KEY);
     }
 
     /**
@@ -37,7 +38,7 @@ public class SessionUtil {
      *
      * @param user
      */
-    public static void setUser(User user) {
+    public static void setUser(SysUser user) {
         RequestHolder.setSession(PyodConstant.PyodKey.SESSION_USER_KEY, user);
     }
 
@@ -54,7 +55,7 @@ public class SessionUtil {
      *
      * @param role
      */
-    public static void setCurrentUserRole(Role role) {
+    public static void setCurrentUserRole(SysRole role) {
         RequestHolder.setSession(PyodConstant.PyodKey.SESSION_USER_CHECKED_ROLE, role);
     }
 
@@ -62,8 +63,8 @@ public class SessionUtil {
      * 返回角色session
      *
      */
-    public static Role getCurrentUserRole() {
-       return (Role) RequestHolder.getSession(PyodConstant.PyodKey.SESSION_USER_CHECKED_ROLE);
+    public static SysRole getCurrentUserRole() {
+       return (SysRole) RequestHolder.getSession(PyodConstant.PyodKey.SESSION_USER_CHECKED_ROLE);
     }
 
     /**

@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.7.RELEASE</version>
+        <version>2.2.8.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -71,8 +71,9 @@
 
         <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
 
-        <springfox-swagger2.version>2.2.2</springfox-swagger2.version>
-        <springfox-swagger-ui.version>2.2.2</springfox-swagger-ui.version>
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
+        <swagger-model.version>1.6.0</swagger-model.version>
 
         <lombok.version>1.18.12</lombok.version>
     </properties>
@@ -100,6 +101,11 @@
                 <groupId>top.yigege</groupId>
                 <artifactId>pyod-service</artifactId>
                 <version>${pyod-service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.yigege</groupId>
+                <artifactId>pyod-api</artifactId>
+                <version>${pyod-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>top.yigege</groupId>
@@ -198,6 +204,12 @@
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${springfox-swagger-ui.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${swagger-model.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -231,5 +243,6 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
 
 </project>

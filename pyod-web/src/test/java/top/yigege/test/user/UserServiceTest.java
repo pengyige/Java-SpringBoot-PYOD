@@ -1,7 +1,6 @@
 package top.yigege.test.user;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -10,12 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.yigege.PyodApplication;
 import top.yigege.constant.BusinessFlagEnum;
-import top.yigege.model.Menu;
-import top.yigege.model.Role;
-import top.yigege.model.User;
+import top.yigege.model.SysMenu;
+import top.yigege.model.SysRole;
+import top.yigege.model.SysUser;
 import top.yigege.service.IGenerateIDService;
-import top.yigege.service.IRoleService;
-import top.yigege.service.IUserService;
+import top.yigege.service.ISysRoleService;
+import top.yigege.service.ISysUserService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.util.JsonUtil;
 import top.yigege.vo.PageBean;
@@ -32,16 +31,16 @@ import java.util.List;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PyodApplication.class)
+@Slf4j
 public class UserServiceTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceTest.class);
 
 
     @Resource
-    private IUserService userService;
+    private ISysUserService userService;
 
     @Resource
-    private IRoleService roleService;
+    private ISysRoleService roleService;
 
     @Resource
     private IGenerateIDService iGenerateIDService;
@@ -50,14 +49,14 @@ public class UserServiceTest {
     public void queryUserRolesMethodTest() {
             final String userNo = "79ebafa2-60f8-4ac4-99f9-34e5fb929b3d";
 
-            User user = userService.queryUserRoles(userNo);
+            SysUser user = userService.queryUserRoles(userNo);
 
-            LOGGER.info("result:{}", JsonUtil.toJson(user));
+            log.info("result:{}", JsonUtil.toJson(user));
     }
 
     public void generateIDTest() {
         for (int i = 0 ; i < 10; i++){
-            LOGGER.info(i+":"+iGenerateIDService.getNo(BusinessFlagEnum.USER.getMsg()));
+            log.info(i+":"+iGenerateIDService.getNo(BusinessFlagEnum.USER.getMsg()));
         }
     }
 
@@ -87,19 +86,19 @@ public class UserServiceTest {
 
 
     public void queryRoleInfoTest() {
-        Role role = roleService.queryRoleInfo(1);
-        LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(role)));
+        SysRole role = roleService.queryRoleInfo(1);
+        log.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(role)));
     }
 
     public void queryUserListByPageTest() {
         PageBean userPage = userService.queryUserList(1,10,null);
-        LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(userPage)));
+        log.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(userPage)));
     }
 
     @Test
     public void queryUserMenuTest() {
-        List<Menu> menuList = userService.queryMenusByRoleNo("admin");
-        LOGGER.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(menuList)));
+        List<SysMenu> menuList = userService.queryMenusByRoleNo("admin");
+        log.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(menuList)));
     }
 
 }

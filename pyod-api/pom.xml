@@ -53,49 +53,5 @@
 
     </dependencies>
 
-    <!--多模块打包：只需在启动类所在模块的POM文件：指定打包插件 -->
-    <build>
-        <plugins>
-            <plugin>
-                <!--该插件主要用途：构建可执行的JAR -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
 
-        <resources>
-            <resource>
-                <directory>src/main/java</directory><!--所在的目录-->
-                <includes><!--包括目录下的.properties,.xml文件都会扫描到-->
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-    </build>
-
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <pkg.env>dev</pkg.env>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <pkg.env>test</pkg.env>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <pkg.env>prod</pkg.env>
-            </properties>
-        </profile>
-    </profiles>
 </project>
