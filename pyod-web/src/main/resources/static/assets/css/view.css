@@ -134,3 +134,8 @@
 .form-box{
     padding: 10px 0;
 }
+
+.layui-table-cell {
+    height: 100%;
+    max-width: 100%;
+}

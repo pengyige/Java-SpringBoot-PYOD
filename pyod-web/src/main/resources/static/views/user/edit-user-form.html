@@ -159,7 +159,7 @@
      */
     function loadUserDetail() {
         $.ajax({
-            url: getLoadUserDetailUrl() + "?id=" + id,
+            url: getLoadUserDetailUrl() + "?userId=" + id,
             method: 'post',
             success: function (res) {
                 if (200 == res.code) {

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 
+import top.yigege.dto.modules.sysRole.QueryRolePageListDTO;
 import top.yigege.model.SysPermission;
 import top.yigege.model.SysRole;
 import top.yigege.vo.LayuiTreeBean;
@@ -31,7 +32,7 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     void addRoleMenuRecord(Integer roleId, List<Integer> menuIds);
 
-    List<SysRole> queryRoleList(Map<String, Object> paramMap, Page pageInfo);
+    List<SysRole> queryRoleList(QueryRolePageListDTO queryRolePageListDTO, Page pageInfo);
 
     List<LayuiTreeBean> queryTreeMenusByRoleId(Integer roleId);
 

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">修改权限</div>
+            <form id="addUserForm" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片URL:</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">跳转URL</label>
+                    <div class="layui-input-block">
+                        <input id="linkUrl" name="linkUrl" type="text" required placeholder="请输入跳转url"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue">
+                            提交<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var tree = layui.tree;
+    var form = layui.form;
+    var layer = layui.layer;
+    var upload = layui.upload;
+    var id = null;
+    var globalSrc = "";
+
+    //普通图片上传
+    var uploadInst = upload.render({
+        elem: '#test1'
+        ,url: getCommonUploadFile() //改成您自己的上传接口
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#demo1').attr('src', result); //图片链接（base64）
+            });
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg(res.msg);
+            }
+            //上传成功
+            globalSrc = res.src;
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+        }
+    });
+
+
+    form.on('submit(submitBtn)', function (data) {
+        submit();
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+    /**
+     * 提交数据
+     */
+    /**
+     * 提交数据
+     */
+    function submit() {
+        if (null == globalSrc || "" == globalSrc) {
+            layer.msg("请先上传轮播图片")
+            return;
+        }
+
+        var requestParam = {
+            "bannerId":id,
+            "imageUrl": globalSrc,
+            "linkUrl": $("#linkUrl").val()
+        };
+
+        $.ajax({
+            url: getModifyBannerUrl(),
+            method: 'post',
+            data: requestParam,
+            dataType: 'json',
+            beforeSend: function () {
+                $("#submitBtn").attr("disabled", "true");
+                $("#btnIcon").addClass("iconjiazaizhong");
+
+            },
+            complete: function () {
+                $("#submitBtn").removeAttr("disabled");
+                $("#btnIcon").removeClass("iconjiazaizhong");
+            },
+            success: function (res) {
+                if (200 == res.code) {
+                    layer.msg("添加轮播成功");
+                } else {
+                    layer.msg(res.message);
+                }
+            },
+            error: function () {
+                layer.msg("网络错误");
+            }
+        });
+    }
+
+
+
+    /**
+     * 初始化权限数据
+     */
+    function initBannerData() {
+        $.ajax({
+            url: getQueryBannerDetailUrl()+"?bannerId="+id,    //后台数据请求地址
+            type: "post",
+            success: function (res) {
+                if (200 == res.code) {
+                    $("#demo1").attr("src",res.data.imageUrl);
+                    globalSrc = res.data.imageUrl;
+                    $('#linkUrl').val(res.data.linkUrl);
+                }
+            }
+        });
+    }
+    $(function () {
+        id = getUrlParam("id");
+        initBannerData();
+
+
+    });
+
+
+
+</script>
+
+</body>
+</html>

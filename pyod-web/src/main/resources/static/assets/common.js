@@ -1,12 +1,17 @@
 var config = {
     "ip" : "localhost",
-    "port": "8443",
-    "contextPath":"/pyod"
+    "port": "9999",
+    "contextPath":"/pyod/web"
 };
 
 
 function getBaseUrl() {
     return "http://" + config.ip + ":" + config.port  + config.contextPath;
+}
+
+function getLoginBaseUrl() {
+    return "http://" + config.ip + ":" + config.port  + "/pyod/login.html";
+
 }
 
 
@@ -16,15 +21,15 @@ function getBaseUrl() {
  * @returns {string}
  */
 function getUserLoginUrl() {
-    return getBaseUrl() + "/user/login";
+    return getBaseUrl() + "/sysUser/login";
 }
 
 /**
  * 用户注销
  * @returns {string}
  */
-function getUserLayoutUrl() {
-    return getBaseUrl() + "/user/layout";
+function getUserLogoutUrl() {
+    return getBaseUrl() + "/sysUser/logout";
 }
 
 
@@ -34,7 +39,7 @@ function getUserLayoutUrl() {
  * @returns {string}
  */
 function getSetCurrentUserRoleUrl() {
-    return getBaseUrl() + "/user/setCurrentUserRole";
+    return getBaseUrl() + "/sysUser/setCurrentUserRole";
 }
 
 /**
@@ -42,7 +47,7 @@ function getSetCurrentUserRoleUrl() {
  * @returns {string}
  */
 function getDeleteUserByIdUrl() {
-    return getBaseUrl() + "/user/deleteUserById";
+    return getBaseUrl() + "/sysUser/deleteUserById";
 }
 
 /**
@@ -50,7 +55,7 @@ function getDeleteUserByIdUrl() {
  * @returns {string}
  */
 function getAddUserUrl() {
-    return getBaseUrl() + "/user/addUser";
+    return getBaseUrl() + "/sysUser/addUser";
 }
 
 /**
@@ -58,7 +63,7 @@ function getAddUserUrl() {
  * @returns {string}
  */
 function getUpdateUserUrl() {
-    return getBaseUrl() + "/user//updateUser";
+    return getBaseUrl() + "/sysUser/updateUser";
 }
 
 
@@ -67,7 +72,7 @@ function getUpdateUserUrl() {
  * @returns {string}
  */
 function getUserInfoUrl() {
-    return getBaseUrl() + "/user/queryUserInfo";
+    return getBaseUrl() + "/sysUser/queryUserInfo";
 }
 
 /**
@@ -75,39 +80,38 @@ function getUserInfoUrl() {
  * @returns {string}
  */
 function getLoadUserDetailUrl() {
-    return getBaseUrl() + "/user/loadUserDetail";
+    return getBaseUrl() + "/sysUser/loadUserDetail";
 }
 
-
-
-
-
-/************菜单模块API*************/
-
 /**
- * 查询菜单信息
+ * 查询用户菜单信息
  * @returns {string}
  */
 function getMenuInfoUrl() {
-    return getBaseUrl() + "/user/queryUserMenuByRole";
+    return getBaseUrl() + "/sysUser/queryUserMenuByRole";
 }
-
 
 /**
  * 查询用户列表信息
  * @returns {string}
  */
 function getQueryUserListUrl() {
-    return getBaseUrl() + "/user/queryUserList";
+    return getBaseUrl() + "/sysUser/queryUserList";
 }
 
+/************用户模块api end****************/
+
+
+
+
+/************菜单模块API start*************/
 
 /**
  * 查询树形菜单信息
  * @returns {string}
  */
 function getTreeMenuUrl() {
-    return getBaseUrl() + "/menu/queryTreeMenu";
+    return getBaseUrl() + "/sysMenu/queryTreeMenu";
 }
 
 /**
@@ -115,15 +119,23 @@ function getTreeMenuUrl() {
  * @returns {string}
  */
 function getQueryMenuDetailUrl() {
-    return getBaseUrl() + "/menu/queryMenuDetail";
+    return getBaseUrl() + "/sysMenu/queryMenuDetail";
 }
 
 /**
- * 添加或更新菜单
+ * 添加菜单
  * @returns {string}
  */
-function getAddOrUpdateMenuUrl() {
-    return getBaseUrl() + "/menu/addOrUpdateMenu";
+function getAddMenuUrl() {
+    return getBaseUrl() + "/sysMenu/addMenu";
+}
+
+/**
+ * 修改菜单
+ * @returns {string}
+ */
+function getModifyMenuUrl() {
+    return getBaseUrl() + "/sysMenu/modifyMenu";
 }
 
 /**
@@ -131,7 +143,7 @@ function getAddOrUpdateMenuUrl() {
  * @returns {string}
  */
 function getDeleteMenuByIdUrl() {
-    return getBaseUrl() + "/menu/deleteMenuById";
+    return getBaseUrl() + "/sysMenu/deleteMenuById";
 }
 
 
@@ -141,7 +153,7 @@ function getDeleteMenuByIdUrl() {
  * @returns {string}
  */
 function getQueryRoleListUrl() {
-    return getBaseUrl() + "/role/queryRoleList";
+    return getBaseUrl() + "/sysRole/queryRoleList";
 }
 
 /**
@@ -149,7 +161,7 @@ function getQueryRoleListUrl() {
  * @returns {string}
  */
 function getQueryRoleDetailUrl() {
-    return getBaseUrl() + "/role/queryRoleDetail";
+    return getBaseUrl() + "/sysRole/queryRoleDetail";
 }
 
 /**
@@ -157,15 +169,23 @@ function getQueryRoleDetailUrl() {
  * @returns {string}
  */
 function getDeleteRoleByIdsUrl() {
-    return getBaseUrl() + "/role/deleteRoleByIds";
+    return getBaseUrl() + "/sysRole/deleteRoleByIds";
 }
 
 /**
- * 添加或更新角色
+ * 添加角色
  * @returns {string}
  */
-function getAddOrUpdateRoleUrl() {
-    return getBaseUrl() + "/role/addOrUpdateRole";
+function getAddRoleUrl() {
+    return getBaseUrl() + "/sysRole/addRole";
+}
+
+/**
+ * 修改角色
+ * @returns {string}
+ */
+function getModifyRoleUrl() {
+    return getBaseUrl() + "/sysRole/modifyRole";
 }
 
 /**
@@ -173,7 +193,7 @@ function getAddOrUpdateRoleUrl() {
  * @returns {string}
  */
 function getQueryCheckedMenuByRoleIdUrl() {
-    return getBaseUrl() + "/role/queryCheckedMenuByRoleId";
+    return getBaseUrl() + "/sysRole/queryCheckedMenuByRoleId";
 }
 
 /**
@@ -181,8 +201,10 @@ function getQueryCheckedMenuByRoleIdUrl() {
  * @returns {string}
  */
 function getQueryAllMenuByRoleIdUrl() {
-    return getBaseUrl() + "/role/queryAllMenuByRoleId";
+    return getBaseUrl() + "/sysRole/queryAllMenuByRoleId";
 }
+/*******************角色模块******************/
+
 
 
 
@@ -192,7 +214,7 @@ function getQueryAllMenuByRoleIdUrl() {
  * @returns {string}
  */
 function getQueryPermissionListUrl() {
-    return getBaseUrl() + "/permission/queryPermissionList";
+    return getBaseUrl() + "/sysPermission/queryPermissionList";
 }
 
 
@@ -201,7 +223,7 @@ function getQueryPermissionListUrl() {
  * @returns {string}
  */
 function getQueryPermissionDetailUrl() {
-    return getBaseUrl() + "/permission/queryPermissionDetail";
+    return getBaseUrl() + "/sysPermission/queryPermissionDetail";
 }
 
 /**
@@ -209,7 +231,7 @@ function getQueryPermissionDetailUrl() {
  * @returns {string}
  */
 function getDeletePermissionByIdUrl() {
-    return getBaseUrl() + "/permission/deletePermissionById";
+    return getBaseUrl() + "/sysPermission/deletePermissionById";
 }
 
 /**
@@ -219,11 +241,60 @@ function getDeletePermissionByIdUrl() {
 function getAddOrUpdatePermissionUrl() {
     return getBaseUrl() + "/permission/addOrUpdatePermission";
 }
+/**************权限模块 end*****************/
 
 
+/**************轮播模块 start****************/
+/**
+ * 查询banner列表
+ * @returns {string}
+ */
+function getBannerListUrl() {
+    return getBaseUrl() + "/banner/queryAllBannerList";
+}
+
+/**
+ * 查询banner详情
+ */
+function getQueryBannerDetailUrl() {
+    return getBaseUrl() + "/banner/queryBannerDetail";
+
+}
+
+/**
+ * 添加banner
+ * @returns {string}
+ */
+function getAddBannerUrl() {
+    return getBaseUrl() + "/banner/addBanner";
+
+}
+
+/**
+ * 修改banner
+ */
+function getModifyBannerUrl() {
+    return getBaseUrl() + "/banner/modifyBanner";
+
+}
+
+/**
+ * 删除banner
+ */
+function getDeleteBannerByIdsUrl() {
+    return getBaseUrl() + "/banner/deleteBannerByIds";
+}
+
+/**************轮播模块 end****************/
 
 
-
+/**
+ * 上传文件
+ * @returns {string}
+ */
+function getCommonUploadFile() {
+    return getBaseUrl() + "/upload/uploadFile"
+}
 
 /**
  * 获取url参数

@@ -1,6 +1,7 @@
 package top.yigege.service.impl;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.yigege.constant.BusinessFlagEnum;
 
+import top.yigege.dto.modules.sysUser.AddUserDTO;
+import top.yigege.dto.modules.sysUser.QueryUserPageListDTO;
 import top.yigege.model.SysMenu;
 import top.yigege.model.SysUser;
 
@@ -17,6 +20,7 @@ import top.yigege.service.IGenerateIDService;
 import top.yigege.service.ISysUserService;
 import top.yigege.dao.*;
 import top.yigege.util.PageUtil;
+import top.yigege.util.Utils;
 import top.yigege.vo.PageBean;
 
 import javax.annotation.Resource;
@@ -55,8 +59,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public SysUser queryUserRolesById(Integer id) {
-        return userMapper.queryUserRolesById(id);
+    public SysUser queryUserRolesById(Integer userId) {
+        return userMapper.queryUserRolesById(userId);
     }
 
     @Transactional
@@ -73,10 +77,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public PageBean queryUserList(int page, int pageSize, Map paramMap) {
+    public PageBean queryUserList(QueryUserPageListDTO queryUserPageListDTO) {
 
-        Page pageInfo = new Page(page, pageSize == 0 ? 10 : pageSize);
-        List<SysUser> userList = userMapper.queryAllUser(paramMap, pageInfo);
+        Page pageInfo = new Page(queryUserPageListDTO.getPage(),
+                queryUserPageListDTO.getPageSize() == 0 ? 10 : queryUserPageListDTO.getPageSize());
+        List<SysUser> userList = userMapper.queryAllUser(queryUserPageListDTO, pageInfo);
         return PageUtil.getPageBean(pageInfo, userList);
     }
 
@@ -104,12 +109,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Transactional
     @Override
-    public SysUser addUser(SysUser user, List<Integer> roleIds) {
+    public SysUser addUser(AddUserDTO addUserDTO) {
+
+        SysUser user = new SysUser();
+        BeanUtil.copyProperties(addUserDTO,user);
         //为新增时、添加NO
         user.setNo(iGenerateIDService.getNo(BusinessFlagEnum.USER.getMsg()));
         user.setPassword(DigestUtil.md5Hex(user.getPassword()));
         save(user);
 
+        List<Integer> roleIds =  Utils.parseIntegersList(Utils.splitStringToList(addUserDTO.getRoleIds()));
         if (null != user.getUserId()) {
             bindUserRoles(user.getUserId(), roleIds);
         }

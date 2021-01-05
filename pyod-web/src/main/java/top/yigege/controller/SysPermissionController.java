@@ -1,6 +1,7 @@
 package top.yigege.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 import top.yigege.constant.ResultCodeEnum;
 
+import top.yigege.dto.modules.sysPermission.QuerySysPermissionPageListDTO;
 import top.yigege.model.SysPermission;
 import top.yigege.service.ISysPermissionService;
 import top.yigege.util.ApiResultUtil;
@@ -37,7 +39,7 @@ import java.util.List;
  */
 @Api(tags = "权限相关接口", description = "提供权限相关API")
 @RestController
-@RequestMapping("/web/permission")
+@RequestMapping("/web/sysPermission")
 @Validated
 public class SysPermissionController {
 
@@ -45,12 +47,6 @@ public class SysPermissionController {
     ISysPermissionService iPermissionService;
 
 
-    @ApiOperation(value = "添加或修改权限", response = ResultBean.class)
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "permissionId", value = "名称", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "name", value = "名称", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "remark", value = "备注", required = true, dataType = "String"),
-    })
     @PostMapping("/addOrUpdatePermission")
     public ResultBean addOrUpdatePermission(@Valid @ApiIgnore SysPermission permission) {
         iPermissionService.saveOrUpdate(permission);
@@ -59,19 +55,19 @@ public class SysPermissionController {
 
     @ApiOperation("查询所有权限")
     @PostMapping("/queryPermissionList")
-    public LayuiTableResultBean queryPermissionList(SysPermission permission) {
+    public LayuiTableResultBean queryPermissionList(QuerySysPermissionPageListDTO querySysPermissionPageListDTO) {
         int code = 0;
         String msg = ResultCodeEnum.SUCCESS.getMsg();
         List<SysPermission> permissionList = new ArrayList<>();
         try {
-            QueryWrapper queryWrapper = new QueryWrapper();
-            if (null != permission) {
-                if (null != permission.getPermissionId()) {
-                    queryWrapper.eq("permission_id", permission.getPermissionId());
+            LambdaQueryWrapper<SysPermission> queryWrapper = new  LambdaQueryWrapper<SysPermission>();
+            if (null != querySysPermissionPageListDTO) {
+                if (null != querySysPermissionPageListDTO.getPermissionId()) {
+                    queryWrapper.eq(SysPermission::getPermissionId, querySysPermissionPageListDTO.getPermissionId());
                 }
 
-                if (StringUtils.isNotBlank(permission.getName())) {
-                    queryWrapper.eq("name", permission.getName());
+                if (StringUtils.isNotBlank(querySysPermissionPageListDTO.getName())) {
+                    queryWrapper.eq(SysPermission::getName, querySysPermissionPageListDTO.getName());
                 }
             }
             permissionList  = iPermissionService.list(queryWrapper);

@@ -93,7 +93,7 @@
         var data = [];
 
         $.ajax({
-            url: getQueryCheckedMenuByRoleIdUrl()+"?id="+id,    //后台数据请求地址
+            url: getQueryCheckedMenuByRoleIdUrl()+"?roleId="+id,    //后台数据请求地址
             type: "post",
             async:false,
             success: function (resut) {
@@ -110,7 +110,7 @@
      */
     function initPermissionCheckBox() {
         $.ajax({
-            url: getQueryRoleDetailUrl()+"?id="+id,    //后台数据请求地址
+            url: getQueryRoleDetailUrl()+"?roleId="+id,    //后台数据请求地址
             type: "post",
             async: false,
             success: function (res) {

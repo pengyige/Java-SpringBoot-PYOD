@@ -35,7 +35,7 @@ import java.util.List;
  * @since 2020-10-14
  */
 @RestController
-@RequestMapping("/web/menu")
+@RequestMapping("/web/sysMenu")
 public class SysMenuController {
 
     @Resource
@@ -48,35 +48,18 @@ public class SysMenuController {
         return menuList;
     }
 
-    @ApiOperation(value = "添加菜单", response = ResultBean.class)
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "pid", value = "父ID", required = true, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "name", value = "菜单名称", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "sort", value = "排序", required = true, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "url", value = "路径", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "status", value = "状态", required = true, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "remark", value = "备注", required = false, dataType = "String")}
-            )
+
     @PostMapping("/addMenu")
-    public ResultBean addOrUpdateMenu(@Valid @ApiIgnore AddSysMenuDTO addSysMenuDTO) {
+    public ResultBean addOrUpdateMenu(@Valid  AddSysMenuDTO addSysMenuDTO) {
         SysMenu sysMenu = new SysMenu();
         BeanUtil.copyProperties(addSysMenuDTO,sysMenu);
         iMenuService.save(sysMenu);
         return ApiResultUtil.success(sysMenu);
     }
 
-    @ApiOperation(value = "修改菜单", response = ResultBean.class)
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "menuId", value = "菜单id", required = true, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "pid", value = "父ID", required = false, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "name", value = "菜单名称", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "sort", value = "排序", required = false, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "url", value = "路径", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "status", value = "状态", required = false, dataType = "Int"),
-            @ApiImplicitParam(paramType = "query", name = "remark", value = "备注", required = false, dataType = "String")}
-    )
+
     @PostMapping("/modifyMenu")
-    public ResultBean<SysMenu> modifyMenu(@Validated @ApiIgnore ModifySysMenuDTO modifySysMenuDTO) {
+    public ResultBean<SysMenu> modifyMenu(@Validated  ModifySysMenuDTO modifySysMenuDTO) {
         SysMenu sysMenu = new SysMenu();
         BeanUtil.copyProperties(modifySysMenuDTO,sysMenu);
         iMenuService.updateById(sysMenu);
@@ -90,8 +73,8 @@ public class SysMenuController {
           }
     )
     @PostMapping("/queryMenuDetail")
-    public ResultBean queryMenuDetail(@NotNull(message = "菜单id不能为空") Integer id) {
-        return ApiResultUtil.success(iMenuService.getById(id));
+    public ResultBean queryMenuDetail(@NotNull(message = "菜单id不能为空") Integer menuId) {
+        return ApiResultUtil.success(iMenuService.getById(menuId));
     }
 
     @ApiOperation(value = "删除菜单", response = ResultBean.class)
@@ -100,8 +83,8 @@ public class SysMenuController {
     }
     )
     @PostMapping("/deleteMenuById")
-    public ResultBean deleteMenuById(@NotNull(message = "菜单id不能为空") Integer id) {
-        return ApiResultUtil.success(iMenuService.removeById(id));
+    public ResultBean deleteMenuById(@NotNull(message = "菜单id不能为空") Integer menuId) {
+        return ApiResultUtil.success(iMenuService.removeById(menuId));
     }
 
 

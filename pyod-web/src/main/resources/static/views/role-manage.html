@@ -114,7 +114,7 @@
             layer.confirm('确定删除'+data.name+'角色吗?', function(index){
                 var loading = null;
                 $.ajax({
-                    url:getDeleteRoleByIdsUrl()+"?id="+id,
+                    url:getDeleteRoleByIdsUrl()+"?roleIds="+id,
                     method:'post',
                     dataType:'json',
                     beforeSend:function(){
@@ -160,9 +160,9 @@
                 curr: 1 //重新从第 1 页开始
             }
             , where: {
-                id: $("#id").val(),
+                roleId: $("#id").val(),
                 name: $("#name").val(),
-                no: $("#no").val()
+                roleNo: $("#no").val()
             }
         }, 'data');
     }

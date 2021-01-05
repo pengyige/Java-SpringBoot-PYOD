@@ -90,10 +90,7 @@ public class UserServiceTest {
         log.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(role)));
     }
 
-    public void queryUserListByPageTest() {
-        PageBean userPage = userService.queryUserList(1,10,null);
-        log.info("response:{}", JsonUtil.toJson(ApiResultUtil.success(userPage)));
-    }
+
 
     @Test
     public void queryUserMenuTest() {

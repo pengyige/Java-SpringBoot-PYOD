@@ -93,6 +93,19 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- 加入插件让字体文件不乱码 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
         </plugins>
 
         <!--配置静态-->
@@ -104,6 +117,7 @@
                     <include>**/*.xml</include>
                     <include>**/*.yml</include>
                 </includes>
+
                 <filtering>true</filtering>
             </resource>
             <!--todo 必须要配置这个，配置的profiles中的参数才会生效-->
@@ -114,6 +128,7 @@
                     <include>**/*</include>
                 </includes>
             </resource>
+
         </resources>
 
 

@@ -2,6 +2,9 @@ package top.yigege.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.yigege.dto.modules.sysRole.AddRoleDTO;
+import top.yigege.dto.modules.sysRole.ModifyRoleDTO;
+import top.yigege.dto.modules.sysRole.QueryRolePageListDTO;
 import top.yigege.model.SysPermission;
 import top.yigege.model.SysRole;
 import top.yigege.vo.LayuiTreeBean;
@@ -41,14 +44,13 @@ public interface ISysRoleService extends IService<SysRole> {
      */
     void bindRoleMenu(Integer roleId, List<Integer> menuIds);
 
+
     /**
      * 分页查询角色信息
-     * @param page
-     * @param pageSize
-     * @param paramMap
+     * @param queryRolePageListDTO
      * @return
      */
-    PageBean queryRoleList(int page, Integer pageSize, Map<String, Object> paramMap);
+    PageBean queryRoleList(QueryRolePageListDTO queryRolePageListDTO);
 
     /**
      * 删除角色 包含菜单和权限记录
@@ -56,14 +58,21 @@ public interface ISysRoleService extends IService<SysRole> {
      */
     void deleteRoleContainsRecord(List<Integer> roleIds);
 
+
     /**
-     * 添加或更新角色
-     * @param role
-     * @param menuIds
-     * @param permissionIds
+     * 添加角色
+     * @param addRoleDTO
      * @return
      */
-    SysRole addOrUpdateRole(SysRole role, List<Integer> menuIds, List<Integer> permissionIds);
+    SysRole addRole(AddRoleDTO addRoleDTO);
+
+    /**
+     * 修改角色
+     * @param modifyRoleDTO
+     * @return
+     */
+    SysRole modifyRole(ModifyRoleDTO modifyRoleDTO);
+
 
     /**
      * 查询选中的菜单

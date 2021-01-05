@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import top.yigege.dto.modules.sysUser.QueryUserPageListDTO;
 import top.yigege.model.SysMenu;
 import top.yigege.model.SysUser;
 
@@ -25,7 +26,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 
     List<SysUser> queryUserByNickname(List<String> nickname);
 
-    List<SysUser> queryAllUser(Map paramMap, IPage iPage);
+    List<SysUser> queryAllUser(QueryUserPageListDTO queryUserPageListDTO, IPage iPage);
 
     SysUser queryUserRoles(String no);
 

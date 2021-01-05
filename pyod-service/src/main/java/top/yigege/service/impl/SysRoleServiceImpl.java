@@ -1,12 +1,17 @@
 package top.yigege.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import top.yigege.constant.BusinessFlagEnum;
 
 import top.yigege.dao.SysMenuMapper;
 
 import top.yigege.dao.SysRoleMapper;
+import top.yigege.dto.modules.sysRole.AddRoleDTO;
+import top.yigege.dto.modules.sysRole.ModifyRoleDTO;
+import top.yigege.dto.modules.sysRole.QueryRolePageListDTO;
 import top.yigege.model.SysPermission;
 import top.yigege.model.SysRole;
 
@@ -15,6 +20,7 @@ import top.yigege.service.ISysRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import top.yigege.util.PageUtil;
+import top.yigege.util.Utils;
 import top.yigege.vo.LayuiTreeBean;
 import top.yigege.vo.PageBean;
 
@@ -78,9 +84,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
-    public PageBean queryRoleList(int page, Integer pageSize, Map<String, Object> paramMap) {
-        Page pageInfo = new Page(page, pageSize == 0 ? 10 : pageSize);
-        List<SysRole> roleList = roleMapper.queryRoleList(paramMap, pageInfo);
+    public PageBean queryRoleList(QueryRolePageListDTO queryRolePageListDTO) {
+        Page pageInfo = new Page(queryRolePageListDTO.getPage()
+                , queryRolePageListDTO.getPageSize() == 0 ? 10 :queryRolePageListDTO.getPageSize());
+        List<SysRole> roleList = roleMapper.queryRoleList(queryRolePageListDTO, pageInfo);
         return PageUtil.getPageBean(pageInfo, roleList);
     }
 
@@ -99,25 +106,53 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         }
     }
 
+
+
     @Transactional
     @Override
-    public SysRole addOrUpdateRole(SysRole role, List<Integer> menuIds, List<Integer> permissionIds) {
-        if (null == role.getRoleId()) {
-            role.setRoleNo(iGenerateIDService.getNo(BusinessFlagEnum.ROLE.getMsg()));
+    public SysRole addRole(AddRoleDTO addRoleDTO) {
+        SysRole sysRole = new SysRole();
+        BeanUtil.copyProperties(addRoleDTO,sysRole);
 
+
+        sysRole.setRoleNo(iGenerateIDService.getNo(BusinessFlagEnum.ROLE.getMsg()));
+
+        save(sysRole);
+
+        if (StringUtils.isNotBlank(addRoleDTO.getMenuIds())) {
+            bindRoleMenu(sysRole.getRoleId(),
+                    Utils.parseIntegersList(Utils.splitStringToList(addRoleDTO.getMenuIds())));
         }
-        saveOrUpdate(role);
 
-        if (!menuIds.isEmpty()) {
-            bindRoleMenu(role.getRoleId(),menuIds);
+        if (StringUtils.isNotBlank(addRoleDTO.getPermissionIds())) {
+            bindRolePermission(sysRole.getRoleId(),
+                    Utils.parseIntegersList(Utils.splitStringToList(addRoleDTO.getPermissionIds())));
         }
 
-        if (!permissionIds.isEmpty()) {
-            bindRolePermission(role.getRoleId(),permissionIds);
-        }
-
-        return queryRoleInfo(role.getRoleId());
+        return queryRoleInfo(sysRole.getRoleId());
     }
+
+    @Transactional
+    @Override
+    public SysRole modifyRole(ModifyRoleDTO modifyRoleDTO) {
+        SysRole sysRole = new SysRole();
+        BeanUtil.copyProperties(modifyRoleDTO,sysRole);
+
+        updateById(sysRole);
+
+        if (StringUtils.isNotBlank(modifyRoleDTO.getMenuIds())) {
+            bindRoleMenu(sysRole.getRoleId(),
+                    Utils.parseIntegersList(Utils.splitStringToList(modifyRoleDTO.getMenuIds())));
+        }
+
+        if (StringUtils.isNotBlank(modifyRoleDTO.getPermissionIds())) {
+            bindRolePermission(sysRole.getRoleId(),
+                    Utils.parseIntegersList(Utils.splitStringToList(modifyRoleDTO.getPermissionIds())));
+        }
+
+        return queryRoleInfo(sysRole.getRoleId());
+    }
+
 
     @Override
     public List<LayuiTreeBean> queryCheckedMenusByRoleId(Integer roleId) {

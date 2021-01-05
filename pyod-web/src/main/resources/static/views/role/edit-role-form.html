@@ -124,7 +124,7 @@
         };
 
         $.ajax({
-            url: getAddOrUpdateRoleUrl(),
+            url: getModifyRoleUrl(),
             method: 'post',
             data: requestParam,
             dataType: 'json',
@@ -168,7 +168,7 @@
     function getData() {
         var data = [];
         $.ajax({
-            url: getQueryAllMenuByRoleIdUrl() + "?id=" + id,    //后台数据请求地址
+            url: getQueryAllMenuByRoleIdUrl() + "?roleId=" + id,    //后台数据请求地址
             type: "post",
             async: false,
             success: function (resut) {
@@ -184,7 +184,7 @@
     function initPermissionCheckBox() {
         var currentRolePerimissionData = [];
         $.ajax({
-            url: getQueryRoleDetailUrl() + "?id=" + id,    //后台数据请求地址
+            url: getQueryRoleDetailUrl() + "?roleId=" + id,    //后台数据请求地址
             type: "post",
             async: false,
             success: function (res) {

@@ -56,7 +56,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">菜单ID:</label>
                     <div class="layui-input-block">
-                        <input id="id" name="id" type="text" placeholder="" readonly
+                        <input id="menuId" name="menuId" type="text" placeholder="" readonly
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
@@ -121,8 +121,8 @@
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue">
-                            提交<i id="btnIcon" class="icon iconfont"></i></button>
-                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            保存<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">新增</button>
                         <button id="deleteBtn"  class="layui-btn layui-btn-danger">删除<i id="deleteBtnIcon" class="icon iconfont"></i></button>
                     </div>
                 </div>
@@ -174,9 +174,15 @@
      * 提交
      */
     function submit() {
+        var url = "";
+        if (null == $('#menuId').val() || '' == $('#menuId').val()) {
+            url = getAddMenuUrl();
+        }else {
+            url = getModifyMenuUrl();
+        }
 
         $.ajax({
-            url: getAddOrUpdateMenuUrl(),
+            url: url,
             method: 'post',
             data: $('#menuForm').serialize(),
             dataType: 'json',
@@ -208,7 +214,7 @@
      * 填充表单
      */
     function fillData(data) {
-        $("#id").val(data.id);
+        $("#menuId").val(data.menuId);
         $("#name").val(data.name);
         $("#pid").val(data.pid);
         $("#icon").val(data.icon);
@@ -216,9 +222,9 @@
         $("#sort").val(data.sort);
         $("#remark").val(data.remark);
         if (1 == data.status) {
-            $("input[name=status]").eq(1).attr("checked", 'checked');
-        } else {
             $("input[name=status]").eq(0).attr("checked", 'checked');
+        } else {
+            $("input[name=status]").eq(1).attr("checked", 'checked');
         }
 
         form.render();
@@ -229,7 +235,7 @@
      */
     function loadMenuDetail(id) {
         $.ajax({
-            url: getQueryMenuDetailUrl() + "?id=" + id,    //后台数据请求地址
+            url: getQueryMenuDetailUrl() + "?menuId=" + id,    //后台数据请求地址
             type: "post",
             success: function (res) {
                 if (200 == res.code) {
@@ -276,7 +282,7 @@
         }
 
         $.ajax({
-            url: getDeleteMenuByIdUrl()+"?id="+id,
+            url: getDeleteMenuByIdUrl()+"?menuId="+id,
             method: 'post',
             dataType: 'json',
             beforeSend: function () {

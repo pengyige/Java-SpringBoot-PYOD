@@ -67,7 +67,7 @@
 
 
     <insert id="addRoleMenuRecord" parameterType="java.util.Map">
-        INSERT INTO t_sys_role_menu ( role_id, menu_id ) SELECT
+        INSERT INTO t_sys_role_menu_relation ( role_id, menu_id ) SELECT
         role_id,
         menu_id
         FROM
@@ -79,23 +79,24 @@
     </insert>
 
 
-    <select id="queryRoleList"  resultType="top.yigege.model.SysRole" parameterType="java.util.Map">
+    <select id="queryRoleList"  resultType="top.yigege.model.SysRole"
+            parameterType="top.yigege.dto.modules.sysRole.QueryRolePageListDTO">
         SELECT
         *
         FROM
         t_sys_role t
         WHERE
         1 = 1
-        <if test="null != paramMap.role_id">
-            AND t.role_id = #{paramMap.role_id}
+        <if test="null != queryRolePageListDTO.roleId">
+            AND t.role_id = #{queryRolePageListDTO.roleId}
         </if>
 
-        <if test="null != paramMap.role_no and '' != paramMap.role_no">
-            AND t.role_no = #{paramMap.role_no}
+        <if test="null != queryRolePageListDTO.roleNo and '' != queryRolePageListDTO.roleNo">
+            AND t.role_no = #{queryRolePageListDTO.roleNo}
         </if>
 
-        <if test="null != paramMap.name and '' != paramMap.name">
-            AND t.name LIKE "%"#{paramMap.name}"%"
+        <if test="null != queryRolePageListDTO.name and '' != queryRolePageListDTO.name">
+            AND t.name LIKE "%"#{queryRolePageListDTO.name}"%"
         </if>
     </select>
 
@@ -103,9 +104,9 @@
         SELECT
          m.menu_id id , m.name title , m.pid pid,m.sort sort
         FROM
-            role r
-            LEFT JOIN role_menu rm ON r.role_id = rm.role_id
-            LEFT JOIN menu m ON m.menu_id = rm.menu_id
+            t_sys_role r
+            LEFT JOIN t_sys_role_menu_relation rm ON r.role_id = rm.role_id
+            LEFT JOIN t_sys_menu m ON m.menu_id = rm.menu_id
             where r.role_id = #{value}
             and m.status = 1
     </select>

@@ -56,6 +56,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(org.springframework.validation.BindException.class)
     public ResultBean bindException(org.springframework.validation.BindException exception) {
         log.info("bindException");
+        log.error(exception.getMessage(),exception);
         BindingResult bindingResult = exception.getBindingResult();
         List<ObjectError> errors = bindingResult.getAllErrors();
 

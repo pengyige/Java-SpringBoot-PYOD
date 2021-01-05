@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 ;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import top.yigege.dto.modules.sysUser.AddUserDTO;
+import top.yigege.dto.modules.sysUser.QueryUserPageListDTO;
 import top.yigege.model.SysMenu;
 import top.yigege.model.SysUser;
 
@@ -38,19 +40,18 @@ public interface ISysUserService extends IService<SysUser> {
 
     /**
      * 通过ID查询用户角色
-     * @param id
+     * @param userId
      * @return
      */
-    SysUser queryUserRolesById(Integer id);
+    SysUser queryUserRolesById(Integer userId);
+
 
     /**
-     * 查询用户列表
-     * @param page
-     * @param pageSize
-     * @param paramMap
+     * 查询用户分页列表
+     * @param queryUserPageListDTO
      * @return
      */
-    PageBean queryUserList(int page, int pageSize, Map paramMap);
+    PageBean queryUserList(QueryUserPageListDTO queryUserPageListDTO);
 
 
     /**
@@ -63,11 +64,10 @@ public interface ISysUserService extends IService<SysUser> {
 
     /**
      * 添加用户
-     * @param user
-     * @param roleIds
+     * @param addUserDTO
      * @return
      */
-    SysUser addUser(SysUser user, List<Integer> roleIds);
+    SysUser addUser(AddUserDTO addUserDTO);
 
     /**
      * 删除用户

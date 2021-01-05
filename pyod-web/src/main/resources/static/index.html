@@ -88,7 +88,7 @@
     </div>
 
     <div class="layui-footer">
-        <p>PYOD<a href="#" target="_blank">PYOD通用后台管理系统</a></p>
+        <p><a href="#" target="_blank">PYOD通用后台管理系统</a></p>
     </div>
 
     <div class="mobile-mask"></div>
@@ -414,11 +414,11 @@
      */
     function layoutHanlder() {
         $.ajax({
-            url:getUserLayoutUrl(),
+            url:getUserLogoutUrl(),
             method:'post',
             dataType:'json',
             success:function () {
-                window.location.href = getBaseUrl();
+                window.location.href = getLoginBaseUrl();
             }
         })
 

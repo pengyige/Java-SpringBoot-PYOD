@@ -11,17 +11,8 @@ public enum DictCodeEnum {
     /**
      * 项目名
      */
-    PROJECT_NAME("PROJECT_NAME"),
+    PROJECT_NAME("PROJECT_NAME");
 
-    /**
-     * 微信APPID
-     */
-    WX_APPID("WX_APPID"),
-
-    /**
-     * 微信密钥
-     */
-    WX_SECRET("WX_SECRET");
 
 
 

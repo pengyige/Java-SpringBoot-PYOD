@@ -31,8 +31,8 @@ import java.util.Set;
  * @author: yigege
  * @date: 2020年09月26日 16:46
  */
-@Configuration
-@EnableSwagger2
+/*@Configuration
+@EnableSwagger2*/
 public class Swagger2Config {
 // "application/json","application/xml"
     //配置content type

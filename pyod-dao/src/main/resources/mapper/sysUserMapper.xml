@@ -30,35 +30,36 @@
     </resultMap>
 
 
-    <select id="queryAllUser"  resultType="top.yigege.model.SysUser" parameterType="java.util.Map">
+    <select id="queryAllUser"  resultType="top.yigege.model.SysUser"
+            parameterType="top.yigege.dto.modules.sysUser.QueryUserPageListDTO">
         SELECT
             *
         FROM
             t_sys_user t
         WHERE
             1 = 1
-            <if test="null != paramMap.userId">
-                AND t.user_id = #{paramMap.userId}
+            <if test="null != queryUserPageListDTO.userId">
+                AND t.user_id = #{queryUserPageListDTO.userId}
             </if>
 
-            <if test="null != paramMap.no and '' != paramMap.no">
-                AND t.no = #{paramMap.no}
+            <if test="null != queryUserPageListDTO.no and '' != queryUserPageListDTO.no">
+                AND t.no = #{queryUserPageListDTO.no}
             </if>
 
-            <if test="null != paramMap.nickname and '' != paramMap.nickname">
-                AND t.nickname LIKE "%"#{paramMap.nickname}"%"
+            <if test="null != queryUserPageListDTO.nickname and '' != queryUserPageListDTO.nickname">
+                AND t.nickname LIKE "%"#{queryUserPageListDTO.nickname}"%"
             </if>
 
-            <if test="null != paramMap.tel and '' != paramMap.tel">
-                AND t.tel = #{paramMap.tel}
+            <if test="null != queryUserPageListDTO.tel and '' != queryUserPageListDTO.tel">
+                AND t.tel = #{queryUserPageListDTO.tel}
             </if>
 
-            <if test="-1 != paramMap.sex">
-                AND t.sex = #{paramMap.sex}
+            <if test="null != queryUserPageListDTO.sex and -1 != paramMap.sex">
+                AND t.sex = #{queryUserPageListDTO.sex}
             </if>
 
-            <if test="-1 != paramMap.status">
-                AND t.status = #{paramMap.status}
+            <if test="null != queryUserPageListDTO.status and -1 != paramMap.status">
+                AND t.status = #{queryUserPageListDTO.status}
             </if>
     </select>
 
