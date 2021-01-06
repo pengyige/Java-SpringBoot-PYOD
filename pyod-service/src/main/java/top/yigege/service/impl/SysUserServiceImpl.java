@@ -42,25 +42,25 @@ import static top.yigege.constant.PyodConstant.Common.PARENT_MENU_FLAG;
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
 
-    @Resource
-    SysUserMapper userMapper;
+    @Autowired
+    SysUserMapper sysUserMapper;
 
     @Autowired
     IGenerateIDService iGenerateIDService;
 
     @Override
     public List<SysUser> queryUserByNickname(List<String> nickname) {
-        return userMapper.queryUserByNickname(nickname);
+        return sysUserMapper.queryUserByNickname(nickname);
     }
 
     @Override
     public SysUser queryUserRoles(String no) {
-        return userMapper.queryUserRoles(no);
+        return sysUserMapper.queryUserRoles(no);
     }
 
     @Override
     public SysUser queryUserRolesById(Integer userId) {
-        return userMapper.queryUserRolesById(userId);
+        return sysUserMapper.queryUserRolesById(userId);
     }
 
     @Transactional
@@ -68,11 +68,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public void bindUserRoles(Integer userId, List<Integer> roleIds) {
         //1.先解绑所有角色
         if (null != userId) {
-             userMapper.deleteUserRoles(userId);
+            sysUserMapper.deleteUserRoles(userId);
         }
         //2. 绑定现有角色
         if (!roleIds.isEmpty()) {
-            userMapper.addUserRoleRecord(userId, roleIds);
+            sysUserMapper.addUserRoleRecord(userId, roleIds);
         }
     }
 
@@ -81,14 +81,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         Page pageInfo = new Page(queryUserPageListDTO.getPage(),
                 queryUserPageListDTO.getPageSize() == 0 ? 10 : queryUserPageListDTO.getPageSize());
-        List<SysUser> userList = userMapper.queryAllUser(queryUserPageListDTO, pageInfo);
+        List<SysUser> userList = sysUserMapper.queryAllUser(queryUserPageListDTO, pageInfo);
         return PageUtil.getPageBean(pageInfo, userList);
     }
 
     @Override
     public List<SysMenu> queryMenusByRoleNo(String roleNo) {
 
-        List<SysMenu> totalMenuList = userMapper.queryMenusByRoleNo(roleNo);
+        List<SysMenu> totalMenuList = sysUserMapper.queryMenusByRoleNo(roleNo);
 
         List<SysMenu> menuTree = new ArrayList<>();
         for (SysMenu menu : totalMenuList) {
@@ -132,7 +132,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         removeById(id);
 
         //清空该用户的角色记录
-        userMapper.deleteUserRoles(id);
+        sysUserMapper.deleteUserRoles(id);
     }
 
     /**

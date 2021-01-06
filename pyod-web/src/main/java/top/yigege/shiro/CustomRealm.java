@@ -33,14 +33,14 @@ public class CustomRealm extends AuthorizingRealm {
 
 
     @Autowired
-    ISysUserService iUserService;
+    ISysUserService iSysUserService;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //根据用户编号查询对应的权限
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         //ISysUserService iUserService = SpringUtil.getBean(ISysUserService.class);
-        SysUser user = iUserService.queryUserRoles(username);
+        SysUser user = iSysUserService.queryUserRoles(username);
 
         List<SysRole> roleList = user.getRoleList();
         Set<String> roleSet = new HashSet<>();
@@ -67,7 +67,7 @@ public class CustomRealm extends AuthorizingRealm {
         String userName = (String) authenticationToken.getPrincipal();
         String userPwd = new String((char[]) authenticationToken.getCredentials());
         //根据用户名从数据库获取密码
-        SysUser user = iUserService.queryUserRoles(userName);
+        SysUser user = iSysUserService.queryUserRoles(userName);
         if (user == null) {
             throw new AccountException(userName+"用户不存在");
         } else if (!DigestUtil.md5Hex(userPwd).equals(user.getPassword())) {

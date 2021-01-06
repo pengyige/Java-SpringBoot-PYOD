@@ -17,7 +17,22 @@ public enum ResultCodeEnum {
     /**
      * 签名不对
      */
-    SIGN_ERROR(101,"签名错误"),
+    SIGN_ERROR(101,"缺少签名参数"),
+
+    /**
+     * 非法签名
+     */
+    ILLEGAL_SIGN_ERROR(102,"非法签名"),
+
+    /**
+     * token不能为空
+     */
+    TOKEN_ERROR(110,"token不能为空"),
+
+    /**
+     * 非法token
+     */
+    ILLEGAL_TOKEN_ERROR(111,"非法token或token已过期，请重新登录"),
 
     /**
      * 成功
@@ -46,7 +61,22 @@ public enum ResultCodeEnum {
     /**
      * 非法业务
      */
-    ILLEGAL_BUSINESS(1000,"非法业务");
+    ILLEGAL_BUSINESS(1000,"非法业务"),
+
+    /**
+     * 调用微信API出错
+     */
+    CALL_WEIXIN_API_ERROR(1001,""),
+
+    /**
+     * 缓存session_key失效
+     */
+    REDIS_SESSION_KEY_EXPIRE(1002,"session_key已失效，请重新获取code"),
+
+    /**
+     * 用户不存在
+     */
+    NO_USER(1003,"用户不存在");
 
 
     private Integer code;

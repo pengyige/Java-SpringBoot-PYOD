@@ -3,12 +3,17 @@ package top.yigege.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.yigege.config.EnvConfig;
+import top.yigege.config.JwtConfig;
 import top.yigege.config.RequestConfig;
+import top.yigege.config.SignConfig;
+import top.yigege.constant.PyodConstant;
 import top.yigege.constant.ResultCodeEnum;
+import top.yigege.service.ITokenService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.util.SignUtil;
 import top.yigege.vo.ResultBean;
@@ -37,6 +42,17 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    EnvConfig envConfig;
+
+    @Resource
+    ITokenService iTokenService;
+
+    @Autowired
+    JwtConfig jwtConfig;
+
+    @Autowired
+    SignConfig signConfig;
 
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
@@ -45,48 +61,46 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
             params.put(entry.getKey(), entry.getValue()[0]);
         }
-
         String url = req.getRequestURI();
+        if (envConfig.isDev()) {
+            //TODO 开发环境下不需要签名和验证token，需指定token
+            req.setAttribute(PyodConstant.JWT.USER_ID, 3);
+            return true;
+        }
 
-      /*  if (EnvConfig.isDev()) {
-            //TODO 测试环境下需指定userId
-            req.setAttribute("userId", 3);
-            return true;
-        }*/
-        // 校验url
-        if (requestConfig.getExcludeUrl().contains(url)) {
-            return true;
+
+        String token =  params.get(PyodConstant.ApiRequestCommonParam.TOKEN).toString();
+       if (signConfig.isEnable()) {
+           //签名校验
+           if (params.get(PyodConstant.ApiRequestCommonParam.TIMESTAMP) == null
+                   || params.get(PyodConstant.ApiRequestCommonParam.NONCE) == null
+                   || params.get(PyodConstant.ApiRequestCommonParam.SIGN) == null
+                   || params.get(PyodConstant.ApiRequestCommonParam.TOKEN) == null
+           ) {
+               write(resp, ApiResultUtil.custom(ResultCodeEnum.SIGN_ERROR));
+               return false;
+           }
+           // 校验sign
+           String sign = params.get(PyodConstant.ApiRequestCommonParam.SIGN).toString();
+           params.remove(PyodConstant.ApiRequestCommonParam.SIGN);
+           String key = signConfig.getSecret();
+           if (StringUtils.isNotBlank(token)) {
+               key = token;
+           }
+           String checkSign = SignUtil.getSign(params,key);
+           if (!sign.equals(checkSign)) {
+               write(resp, ApiResultUtil.custom(ResultCodeEnum.SIGN_ERROR));
+               return false;
+           }
+       }
+
+        //登入需要校验的接口
+        if (!requestConfig.getExcludeUrl().contains(url)) {
+            // 校验token
+            if (iTokenService.checkToken(token)) {
+                req.setAttribute(PyodConstant.JWT.USER_ID, iTokenService.getUserId(token));
+            }
         }
-        // 校验参数
-        if (params.get("timestamp") == null
-                || params.get("nonce") == null
-                || params.get("sign") == null
-                || params.get("userType") == null
-        ) {
-            write(resp, ApiResultUtil.custom(ResultCodeEnum.SIGN_ERROR));
-            return false;
-        }
-        // 校验sign
-        String openId = params.get("openId").toString();
-        String sign = params.get("sign").toString();
-        params.remove("sign");
-        String checkSign = SignUtil.getSign(params, openId);
-        if (!sign.equals(checkSign)) {
-            write(resp, ApiResultUtil.custom(ResultCodeEnum.SIGN_ERROR));
-            return false;
-        }
-        // 校验openId
-        /*Integer userType = Integer.parseInt(params.get("userType").toString());
-        UserEntity user = userService.checkLoginOpenId(openId, userType);
-        if (null == user) {
-            write(resp, R.code(RCode.OPENID_ERR));
-            return false;
-        }
-        if (1 == user.getDisableFlag()) {
-            write(resp, R.code(RCode.USER_DISABLE));
-            return false;
-        }
-        req.setAttribute("userId", user.getUserId());*/
 
         return true;
     }

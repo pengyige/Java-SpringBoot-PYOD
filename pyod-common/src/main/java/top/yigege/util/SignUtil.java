@@ -24,14 +24,14 @@ public class SignUtil {
      * 获取sign
      *
      * @param param
-     * @param openId
+     * @param key
      * @return
      */
-    public static String getSign(Map<String, Object> param, String openId) {
+    public static String getSign(Map<String, Object> param, String key) {
         List<String> ss = new ArrayList<>();
         param.forEach((k, v) -> ss.add(k + "=" + v));
         String s = Base64.encode(StringUtils.join(ss, "&"));
-        String sign = SecureUtil.md5().digestHex(SecureUtil.hmacSha1(openId).digest(s));
+        String sign = SecureUtil.md5().digestHex(SecureUtil.hmacSha1(key).digest(s));
         return sign;
     }
 

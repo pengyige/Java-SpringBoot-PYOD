@@ -55,7 +55,7 @@ public class PyodConstant {
          * 微信接口地址
          */
         public final static String CODE2SESSION_URL = "https://api.weixin.qq.com/sns/jscode2session?appid={appId}&secret={secret}" +
-                "&grant_type=authorization_code&js_code=";
+                "&grant_type=authorization_code&js_code={js_code}";
 
         /**
          * 获取微信token
@@ -69,6 +69,26 @@ public class PyodConstant {
     }
 
 
+    /**
+     * JWT 常量
+     */
+    public interface  JWT {
 
+        String USER_ID = "userId";
+    }
+
+    /**
+     * api请求公共参数
+     */
+    public interface ApiRequestCommonParam {
+
+        String TIMESTAMP = "timestamp";
+
+        String NONCE = "nonce";
+
+        String SIGN = "sign";
+
+        String TOKEN = "token";
+    }
 
 }

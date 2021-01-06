@@ -1,6 +1,7 @@
 package top.yigege.util;
 
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -14,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import top.yigege.config.WxConfig;
 import top.yigege.constant.PyodConstant;
+import top.yigege.vo.wx.Code2SessionResultBean;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -64,4 +66,20 @@ public class WeixinUtil {
         return Base64.encodeBase64String(entity.getBody());
     }
 
+
+    /**
+     * 获取sessionBean
+     * @param code
+     * @return
+     */
+    public Code2SessionResultBean getCode2Session(String code) {
+        String wxRequestUrl = "";
+        wxRequestUrl = PyodConstant.WeiXin.CODE2SESSION_URL.replace("{appId}", wxConfig.getAppId())
+                .replace("{secret}", wxConfig.getSecret())
+                .replace("{js_code}",code);
+
+        String getRes = HttpUtil.get(wxRequestUrl);
+
+        return JSONUtil.toBean(getRes,Code2SessionResultBean.class);
+    }
 }

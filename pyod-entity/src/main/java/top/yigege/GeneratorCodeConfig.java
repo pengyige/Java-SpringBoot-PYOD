@@ -52,7 +52,7 @@ public class GeneratorCodeConfig {
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl("jdbc:mysql://101.132.146.180:3306/pyod?useUnicode=true&characterEncoding=UTF-8&useSSL=false");
-        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
+        dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("Pyod@2020!");
         mpg.setDataSource(dsc);
@@ -62,7 +62,7 @@ public class GeneratorCodeConfig {
         //pc.setModuleName("t");
         pc.setParent("top.yigege");
         pc.setEntity("model");
-        pc.setMapper("mapper");
+        pc.setMapper("dao");
         pc.setService("service");
         pc.setServiceImpl("service.impl");
         mpg.setPackageInfo(pc);

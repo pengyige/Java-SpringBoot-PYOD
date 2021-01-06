@@ -11,9 +11,13 @@ public enum DictCodeEnum {
     /**
      * 项目名
      */
-    PROJECT_NAME("PROJECT_NAME");
+    PROJECT_NAME("PROJECT_NAME"),
 
 
+    /**
+     * 金币清空持续时间
+     */
+    COIN_CLEAR_DURATION_TIME("COIN_CLEAR_DURATION_TIME");
 
 
     String code;

@@ -38,3 +38,4 @@ mybatis-plus:
 #swagger2
 swagger:
   enable: true
+  secret: PYOD8888

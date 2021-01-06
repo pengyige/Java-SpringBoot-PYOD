@@ -81,6 +81,10 @@
         <lombok.version>1.18.12</lombok.version>
 
         <aliyun-sdk-oss.version>3.8.0</aliyun-sdk-oss.version>
+
+        <java-jwt.version>3.4.0</java-jwt.version>
+
+        <bdprov-jdk15.version>1.46</bdprov-jdk15.version>
     </properties>
 
     <!-- 版本说明：这里统一管理依赖的版本号 -->
@@ -228,6 +232,18 @@
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun-sdk-oss.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${java-jwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15</artifactId>
+                <version>${bdprov-jdk15.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

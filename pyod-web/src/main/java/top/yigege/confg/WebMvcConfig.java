@@ -1,4 +1,4 @@
-package top.yigege.config;
+package top.yigege.confg;
 
 
 import com.alibaba.fastjson.serializer.SerializerFeature;

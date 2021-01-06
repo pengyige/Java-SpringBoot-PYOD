@@ -40,7 +40,7 @@ public class LogAspect {
     private static final ThreadLocal<Long> timeTreadLocal = new ThreadLocal<>();
 
     //@Pointcut("@annotation( top.yigege.annotation.WebLog)")
-    @Pointcut("execution(* top.yigege.controller.*.*(..))")
+    @Pointcut("execution(* top.yigege.controller..*.*(..))")
     public void logPointCut() {
 
     }
