@@ -15,6 +15,14 @@ public abstract class AbstractCommonException extends RuntimeException implement
 
     protected String message;
 
+    public AbstractCommonException(String msg) {
+        super(msg);
+    }
+
+    public AbstractCommonException() {
+
+    }
+
 
     @Override
     public ResultBean getResultBean() {

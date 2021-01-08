@@ -49,6 +49,9 @@ public class PyodConstant {
         int ALL = -1;
     }
 
+    /**
+     * 微信api
+     */
     public interface  WeiXin {
 
         /**
@@ -66,6 +69,39 @@ public class PyodConstant {
          * 获取小程序二维码
          */
         public final static String GET_WX_ACODE = "https://api.weixin.qq.com/wxa/getwxacode?access_token={access_token}";
+    }
+
+    /**
+     * 天气api
+     */
+    public interface WeatherApi {
+
+        /**
+         * 实时天气
+         */
+        String REALTIME_URL = "https://tianqiapi.com/api?version=v6&appid={appid}&appsecret={appsecret}";
+
+        /**
+         * 7日天气
+         */
+        String SERVEN_DAYS_URL = "https://tianqiapi.com/api?version=v1&appid={appid}&appsecret={appsecret}";
+
+        /**
+         * 降水量预报图
+         */
+        String PRECIPITATION_URL = "https://tianqiapi.com/api?version=v8&appid={appid}&appsecret={appsecret}";
+    }
+
+    /**
+     * 高德api
+     */
+    public interface GaodeApi {
+
+        /**
+         * 逆地址编码接口
+         */
+        String REGEO_URL = "https://restapi.amap.com/v3/geocode/regeo?key={key}";
+
     }
 
 

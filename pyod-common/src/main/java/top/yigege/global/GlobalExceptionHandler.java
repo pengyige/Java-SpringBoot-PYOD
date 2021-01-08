@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,6 +47,9 @@ public class GlobalExceptionHandler {
             return ApiResultUtil.paramError(exception.getMessage());
         }else if (exception instanceof AccountException){
             //shiro 认证失败
+            return ApiResultUtil.paramError(exception.getMessage());
+        }else if (exception instanceof HttpRequestMethodNotSupportedException) {
+            //请求方法不支持
             return ApiResultUtil.paramError(exception.getMessage());
         }
         log.info("exceptionHandler");

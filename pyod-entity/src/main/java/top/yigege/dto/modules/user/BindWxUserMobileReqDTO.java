@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 public class BindWxUserMobileReqDTO {
 
     @NotBlank(message = "openid不能为空")
-    private String openId;
+    private String openid;
 
     @NotBlank(message = "向量不能为空")
     private String iv;

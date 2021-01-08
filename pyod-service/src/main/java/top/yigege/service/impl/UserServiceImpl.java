@@ -75,6 +75,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
             userLoginResDTO.setOpenid(code2SessionResultBean.getOpenid());
             userLoginResDTO.setToken("");
+            userLoginResDTO.setMobile("");
         }
         //将openid对应的session_key缓存到redis
         iRedisService.setObj(code2SessionResultBean.getOpenid(),code2SessionResultBean.getSession_key(),300);
@@ -84,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public UserLoginResDTO loginByUserDetail(UserLoginDetailReqDTO userLoginDetailReqDTO) throws Exception {
-        Object sessionKey = iRedisService.getObj(userLoginDetailReqDTO.getOpenId());
+        Object sessionKey = iRedisService.getObj(userLoginDetailReqDTO.getOpenid());
         if (null == sessionKey) {
             throw new BusinessException(REDIS_SESSION_KEY_EXPIRE);
         }
@@ -97,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //根据openId判断用户是否已存在
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        userLambdaQueryWrapper.eq(User::getOpenid, userLoginDetailReqDTO.getOpenId());
+        userLambdaQueryWrapper.eq(User::getOpenid, userLoginDetailReqDTO.getOpenid());
 
         User user = getOne(userLambdaQueryWrapper);
         UserLoginResDTO userLoginResDTO = new UserLoginResDTO();
@@ -111,10 +112,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             newUser.setNickname(wxUserInfoDataBean.getNickName());
             newUser.setAvatar(wxUserInfoDataBean.getAvatarUrl());
             newUser.setSex(wxUserInfoDataBean.getGender()+1);
-            newUser.setOpenid(userLoginDetailReqDTO.getOpenId());
+            newUser.setOpenid(userLoginDetailReqDTO.getOpenid());
             save(newUser);
             BeanUtil.copyProperties(newUser,userLoginResDTO);
-            userLoginResDTO.setToken(iTokenService.getToken(user));
+            userLoginResDTO.setToken(iTokenService.getToken(newUser));
         }
 
         return userLoginResDTO;
@@ -122,7 +123,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public UserLoginResDTO bindUserMobile(BindWxUserMobileReqDTO bindWxUserMobileReqDTO) throws Exception {
-        Object sessionKey = iRedisService.getObj(bindWxUserMobileReqDTO.getOpenId());
+        Object sessionKey = iRedisService.getObj(bindWxUserMobileReqDTO.getOpenid());
         if (null == sessionKey) {
             throw new BusinessException(REDIS_SESSION_KEY_EXPIRE);
         }
@@ -134,7 +135,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         WxMobileDataBean wxMobileDataBean = JSONUtil.toBean(resultByte,WxMobileDataBean.class);
         //根据openId判断用户是否已存在
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        userLambdaQueryWrapper.eq(User::getOpenid, bindWxUserMobileReqDTO.getOpenId());
+        userLambdaQueryWrapper.eq(User::getOpenid, bindWxUserMobileReqDTO.getOpenid());
 
         User user = getOne(userLambdaQueryWrapper);
         UserLoginResDTO userLoginResDTO = new UserLoginResDTO();

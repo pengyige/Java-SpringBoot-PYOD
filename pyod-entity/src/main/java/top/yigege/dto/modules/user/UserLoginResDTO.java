@@ -53,10 +53,11 @@ public class UserLoginResDTO {
      */
     private String openid;
 
+
     /**
      * 手机号
      */
-    private String mobile;
+    private String mobile = "";
 
     /**
      * 可用积分

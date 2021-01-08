@@ -32,6 +32,11 @@
             <artifactId>pyod-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>top.yigege</groupId>
+            <artifactId>pyod-job</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

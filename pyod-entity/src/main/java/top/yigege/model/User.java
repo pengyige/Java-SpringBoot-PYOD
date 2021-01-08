@@ -70,6 +70,11 @@ public class User extends Model {
     private String openid;
 
     /**
+     * 微信unionid
+     */
+    private String unionid;
+
+    /**
      * 可用积分
      */
     private Integer avaliableIntegrate;

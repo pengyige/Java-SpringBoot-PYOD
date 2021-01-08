@@ -34,6 +34,7 @@ public enum ResultCodeEnum {
      */
     ILLEGAL_TOKEN_ERROR(111,"非法token或token已过期，请重新登录"),
 
+
     /**
      * 成功
      */
