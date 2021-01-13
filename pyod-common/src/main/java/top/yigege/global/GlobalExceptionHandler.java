@@ -107,6 +107,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResultBean paramValidExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
         log.info("paramValidExceptionHandler");
+        log.error(methodArgumentNotValidException.getMessage(), methodArgumentNotValidException);
 
         BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
         List<ObjectError> errors = bindingResult.getAllErrors();
@@ -126,6 +127,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResultBean constraintViolationExceptionHandler(ConstraintViolationException constraintViolationException) {
         log.info("constraintViolationExceptionHandler");
+        log.error(constraintViolationException.getMessage(), constraintViolationException);
+
         Set<ConstraintViolation<?>> cves = constraintViolationException.getConstraintViolations();
         StringBuffer errorMsg = new StringBuffer();
 

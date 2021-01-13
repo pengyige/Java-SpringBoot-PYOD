@@ -12,7 +12,7 @@
 <div class="layui-content">
     <div class="layui-row">
         <div class="layui-card">
-            <div class="layui-card-header">修改权限</div>
+            <div class="layui-card-header">修改卡片封面</div>
             <form id="addUserForm" class="layui-form layui-card-body" action="">
                 <div class="layui-form-item">
                     <label class="layui-form-label">图片URL:</label>
@@ -28,9 +28,9 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">跳转URL</label>
+                    <label class="layui-form-label">排序</label>
                     <div class="layui-input-block">
-                        <input id="linkUrl" name="linkUrl" type="text" required placeholder="请输入跳转url"
+                        <input id="sort" name="sort" type="text" required placeholder="请输入排序"
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
@@ -104,18 +104,18 @@
      */
     function submit() {
         if (null == globalSrc || "" == globalSrc) {
-            layer.msg("请先上传轮播图片")
+            layer.msg("请先上传图片")
             return;
         }
 
         var requestParam = {
-            "bannerId":id,
+            "cardCoverId":id,
             "imageUrl": globalSrc,
-            "linkUrl": $("#linkUrl").val()
+            "sort": $("#sort").val()
         };
 
         $.ajax({
-            url: getModifyBannerUrl(),
+            url: getModifyCardCoverUrl(),
             method: 'post',
             data: requestParam,
             dataType: 'json',
@@ -130,7 +130,7 @@
             },
             success: function (res) {
                 if (200 == res.code) {
-                    layer.msg("添加轮播成功");
+                    layer.msg("修改成功");
                 } else {
                     layer.msg(res.message);
                 }
@@ -144,26 +144,24 @@
 
 
     /**
-     * 初始化权限数据
+     * 初始化数据
      */
-    function initBannerData() {
+    function initData() {
         $.ajax({
-            url: getQueryBannerDetailUrl()+"?bannerId="+id,    //后台数据请求地址
+            url: getQueryCardCoverDetailUrl()+"?cardCoverId="+id,    //后台数据请求地址
             type: "post",
             success: function (res) {
                 if (200 == res.code) {
                     $("#demo1").attr("src",res.data.imageUrl);
                     globalSrc = res.data.imageUrl;
-                    $('#linkUrl').val(res.data.linkUrl);
+                    $('#sort').val(res.data.sort);
                 }
             }
         });
     }
     $(function () {
         id = getUrlParam("id");
-        initBannerData();
-
-
+        initData();
     });
 
 

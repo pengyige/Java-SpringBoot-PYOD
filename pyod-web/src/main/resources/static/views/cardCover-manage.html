@@ -15,9 +15,9 @@
         <div class="pagewrap">
                 <span class="layui-breadcrumb">
                   <a href="">基础设置</a>
-                  <a><cite>轮播管理</cite></a>
+                  <a><cite>卡片封面管理</cite></a>
                 </span>
-            <h2 class="title">轮播管理</h2>
+            <h2 class="title">卡片封面管理</h2>
         </div>
     </div>
     <div class="layui-row">
@@ -57,7 +57,7 @@
         table.render({
             elem: '#demo'
             , id: 'demo'
-            , url: getBannerListUrl()
+            , url: getCardCoverListUrl()
             , method: 'post'
             , request: {
                 pageName: 'page' //页码的参数名称，默认：page
@@ -65,14 +65,14 @@
             }
             , cols: [[ //标题栏
                 //{type:'radio'},
-                {field: 'bannerId', title: '轮播ID', sort: true}
+                {field: 'cardCoverId', title: '卡片封面id', sort: true}
                 , {
-                    field: 'imageUrl', title: '图片url',height:"100", templet: function (row) {
+                    field: 'imageUrl', title: '封面地址',height:"100", templet: function (row) {
                         var imgHtml = "<img src='" + row.imageUrl + "' style='width: 100px;height:100px'/>";
                         return imgHtml;
                     }
                 }
-                , {field: 'linkUrl', title: '跳转url'}
+                , {field: 'sort', title: '排序'}
                 , {fixed: 'right', title: '操作', toolbar: '#barDemo'}
             ]]
             , skin: 'line' //表格风格
@@ -89,20 +89,20 @@
         var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
         var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
 
-        var id = data.bannerId;
+        var id = data.cardCoverId;
         if (layEvent === 'view') { //查看
             layer.open({
                 type: 2,
                 title: '',
                 area: ['90%', '90%'],
-                content: './banner/view-banner-form.html?id=' + id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                content: './cardCover/view-cardCover-form.html?id=' + id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             });
             //do somehing
         } else if (layEvent === 'del') { //删除
-            layer.confirm('确定删除[' + data.bannerId + ']吗?', function (index) {
+            layer.confirm('确定删除[' + data.cardCoverId + ']吗?', function (index) {
                 var loading = null;
                 $.ajax({
-                    url: getDeleteBannerByIdsUrl() + "?bannerIds=" + id,
+                    url: getDeleteCardCoverByIdsUrl() + "?cardCoverIds=" + id,
                     method: 'post',
                     dataType: 'json',
                     beforeSend: function () {
@@ -131,7 +131,7 @@
                 type: 2,
                 title: '',
                 area: ['90%', '90%'],
-                content: './banner/edit-banner-form.html?id=' + id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                content: './cardCover/edit-cardCover-form.html?id=' + id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             });
         }
     });
@@ -174,7 +174,7 @@
                 type: 2,
                 title: '',
                 area: ['90%', '90%'],
-                content: './banner/add-banner-form.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                content: './cardCover/add-cardCover-form.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 //btn: ['添加', '取消'],
                 yes: function (index, layero) {
                     //TODO 发送添加用户请求

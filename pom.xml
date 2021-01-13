@@ -29,6 +29,7 @@
         <module>pyod-web</module>
         <module>pyod-dao</module>
         <module>pyod-api</module>
+        <module>pyod-job</module>
     </modules>
 
 
@@ -45,6 +46,7 @@
         <pyod-service.version>1.0</pyod-service.version>
         <pyod-web.version>1.0</pyod-web.version>
         <pyod-api.version>1.0</pyod-api.version>
+        <pyod-job.version>1.0</pyod-job.version>
 
         <mybatis-plus-boot-starter.version>3.0.6</mybatis-plus-boot-starter.version>
         <!--<mybatis-plus.version>3.3.0</mybatis-plus.version>
@@ -85,6 +87,8 @@
         <java-jwt.version>3.4.0</java-jwt.version>
 
         <bdprov-jdk15.version>1.46</bdprov-jdk15.version>
+        <zxing-core.version>3.3.0</zxing-core.version>
+        <zxing-javase.version>3.3.0</zxing-javase.version>
     </properties>
 
     <!-- 版本说明：这里统一管理依赖的版本号 -->
@@ -120,6 +124,11 @@
                 <groupId>top.yigege</groupId>
                 <artifactId>pyod-web</artifactId>
                 <version>${pyod-web.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.yigege</groupId>
+                <artifactId>pyod-job</artifactId>
+                <version>${pyod-job.version}</version>
             </dependency>
             <!-- module end -->
 
@@ -244,6 +253,19 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15</artifactId>
                 <version>${bdprov-jdk15.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
+       <!--     <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>3.3.0<version>
+            </dependency>-->
+            <!-- https://mvnrepository.com/artifact/com.google.zxing/javase -->
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>javase</artifactId>
+                <version>${zxing-javase.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

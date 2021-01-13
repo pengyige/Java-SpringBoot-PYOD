@@ -110,7 +110,7 @@ public class SysUserController {
 
 
     @PostMapping(value = "/loadUserDetail")
-    public ResultBean<SysUser> loadUserDetail(@NotBlank(message = "用户id不能为空") Integer userId) {
+    public ResultBean<SysUser> loadUserDetail(@NotNull(message = "用户id不能为空") Integer userId) {
         return ApiResultUtil.success(iUserService.queryUserRolesById(userId));
     }
 

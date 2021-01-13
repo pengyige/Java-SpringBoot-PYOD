@@ -15,9 +15,16 @@ public enum DictCodeEnum {
 
 
     /**
+     * 消费金额获取金币
+     */
+    SPEND_MONEY_GET_COIN("SPEND_MONEY_GET_COIN"),
+
+    /**
      * 金币清空持续时间
      */
     COIN_CLEAR_DURATION_TIME("COIN_CLEAR_DURATION_TIME");
+
+
 
 
     String code;

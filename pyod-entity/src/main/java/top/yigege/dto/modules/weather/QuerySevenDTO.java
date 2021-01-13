@@ -12,11 +12,6 @@ import lombok.Data;
 public class QuerySevenDTO {
 
     /**
-     * 城市id
-     */
-    String cityId;
-
-    /**
      * 经度
      */
     Double longitude;

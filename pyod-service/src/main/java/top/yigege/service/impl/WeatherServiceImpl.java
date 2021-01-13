@@ -14,8 +14,7 @@ import top.yigege.constant.ResultCodeEnum;
 import top.yigege.dto.modules.weather.QueryRealtimeDTO;
 import top.yigege.dto.modules.weather.QuerySevenDTO;
 import top.yigege.exception.BusinessException;
-import top.yigege.model.City;
-import top.yigege.service.ICityService;
+
 import top.yigege.service.IRedisService;
 import top.yigege.service.IWeatherService;
 import top.yigege.util.DateUtil;
@@ -38,9 +37,6 @@ public class WeatherServiceImpl implements IWeatherService {
     WeatherConfig weatherConfig;
 
     @Autowired
-    ICityService iCityService;
-
-    @Autowired
     GaodeUtil gaodeUtil;
 
     @Override
@@ -54,33 +50,21 @@ public class WeatherServiceImpl implements IWeatherService {
                 .replace("{appsecret}", weatherConfig.getAppSecret());
 
         String res = "";
-        String cityId = "";
-        if (StringUtils.isNotBlank(queryRealtimeDTO.getCityId())) {
-            cityId =  queryRealtimeDTO.getCityId();
-        }else {
-            if (queryRealtimeDTO.getLongitude() != null &&
-               queryRealtimeDTO.getLatitude() != null) {
-                //逆地址解析找到城市信息，然后从db找到城市信息
-                AddressInfoResultBean addressInfoResultBean = gaodeUtil.regeo(queryRealtimeDTO.getLongitude(),
-                        queryRealtimeDTO.getLatitude());
-                City city =iCityService.queryCityDetail(addressInfoResultBean.getRegeocode().getAddressComponent().getProvince(),
-                        addressInfoResultBean.getRegeocode().getAddressComponent().getCity(),
-                        addressInfoResultBean.getRegeocode().getAddressComponent().getDistrict());
-                if (null != city) {
-                    cityId = city.getCityId();
-                }
-            }
+        String cityName = "";
+
+        if (queryRealtimeDTO.getLongitude() != null &&
+           queryRealtimeDTO.getLatitude() != null) {
+            //逆地址解析找到城市信息，然后从db找到城市信息
+            AddressInfoResultBean addressInfoResultBean = gaodeUtil.regeo(queryRealtimeDTO.getLongitude(),
+                    queryRealtimeDTO.getLatitude());
+            cityName = addressInfoResultBean.getRegeocode().getAddressComponent().getCity().replace("市","");
         }
 
-        //优先城市id
-        if (StringUtils.isNotBlank(cityId)) {
-            url = url + "&cityid=" +cityId;
-        }else  {
-            if (StringUtils.isNotBlank(queryRealtimeDTO.getCityName())) {
-                url = url + "&city=" +queryRealtimeDTO.getCityName();
-            }
-        }
+        if (StringUtils.isNotBlank(queryRealtimeDTO.getCityName())) {
+            cityName = queryRealtimeDTO.getCityName();
 
+        }
+        url = url + "&city=" +queryRealtimeDTO.getCityName();
         res = HttpUtil.get(url);
 
         return JSON.parse(res);
@@ -99,32 +83,23 @@ public class WeatherServiceImpl implements IWeatherService {
                 .replace("{appsecret}", weatherConfig.getAppSecret());
 
         String res = "";
-        String cityId = "";
-        if (StringUtils.isNotBlank(querySevenDTO.getCityId())) {
-            cityId =  querySevenDTO.getCityId();
-        }else {
-            if (querySevenDTO.getLongitude() != null &&
-                    querySevenDTO.getLatitude() != null) {
-                //逆地址解析找到城市信息，然后从db找到城市信息
-                AddressInfoResultBean addressInfoResultBean = gaodeUtil.regeo(querySevenDTO.getLongitude(),
-                        querySevenDTO.getLatitude());
-                City city =iCityService.queryCityDetail(addressInfoResultBean.getRegeocode().getAddressComponent().getProvince(),
-                        addressInfoResultBean.getRegeocode().getAddressComponent().getCity(),
-                        addressInfoResultBean.getRegeocode().getAddressComponent().getDistrict());
-                if (null != city) {
-                    cityId = city.getCityId();
-                }
-            }
+        String cityName = "";
+
+        if (querySevenDTO.getLongitude() != null &&
+                querySevenDTO.getLatitude() != null) {
+            //逆地址解析找到城市信息，然后从db找到城市信息
+            AddressInfoResultBean addressInfoResultBean = gaodeUtil.regeo(querySevenDTO.getLongitude(),
+                    querySevenDTO.getLatitude());
+            cityName = addressInfoResultBean.getRegeocode().getAddressComponent().getCity().replace("市","");
         }
 
-        //优先城市id
-        if (StringUtils.isNotBlank(cityId)) {
-            url = url + "&cityid=" +cityId;
-        }else  {
-            if (StringUtils.isNotBlank(querySevenDTO.getCityName())) {
-                url = url + "&city=" +querySevenDTO.getCityName();
-            }
+        if (StringUtils.isNotBlank(querySevenDTO.getCityName())) {
+            cityName = querySevenDTO.getCityName();
         }
+
+        url = url + "&city=" +querySevenDTO.getCityName();
+
+
 
         res = HttpUtil.get(url);
 

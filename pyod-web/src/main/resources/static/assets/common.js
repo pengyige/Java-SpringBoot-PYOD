@@ -289,6 +289,51 @@ function getDeleteBannerByIdsUrl() {
 /**************轮播模块 end****************/
 
 
+/**************封面模块 start****************/
+/**
+ * 查询封面列表
+ * @returns {string}
+ */
+function getCardCoverListUrl() {
+    return getBaseUrl() + "/cardCover/queryAllCardCoverList";
+}
+
+/**
+ * 查询封面详情
+ */
+function getQueryCardCoverDetailUrl() {
+    return getBaseUrl() + "/cardCover/queryCardCoverDetail";
+
+}
+
+/**
+ * 添加封面
+ * @returns {string}
+ */
+function getAddCardCoverUrl() {
+    return getBaseUrl() + "/cardCover/addCardCover";
+
+}
+
+/**
+ * 修改封面
+ */
+function getModifyCardCoverUrl() {
+    return getBaseUrl() + "/cardCover/modifyCardCover";
+
+}
+
+/**
+ * 删除封面
+ */
+function getDeleteCardCoverByIdsUrl() {
+    return getBaseUrl() + "/cardCover/deleteCardCoverByIds";
+}
+
+/**************轮播模块 end****************/
+
+
+
 /**
  * 上传文件
  * @returns {string}

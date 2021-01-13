@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">查看卡片封面</div>
+            <form id="addUserForm" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">卡片封面:</label>
+                    <div class="layui-input-block">
+                      <img  id="imageUrl" >
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">排序:</label>
+                    <div class="layui-input-block">
+                        <input id="linkUrl" name="linkUrl" type="text" required placeholder=""
+                               readonly autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var tree = layui.tree;
+    var form = layui.form;
+    var layer = layui.layer;
+    var id = null;
+
+
+
+    /**
+     * 初始化数据
+     */
+    function initData() {
+        $.ajax({
+            url: getQueryCardCoverDetailUrl()+"?cardCoverId="+id,    //后台数据请求地址
+            type: "post",
+            success: function (res) {
+                if (200 == res.code) {
+                    $("#imageUrl").attr("src",res.data.imageUrl);
+                    $('#sort').val(res.data.sort);
+                }
+            }
+        });
+    }
+    $(function () {
+        id = getUrlParam("id");
+        initData();
+    });
+
+
+</script>
+
+</body>
+</html>

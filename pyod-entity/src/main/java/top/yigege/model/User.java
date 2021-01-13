@@ -1,6 +1,8 @@
 package top.yigege.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -85,18 +87,49 @@ public class User extends Model {
     private Integer totalIntegrate;
 
     /**
-     * 创建时间
+     * 等级id
      */
-    private Date createTime;
+    private Long levelId;
+
 
     /**
-     * 更新时间
+     * 经度
      */
+    private Double longitude;
+
+    /**
+     * 纬度
+     */
+    private Double latitude;
+
+    /**
+     * 城市id
+     */
+    private Long cityId;
+
+    /**
+     * 生日
+     */
+    private Date birthday;
+
+    /**
+     * 创建时间
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
+    /**
+     * 修改时间
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
+
+
 
     /**
      * 到期时间
      */
     private Date expireTime;
+
+    //@TableField(exist = false)
 
 }
