@@ -1,6 +1,5 @@
 package top.yigege.confg;
 
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -12,7 +11,8 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import top.yigege.controller.message.RedisReceiver;
+import top.yigege.config.RedisTopicTypeEnum;
+import top.yigege.message.RedisReceiver;
 
 /**
  * @ClassName: RedisConfig
@@ -44,13 +44,12 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         // 可以添加多个 messageListener，配置不同的交换机
-        container.addMessageListener(listenerAdapter, new PatternTopic("channel:test"));
+        container.addMessageListener(listenerAdapter, new PatternTopic(RedisTopicTypeEnum.CHANNEL_TEST.getTopic()));
         return container;
     }
 
     @Bean
     MessageListenerAdapter listenerAdapter(RedisReceiver receiver) {
-        System.out.println("消息适配器1");
         return new MessageListenerAdapter(receiver, "onMessage");
     }
 

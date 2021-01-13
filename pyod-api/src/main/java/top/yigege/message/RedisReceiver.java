@@ -1,5 +1,6 @@
-package top.yigege.controller.message;
+package top.yigege.message;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
@@ -11,11 +12,12 @@ import org.springframework.stereotype.Component;
  * @date: 2021年01月12日 20:56
  */
 @Component
+@Slf4j
 public class RedisReceiver implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        System.out.println(new String(message.getBody()));
-        System.out.println(new String(message.getChannel()));
+        log.info(new String(message.getBody()));
+        log.info(new String(message.getChannel()));
     }
 }
