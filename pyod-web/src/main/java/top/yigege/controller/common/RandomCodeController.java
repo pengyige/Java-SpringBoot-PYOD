@@ -1,10 +1,12 @@
 package top.yigege.controller.common;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 import top.yigege.PyodApplication;
 import top.yigege.constant.PyodConstant;
 
@@ -23,6 +25,7 @@ import java.io.ByteArrayOutputStream;
  * @author: yigege
  * @date: 2020年09月17日 17:04
  */
+@Api(tags = "验证码(WEB)")
 @Controller
 @RequestMapping("/random")
 @Slf4j

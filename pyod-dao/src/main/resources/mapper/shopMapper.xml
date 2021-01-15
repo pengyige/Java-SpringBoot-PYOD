@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.ShopMapper">
+
+
+
+
+    <resultMap id="shopMap" type="top.yigege.model.Shop">
+        <id column="shop_id" property="shopId"/>
+        <result column="name" property="name" />
+        <result column="address" property="address" />
+        <result column="work_mode" property="workMode" />
+        <result column="contact" property="contact" />
+        <result column="pic" property="pic"/>
+        <result column="distance" property="distance" />
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+
+
+        <collection property="labelList" ofType="top.yigege.model.Label">
+            <id column="l_label_id" property="labelId"></id>
+            <result column="l_name" property="name"></result>
+        </collection>
+
+    </resultMap>
+
+    <resultMap id="shopPageMap" type="top.yigege.model.Shop">
+        <id column="shop_id" property="shopId"/>
+        <result column="name" property="name" />
+        <result column="address" property="address" />
+        <result column="work_mode" property="workMode" />
+        <result column="contact" property="contact" />
+        <result column="pic" property="pic"/>
+        <result column="distance" property="distance" />
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+
+
+        <collection property="labelList"
+                    ofType="top.yigege.model.Label"
+                    javaType="java.util.ArrayList"
+                    column="shop_id"
+                    select="top.yigege.dao.ShopMapper.selectLabelByShopId">
+
+        </collection>
+
+    </resultMap>
+
+
+    <select id="selectLabelByShopId" parameterType="java.lang.Long" resultType="top.yigege.model.Label">
+        SELECT
+            l.label_id labelId,
+            l.NAME NAME
+        FROM
+            t_shop_label sl
+            LEFT JOIN t_label l ON sl.label_id = l.label_id
+        WHERE
+            sl.shop_id = #{value}
+    </select>
+
+
+    <select id="queryNearbyLatestShop"  resultMap="shopMap" parameterType="top.yigege.dto.modules.shop.QueryNearbyLatestShopDTO">
+        SELECT
+            s.shop_id ,
+            s.NAME NAME,
+            s.address address,
+            s.work_mode,
+            s.contact contact,
+            s.pic pic,
+            s.longitude,
+            s.latitude,
+            ROUND(
+            6378.138 * 2 * ASIN(
+            SQRT(
+            POW( SIN( ( #{latitude} * PI( ) / 180- s.latitude * PI( ) / 180 ) / 2 ), 2 ) + COS(  #{latitude} * PI( ) / 180 ) * COS( s.latitude * PI( ) / 180 ) * POW( SIN( ( #{longitude} * PI( ) / 180- s.longitude * PI( ) / 180 ) / 2 ), 2 )
+            )
+            ) * 1000
+            ) distance
+        FROM
+            `t_shop` s
+        WHERE
+            1 = 1
+
+            <if test="null != cityId">
+                and s.city_id = #{cityId}
+            </if>
+        ORDER BY
+            distance ASC
+            LIMIT 1
+    </select>
+
+
+    <select id="queryNearbyShopPageList"  resultMap="shopPageMap" parameterType="top.yigege.dto.modules.shop.QueryNearbyShopPageListDTO">
+        SELECT
+        s.shop_id ,
+        s.NAME NAME,
+        s.address address,
+        s.work_mode,
+        s.contact contact,
+        s.pic pic,
+        s.longitude,
+        s.latitude,
+        ROUND(
+        6378.138 * 2 * ASIN(
+        SQRT(
+        POW( SIN( ( #{queryNearbyShopPageListDTO.latitude} * PI( ) / 180- s.latitude * PI( ) / 180 ) / 2 ), 2 ) + COS(  #{queryNearbyShopPageListDTO.latitude} * PI( ) / 180 ) * COS( s.latitude * PI( ) / 180 ) * POW( SIN( ( #{queryNearbyShopPageListDTO.longitude} * PI( ) / 180- s.longitude * PI( ) / 180 ) / 2 ), 2 )
+        )
+        ) * 1000
+        ) distance
+        FROM
+        `t_shop` s
+        WHERE
+        1 = 1
+        <if test="null != queryNearbyShopPageListDTO.cityId">
+            and s.city_id = #{queryNearbyShopPageListDTO.cityId}
+        </if>
+        ORDER BY
+        distance ASC
+    </select>
+
+</mapper>

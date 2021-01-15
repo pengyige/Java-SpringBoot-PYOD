@@ -30,6 +30,7 @@ import java.util.List;
  */
 @Data
 @TableName("t_sys_user")
+@ApiModel("系统用户")
 public class SysUser extends Model<SysUser> {
 
     private static final long serialVersionUID = 1L;
@@ -53,9 +54,9 @@ public class SysUser extends Model<SysUser> {
     private String no;
 
     /**
-     * 性别;0:男 1:女
+     * 性别;1:男 2:女
      */
-    @ApiModelProperty("用户性别 0:男 1:女")
+    @ApiModelProperty("用户性别 1:男 2:女")
     private Integer sex = SexType.NONE.getCode();
 
     /**
@@ -90,19 +91,23 @@ public class SysUser extends Model<SysUser> {
     /**
      * 备注
      */
+    @ApiModelProperty("备注")
     private String remark;
 
     /**
      * 创建时间
      */
+    @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     /**
      * 修改时间
      */
+    @ApiModelProperty("修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+    @ApiModelProperty("角色列表")
     @TableField(exist = false)
     private List<SysRole> roleList = new ArrayList<>();
 

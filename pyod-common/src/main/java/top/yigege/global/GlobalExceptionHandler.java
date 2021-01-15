@@ -2,6 +2,7 @@ package top.yigege.global;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AccountException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import top.yigege.constant.ResultCodeEnum;
 import top.yigege.exception.BusinessException;
 import top.yigege.exception.NoPermissionException;
 import top.yigege.util.ApiResultUtil;
@@ -82,6 +84,12 @@ public class GlobalExceptionHandler {
         log.info("noPermissionExceptionHandler");
         log.error(noPermissionException.getMessage(), noPermissionException);
         return noPermissionException.getResultBean();
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResultBean unauthorizedExceptionHandler(UnauthorizedException unauthorizedException) {
+        log.error(unauthorizedException.getMessage(), unauthorizedException);
+        return ApiResultUtil.custom(ResultCodeEnum.NO_PERMISSION);
     }
 
     /**

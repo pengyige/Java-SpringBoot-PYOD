@@ -37,7 +37,7 @@ import java.util.List;
  * @author astupidcoder
  * @since 2020-09-27
  */
-@Api(tags = "权限相关接口", description = "提供权限相关API")
+@Api(tags = "权限管理(WEB)", description = "提供权限相关API")
 @RestController
 @RequestMapping("/web/sysPermission")
 @Validated

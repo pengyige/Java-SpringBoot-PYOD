@@ -54,11 +54,11 @@
                 AND t.tel = #{queryUserPageListDTO.tel}
             </if>
 
-            <if test="null != queryUserPageListDTO.sex and -1 != paramMap.sex">
+            <if test="null != queryUserPageListDTO.sex and 0 != paramMap.sex">
                 AND t.sex = #{queryUserPageListDTO.sex}
             </if>
 
-            <if test="null != queryUserPageListDTO.status and -1 != paramMap.status">
+            <if test="null != queryUserPageListDTO.status and 0 != paramMap.status">
                 AND t.status = #{queryUserPageListDTO.status}
             </if>
     </select>

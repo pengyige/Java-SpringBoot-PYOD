@@ -49,6 +49,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         //swagger资源映射
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 
         //默认找static目录
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");

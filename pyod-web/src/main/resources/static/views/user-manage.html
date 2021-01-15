@@ -46,9 +46,9 @@
                             <div class="layui-form-mid">性别:</div>
                             <div class="layui-input-inline" style="width: 100px;">
                                 <select name="sex">
-                                    <option value="-1" selected="selected">全部</option>
-                                    <option value="0">男</option>
-                                    <option value="1">女</option>
+                                    <option value="0" selected="selected">全部</option>
+                                    <option value="1">男</option>
+                                    <option value="2">女</option>
                                 </select>
                             </div>
                             <div class="layui-form-mid">状态:</div>
@@ -164,7 +164,7 @@
                 , {field: 'tel', title: '电话', minWidth: 80}
                 , {
                     field: 'sex', title: '性别', width: 80, templet: function (d) {
-                        return d.sex == 0 ? '男' : '女';
+                        return d.sex == 1 ? '男' : '女';
                     }
                 }
                 , {

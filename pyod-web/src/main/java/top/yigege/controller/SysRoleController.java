@@ -45,7 +45,7 @@ import java.util.Map;
  * @author astupidcoder
  * @since 2020-09-27
  */
-@Api(tags = "角色相关接口", description = "提供角色相关API")
+@Api(tags = "角色管理(WEB)", description = "提供角色相关API")
 @RestController
 @RequestMapping("/web/sysRole")
 @Validated

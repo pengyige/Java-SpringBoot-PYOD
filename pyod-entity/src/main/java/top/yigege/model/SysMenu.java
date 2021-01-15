@@ -95,6 +95,7 @@ public class SysMenu extends Model implements Comparable<SysMenu>{
     /**
      * 子菜单
      */
+    @ApiModelProperty("子菜单")
     @TableField(exist = false)
     private List<SysMenu> subMenu = new ArrayList<>();
 

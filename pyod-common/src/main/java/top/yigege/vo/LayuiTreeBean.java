@@ -1,5 +1,8 @@
 package top.yigege.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,20 +12,28 @@ import java.util.List;
  * @author: yigege
  * @date: 2020年10月19日 15:46
  */
+@ApiModel("Layui菜单树实体")
 public class LayuiTreeBean implements Comparable<LayuiTreeBean>{
 
+    @ApiModelProperty("id")
     private int id;
 
+    @ApiModelProperty("标题")
     private String title;
 
+    @ApiModelProperty("是否展开")
     private boolean spread = false;
 
+    @ApiModelProperty("是否选中")
     private boolean checked = false;
 
+    @ApiModelProperty("顺序")
     private int sort;
 
+    @ApiModelProperty("父id")
     private int pid;
 
+    @ApiModelProperty("子菜单")
     private List<LayuiTreeBean> children = new ArrayList<>();
 
     public int getId() {

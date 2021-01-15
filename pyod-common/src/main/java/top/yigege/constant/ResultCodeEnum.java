@@ -57,6 +57,11 @@ public enum ResultCodeEnum {
      */
     NO_PERMISSION(501,"权限不足"),
 
+    /**
+     * shiro session失效
+     */
+    SESSION_EXPIRE(502,"登入时间过长,请重新登入"),
+
 
     //1000-9999 业务错误
     /**
@@ -67,7 +72,7 @@ public enum ResultCodeEnum {
     /**
      * 调用微信API出错
      */
-    CALL_WEIXIN_API_ERROR(1001,""),
+    CALL_WEIXIN_API_ERROR(1001,"调用微信API出错"),
 
     /**
      * 缓存session_key失效

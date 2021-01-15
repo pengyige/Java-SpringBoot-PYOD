@@ -63,14 +63,24 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
         }
         String url = req.getRequestURI();
         log.info("url:{}",url);
+
+        Object tokenParam = params.get(PyodConstant.ApiRequestCommonParam.TOKEN);
+        String token = "";
+        if (null != tokenParam) {
+            token = tokenParam.toString();
+        }
+
         if (envConfig.isDev()) {
             //TODO 开发环境下不需要签名和验证token，需指定token
-            req.setAttribute(PyodConstant.JWT.USER_ID, 2);
+            if (StringUtils.isNotBlank(token)) {
+                req.setAttribute(PyodConstant.JWT.USER_ID, iTokenService.getUserId(token));
+            }else {
+                req.setAttribute(PyodConstant.JWT.USER_ID, 1);
+            }
             return true;
         }
 
-        String token = "";
-       if (signConfig.isEnable()) {
+        if (!envConfig.isDev() && signConfig.isEnable()) {
            //签名校验
            if (params.get(PyodConstant.ApiRequestCommonParam.TIMESTAMP) == null
                    || params.get(PyodConstant.ApiRequestCommonParam.NONCE) == null
@@ -80,8 +90,6 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
                write(resp, ApiResultUtil.custom(ResultCodeEnum.SIGN_ERROR));
                return false;
            }
-           token =  params.get(PyodConstant.ApiRequestCommonParam.TOKEN).toString();
-
            // 校验sign
            String sign = params.get(PyodConstant.ApiRequestCommonParam.SIGN).toString();
            params.remove(PyodConstant.ApiRequestCommonParam.SIGN);

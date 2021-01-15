@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -24,6 +27,7 @@ import java.util.Date;
  */
 @Data
 @TableName("t_sys_permission")
+@ApiModel("系统权限")
 public class SysPermission extends Model<SysPermission> {
 
     private static final long serialVersionUID = 1L;
@@ -31,28 +35,33 @@ public class SysPermission extends Model<SysPermission> {
     /**
      * 权限ID
      */
+    @ApiModelProperty("权限ID")
     @TableId(value = "permission_id", type = IdType.AUTO)
     private Integer permissionId;
 
     /**
      * 权限名
      */
+    @ApiModelProperty("权限名")
     @NotBlank(message = "权限名称不能为空")
     private String name;
 
     /**
      * 权限备注
      */
+    @ApiModelProperty("权限备注")
     private String remark;
 
     /**
      * 创建时间
      */
+    @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     /**
      * 修改时间
      */
+    @ApiModelProperty("修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 

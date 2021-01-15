@@ -1,5 +1,8 @@
 package top.yigege.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.List;
 
 /**
@@ -8,14 +11,20 @@ import java.util.List;
  * @author: yigege
  * @date: 2020年10月16日 15:25
  */
+@ApiModel("Layui表格响应实体")
 public class LayuiTableResultBean {
 
+
+    @ApiModelProperty(value = "响应码")
     private int code;
 
+    @ApiModelProperty(value = "提示")
     private String msg;
 
+    @ApiModelProperty(value = "总条数")
     private int count;
 
+    @ApiModelProperty(value = "数据")
     private List data;
 
 

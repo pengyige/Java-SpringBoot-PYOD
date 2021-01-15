@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import springfox.documentation.annotations.ApiIgnore;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.vo.ResultBean;
 
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author: yigege
  * @date: 2020年09月20日 20:22
  */
+@ApiIgnore
 @Controller
 public class NotFoundController implements ErrorController {
 

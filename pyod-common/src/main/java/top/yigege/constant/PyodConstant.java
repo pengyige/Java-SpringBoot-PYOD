@@ -47,6 +47,7 @@ public class PyodConstant {
          * 全部
          */
         int ALL = -1;
+
     }
 
     /**

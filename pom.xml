@@ -77,7 +77,9 @@
         <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
 
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
-        <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
+       <!-- <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>-->
+        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
+
         <swagger-model.version>1.6.0</swagger-model.version>
 
         <lombok.version>1.18.12</lombok.version>
@@ -217,11 +219,11 @@
                 <artifactId>springfox-swagger2</artifactId>
                 <version>${springfox-swagger2.version}</version>
             </dependency>
-           <dependency>
+          <!-- <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${springfox-swagger-ui.version}</version>
-            </dependency>
+            </dependency>-->
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-models</artifactId>
@@ -266,6 +268,13 @@
                 <groupId>com.google.zxing</groupId>
                 <artifactId>javase</artifactId>
                 <version>${zxing-javase.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>swagger-bootstrap-ui</artifactId>
+                <version>${swagger-bootstrap-ui.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

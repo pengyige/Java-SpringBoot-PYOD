@@ -20,7 +20,7 @@ public enum DictCodeEnum {
     SPEND_MONEY_GET_COIN("SPEND_MONEY_GET_COIN"),
 
     /**
-     * 金币清空持续时间
+     * 金币清空持续时间 单位秒
      */
     COIN_CLEAR_DURATION_TIME("COIN_CLEAR_DURATION_TIME");
 

@@ -1,5 +1,6 @@
 package top.yigege.dto.modules.weather;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -14,20 +15,24 @@ public class QueryRealtimeDTO {
     /**
      * 城市id
      */
+    @ApiModelProperty("城市id")
     String cityId;
 
     /**
      * 经度
      */
+    @ApiModelProperty("经度")
     Double longitude;
 
     /**
      * 纬度
      */
+    @ApiModelProperty("纬度")
     Double latitude;
 
     /**
      * 城市名
      */
+    @ApiModelProperty("城市名")
     String cityName;
 }

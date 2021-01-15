@@ -57,7 +57,7 @@ import java.util.Map;
  * @since 2020-09-23
  */
 
-@Api(tags = "用户相关接口", description = "提供用户相关API")
+@Api(tags = "用户管理(WEB)", description = "提供用户相关API")
 @RestController
 @RequestMapping("/web/sysUser")
 @Slf4j

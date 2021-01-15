@@ -11,6 +11,7 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.service.Parameter;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spi.DocumentationType;
@@ -31,8 +32,8 @@ import java.util.Set;
  * @author: yigege
  * @date: 2020年09月26日 16:46
  */
-/*@Configuration
-@EnableSwagger2*/
+@Configuration
+@EnableSwagger2
 public class Swagger2Config {
 // "application/json","application/xml"
     //配置content type
@@ -63,8 +64,8 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .globalResponseMessage(RequestMethod.POST, responseMessageList)
                 //.globalOperationParameters(aParameters)
-   /*             .consumes(DEFAULT_PRODUCES_AND_CONSUMES)
-                .produces(DEFAULT_PRODUCES_AND_CONSUMES)*/
+                .consumes(DEFAULT_PRODUCES_AND_CONSUMES)
+                .produces(DEFAULT_PRODUCES_AND_CONSUMES)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(PyodConstant.Common.BASE_PACKAGE+".controller"))
@@ -73,9 +74,11 @@ public class Swagger2Config {
     }
 
     private ApiInfo apiInfo() {
+        Contact contact = new Contact("yigege", "https://yigege.top", "1309902313@qq.com");
         return new ApiInfoBuilder()
                 .title("PYOD API")
                 .version("1.0")
+                .contact(contact)
                 .build();
     }
 }

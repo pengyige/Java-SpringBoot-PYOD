@@ -1,5 +1,6 @@
 package top.yigege.controller.common;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.validation.annotation.Validated;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 import top.yigege.annotation.WebLog;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.vo.ResultBean;
@@ -22,6 +24,7 @@ import javax.validation.constraints.NotBlank;
  * @author: yigege
  * @date: 2020年09月17日 16:32
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/hello-pyod")
 @Validated

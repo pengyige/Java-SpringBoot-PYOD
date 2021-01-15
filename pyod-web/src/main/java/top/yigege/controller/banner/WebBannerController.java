@@ -1,6 +1,7 @@
 package top.yigege.controller.banner;
 
 import cn.hutool.core.bean.BeanUtil;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import java.util.List;
  * @author: yigege
  * @date: 2021年01月04日 17:53
  */
+@Api(tags = "轮播管理(WEB)")
 @RestController
 @RequestMapping("/web/banner")
 @Validated

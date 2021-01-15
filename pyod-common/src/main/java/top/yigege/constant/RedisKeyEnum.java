@@ -14,7 +14,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RedisKeyEnum {
 
-    WEATHER_NATIONAL_PRECIPITATION("weather:national-precipitation","全国降水量");
+    WEATHER_NATIONAL_PRECIPITATION("weather:national-precipitation","全国降水量"),
+
+    PEA_EXPIRE_EVENT("pea-expire-event:","豆豆失效事件");
 
     private String key;
 

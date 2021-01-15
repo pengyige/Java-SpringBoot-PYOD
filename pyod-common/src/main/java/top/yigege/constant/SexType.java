@@ -8,11 +8,11 @@ package top.yigege.constant;
  */
 public enum SexType {
 
-    NONE(-1,"不详"),
+    NONE(0,"不详"),
 
-    MAN(0,"男"),
+    MAN(1,"男"),
 
-    WOMAN(1,"女");
+    WOMAN(2,"女");
 
     private int code;
 

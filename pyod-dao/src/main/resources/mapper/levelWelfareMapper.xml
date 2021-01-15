@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.LevelWelfareMapper">
+
+    <resultMap id="levelWelfareMap" type="top.yigege.model.LevelWelfare">
+        <id column="level_welfare_id" property="levelWelfareId"/>
+        <result column="level_id" property="levelId" />
+        <result column="welfare_id" property="welfareId" />
+
+
+        <association property="welfare" javaType="top.yigege.model.Welfare">
+            <id column="w_welfare_id" property="welfareId"></id>
+            <result column="w_name" property="name"></result>
+            <result column="w_image_url" property="imageUrl"/>
+            <result column="w_desc" property="desc"/>
+        </association>
+    </resultMap>
+
+
+    <select id="queryLevelWelfareByLevelId"  resultMap="levelWelfareMap" parameterType="java.lang.Long">
+        SELECT
+            lw.level_id,
+            lw.welfare_id,
+            w.welfare_id w_welfare_id,
+            w.NAME w_name,
+            w.image_url w_image_url,
+            w.DESC w_desc
+        FROM
+            t_level_welfare lw
+            LEFT JOIN t_welfare w ON lw.welfare_id = w.welfare_id
+        WHERE
+            lw.level_id = #{value}
+    </select>
+
+
+</mapper>

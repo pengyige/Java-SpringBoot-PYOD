@@ -2,6 +2,7 @@ package top.yigege.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,7 @@ import java.util.List;
  * @author yigege
  * @since 2020-10-14
  */
+@Api(tags = "用户管理(WEB)", description = "提供用户相关API")
 @RestController
 @RequestMapping("/web/sysMenu")
 public class SysMenuController {
@@ -67,7 +69,7 @@ public class SysMenuController {
     }
 
 
-    @ApiOperation(value = "查询菜单详情", response = ResultBean.class)
+    @ApiOperation(value = "查询菜单详情")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "menuId", value = "菜单id", required = true, dataType = "Int")
           }
@@ -77,7 +79,7 @@ public class SysMenuController {
         return ApiResultUtil.success(iMenuService.getById(menuId));
     }
 
-    @ApiOperation(value = "删除菜单", response = ResultBean.class)
+    @ApiOperation(value = "删除菜单")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "id", value = "菜单id", required = true, dataType = "Int")
     }
