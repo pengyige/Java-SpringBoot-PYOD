@@ -8,7 +8,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import top.yigege.config.WxConfig;
+import top.yigege.constant.ActivityTypeEnum;
+import top.yigege.constant.CouponStatusEnum;
 import top.yigege.constant.DictCodeEnum;
 import top.yigege.constant.PyodConstant;
 import top.yigege.constant.RedisKeyEnum;
@@ -18,12 +22,18 @@ import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserLoginResDTO;
 import top.yigege.exception.BusinessException;
+import top.yigege.model.CouponActivity;
+import top.yigege.model.CouponActivityRegister;
 import top.yigege.model.Label;
 import top.yigege.model.Level;
 import top.yigege.model.SysDict;
 import top.yigege.model.User;
+import top.yigege.model.UserCoupon;
 import top.yigege.model.UserVipCard;
 import top.yigege.model.VipCard;
+import top.yigege.service.ICouponActivityRegisterService;
+import top.yigege.service.ICouponActivityService;
+import top.yigege.service.ICouponService;
 import top.yigege.service.ILevelService;
 import top.yigege.service.IRedisService;
 import top.yigege.service.ISysDictService;
@@ -40,6 +50,7 @@ import top.yigege.vo.wx.WxUserInfoDataBean;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static top.yigege.constant.ResultCodeEnum.NO_USER;
 import static top.yigege.constant.ResultCodeEnum.REDIS_SESSION_KEY_EXPIRE;
@@ -77,7 +88,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     IUserVipCardService iUserVipCardService;
 
     @Autowired
+    ICouponService iCouponService;
+
+    @Autowired
     IUserCouponService iUserCouponService;
+
+    @Autowired
+    ICouponActivityService iCouponActivityService;
+
+    @Autowired
+    ICouponActivityRegisterService iCouponActivityRegisterService;
+
+
+
 
     @Override
     public UserLoginResDTO loginByCode(String code) {
@@ -108,6 +131,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
 
+    @Transactional
     @Override
     public UserLoginResDTO loginByUserDetail(UserLoginDetailReqDTO userLoginDetailReqDTO) throws Exception {
         Object sessionKey = iRedisService.getObj(userLoginDetailReqDTO.getOpenid());
@@ -154,9 +178,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 iRedisService.setObj(key,newUser.getUserId(),Long.parseLong(sysDict.getValue()));
             }
 
-            BeanUtil.copyProperties(newUser, userLoginResDTO);
-            userLoginResDTO.setToken(iTokenService.getToken(newUser));
-            userLoginResDTO.setLevelName(defaultLevel.getName());
+            //新用户注册赠券活动是否开启
+            CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(ActivityTypeEnum.NEW_USER_REGISTER);
+            if (null != couponActivity) {
+                //查询对应券，赠送给用户
+                LambdaQueryWrapper<CouponActivityRegister> couponActivityRegisterLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                couponActivityRegisterLambdaQueryWrapper.eq(CouponActivityRegister::getCouponActivityId,couponActivity.getCouponActivityId());
+                List<CouponActivityRegister> couponActivityRegisters = iCouponActivityRegisterService.list(couponActivityRegisterLambdaQueryWrapper);
+                if (!couponActivityRegisters.isEmpty()) {
+                    List<UserCoupon> userCouponList = couponActivityRegisters.stream().map(item ->{
+                        UserCoupon userCoupon = new UserCoupon();
+                        userCoupon.setUserId(newUser.getUserId());
+                        userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                        userCoupon.setCouponId(item.getCouponId());
+                        userCoupon.setNum(item.getNum());
+                        userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(),newUser.getCreateTime()));
+                        userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                        return userCoupon;
+                    }).collect(Collectors.toList());
+                    //保存
+                    iUserCouponService.batchAddUserCoupon(userCouponList);
+                }
+            }
+
+            fillData(newUser,userLoginResDTO);
         }
 
         return userLoginResDTO;
@@ -190,6 +235,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         return userLoginResDTO;
+    }
+
+    @Override
+    public void updateUserPrimaryVipCard(Long userId, Long primaryVipCardId) {
+        //更新用户主卡信息
+        User user = getById(userId);
+        user.setVipCardId(primaryVipCardId);
+        updateById(user);
     }
 
 
@@ -240,7 +293,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         //优惠券数量
-        userLoginResDTO.setAvaliableCouponNum(iUserVipCardService.queryTotalUserVipCardCount(user.getUserId()));
+        userLoginResDTO.setAvaliableCouponNum(iUserCouponService.queryTotalAvailableCouponCount(user.getUserId()));
     }
 
 }

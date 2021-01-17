@@ -82,7 +82,32 @@ public enum ResultCodeEnum {
     /**
      * 用户不存在
      */
-    NO_USER(1003,"用户不存在");
+    NO_USER(1003,"用户不存在"),
+
+    /**
+     * 商品不存在
+     */
+    NO_PRODUCT(1004,"商品不存在"),
+
+    /**
+     * 下单失败
+     */
+    ORDERS_FAIL(1005,"下单失败"),
+
+    /**
+     * 主卡已存在
+     */
+    PRIMARY_CARD_EXIST(1006,"参数错误,主卡已存在"),
+
+    /**
+     * 卡片不存在
+     */
+    NO_CARD (1007,"卡片不存在"),
+
+    /**
+     * 卡片已被使用
+     */
+    CARD_UESD (1007,"此VIP卡已被绑定");
 
 
     private Integer code;

@@ -91,6 +91,8 @@
         <bdprov-jdk15.version>1.46</bdprov-jdk15.version>
         <zxing-core.version>3.3.0</zxing-core.version>
         <zxing-javase.version>3.3.0</zxing-javase.version>
+
+        <wxpay-sdk.version>0.0.3</wxpay-sdk.version>
     </properties>
 
     <!-- 版本说明：这里统一管理依赖的版本号 -->
@@ -276,6 +278,14 @@
                 <artifactId>swagger-bootstrap-ui</artifactId>
                 <version>${swagger-bootstrap-ui.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.github.wxpay</groupId>
+                <artifactId>wxpay-sdk</artifactId>
+                <version>${wxpay-sdk.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 

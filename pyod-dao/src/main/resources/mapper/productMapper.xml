@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.ProductMapper">
+
+    <resultMap id="productMap" type="top.yigege.model.Product">
+        <id column="product_id" property="productId"/>
+        <result column="name" property="name" />
+        <result column="price" property="price" />
+        <result column="product_type" property="productType" />
+        <result column="use_desc" property="useDesc" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+
+
+        <association property="couponList" javaType="top.yigege.model.Coupon">
+            <id column="c_coupon_id" property="couponId"></id>
+            <result column="c_name" property="name"></result>
+            <result column="c_price" property="price"/>
+            <result column="c_use_desc" property="useDesc"/>
+            <result column="c_type" property="type"/>
+            <result column="c_indate_type" property="indateType"/>
+            <result column="c_mutex_flag" property="mutexFlag"/>
+            <result column="c_over_money" property="overMoney"/>
+            <result column="c_duration" property="duration"/>
+            <result column="c_discount" property="discount"/>
+            <result column="c_min_money" property="minMoney"/>
+            <result column="c_max_money" property="maxMoney"/>
+            <result column="c_indate_start_time" property="indateStartTime"/>
+            <result column="c_indate_end_time" property="indateEndTime"/>
+            <result column="c_create_time" property="createTime"/>
+            <result column="c_update_time" property="updateTime"/>
+            <result column="num" property="num"/>
+        </association>
+    </resultMap>
+
+    <select id="queryProductWithCoupon" resultMap="productMap" parameterType="java.lang.Long">
+       SELECT
+            p.*,
+            c.coupon_id c_coupon_id,
+            c.NAME c_name,
+            cap.num num
+        FROM
+            t_product p
+            LEFT JOIN t_coupon_activity_product cap ON p.product_id = cap.product_id
+            LEFT JOIN t_coupon c ON cap.coupon_id = c.coupon_id
+        WHERE
+            cap.coupon_activity_id = #{value}
+    </select>
+
+    <select id="queryProductDetailWithCoupon" resultMap="productMap" >
+       SELECT
+            p.*,
+            c.coupon_id c_coupon_id,
+            c.NAME c_name,
+            cap.num num
+        FROM
+            t_product p
+            LEFT JOIN t_coupon_activity_product cap ON p.product_id = cap.product_id
+            LEFT JOIN t_coupon c ON cap.coupon_id = c.coupon_id
+        WHERE
+            cap.coupon_activity_id = #{couponActivityId}
+            and p.product_id = #{productId}
+    </select>
+
+</mapper>

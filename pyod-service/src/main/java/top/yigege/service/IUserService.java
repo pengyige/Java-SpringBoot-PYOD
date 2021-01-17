@@ -37,4 +37,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     UserLoginResDTO bindUserMobile(BindWxUserMobileReqDTO bindWxUserMobileReqDTO) throws Exception;
+
+    /**
+     * 更新用户主卡
+     * @param userId
+     * @param primaryVipCardId
+     */
+    void updateUserPrimaryVipCard(Long userId, Long primaryVipCardId);
 }

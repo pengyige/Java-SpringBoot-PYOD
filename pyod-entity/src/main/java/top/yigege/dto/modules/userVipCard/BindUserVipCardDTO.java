@@ -26,6 +26,8 @@ public class BindUserVipCardDTO {
     /**
      * 主卡标识
      */
-    @ApiModelProperty(value = "主卡标识(0-非主卡,1-主卡.默认为主卡)")
+    @ApiModelProperty(value = "主卡标识(0-非主卡,1-主卡.默认为非主卡)")
     int primaryFlag = YesOrNo.YES.getCode();
+
+    Long userId;
 }

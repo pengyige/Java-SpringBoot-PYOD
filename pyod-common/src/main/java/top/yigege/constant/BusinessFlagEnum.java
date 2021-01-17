@@ -8,9 +8,13 @@ package top.yigege.constant;
  */
 public enum BusinessFlagEnum {
 
-    USER(0,"U"),
+    USER(0, "U"),
 
-    ROLE(1,"R");
+
+    ROLE(1, "R"),
+    PRODUCT(2, "P"),
+
+    VIP_CARD(3, "C");
 
     private Integer code;
 

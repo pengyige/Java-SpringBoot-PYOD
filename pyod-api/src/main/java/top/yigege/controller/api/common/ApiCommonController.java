@@ -13,6 +13,7 @@ import top.yigege.service.ICardCoverService;
 import top.yigege.service.ICityService;
 import top.yigege.service.ILevelService;
 import top.yigege.service.ILevelWelfareService;
+import top.yigege.service.IProductService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.vo.ResultBean;
 
@@ -43,6 +44,9 @@ public class ApiCommonController {
 
     @Autowired
     ICityService iCityService;
+
+    @Autowired
+    IProductService iProductService;
 
     @ApiOperation("查询所有轮播列表")
     @PostMapping("/queryBannerList")
@@ -79,5 +83,12 @@ public class ApiCommonController {
         queryCityDataResDTO.setHotCityList(iCityService.queryHotCity());
         queryCityDataResDTO.setCityList(iCityService.queryAllCity());
         return ApiResultUtil.success(queryCityDataResDTO);
+    }
+
+
+    @ApiOperation("查询所有商品数据列表")
+    @PostMapping("/queryProductData")
+    public ResultBean queryProductData() {
+        return ApiResultUtil.success(iProductService.queryAllProductInfo());
     }
 }

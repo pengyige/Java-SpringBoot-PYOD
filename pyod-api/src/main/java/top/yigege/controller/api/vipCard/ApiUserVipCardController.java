@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.yigege.dto.modules.userVipCard.BindUserVipCardDTO;
@@ -31,7 +32,9 @@ public class ApiUserVipCardController {
 
     @ApiOperation("绑定VIP卡片")
     @PostMapping("/bindUserVipCard")
-    public ResultBean bindUserVipCard(@Validated BindUserVipCardDTO bindUserVipCardDTO){
+    public ResultBean bindUserVipCard(@Validated BindUserVipCardDTO bindUserVipCardDTO, @RequestAttribute Long userId){
+        bindUserVipCardDTO.setUserId(userId);
+        iUserVipCardService.bindVipCard(bindUserVipCardDTO);
         return ApiResultUtil.success();
     }
 

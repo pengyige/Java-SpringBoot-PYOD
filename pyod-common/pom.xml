@@ -176,6 +176,11 @@
             <artifactId>javase</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.wxpay</groupId>
+            <artifactId>wxpay-sdk</artifactId>
+        </dependency>
+
     </dependencies>
 
 

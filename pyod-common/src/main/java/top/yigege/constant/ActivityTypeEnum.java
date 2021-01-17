@@ -16,7 +16,7 @@ public enum ActivityTypeEnum {
 
         NEW_USER_REGISTER(1,"新用户注册"),
 
-        BUG_PRODUCT(2,"购买商品"),
+        BUY_PRODUCT(2,"购买商品"),
 
         CD_KEY(3,"兑换cdkey"),
 

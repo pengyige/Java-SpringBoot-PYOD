@@ -16,7 +16,13 @@ public class WxConfig {
 
     @Value("${wx.appId}")
     private String appId;
+
     @Value("${wx.secret}")
     private String secret;
+
+    @Value("${wx.mchId}")
+    private String mchId;
+    @Value("${wx.notify.domain}")
+    private String notifyUrl;
 
 }

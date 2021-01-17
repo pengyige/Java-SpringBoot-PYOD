@@ -19,7 +19,9 @@ import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserQrCodeDTO;
 import top.yigege.model.User;
+import top.yigege.model.UserVipCard;
 import top.yigege.service.IUserService;
+import top.yigege.service.IUserVipCardService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.util.QRCodeUtil;
 import top.yigege.vo.ResultBean;
@@ -46,6 +48,9 @@ public class ApiUserController {
 
     @Autowired
     QrCodeConfig qrCodeConfig;
+
+    @Autowired
+    IUserVipCardService iUserVipCardService;
 
     /**
      * 通过code登入，若找到user，token有值;若无,token为""
@@ -87,6 +92,12 @@ public class ApiUserController {
             qrCode = QRCodeUtil.encode(encryptContent);
         }
         return ApiResultUtil.success(qrCode);
+    }
+
+    @ApiOperation(value = "查询用户所有vip卡片信息")
+    @PostMapping("/queryUserVipCardList")
+    public ResultBean queryUserVipCardList(@RequestAttribute Long userId) {
+        return ApiResultUtil.success(iUserVipCardService.queryUserVipCardList(userId));
     }
 
 

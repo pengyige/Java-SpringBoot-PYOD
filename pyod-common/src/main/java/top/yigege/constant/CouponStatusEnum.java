@@ -14,6 +14,8 @@ import lombok.Getter;
 public enum CouponStatusEnum {
 
     //   * 优惠券状态(1-可使用,2-已使用,3-已赠送未领取,4-赠送成功)
+    OUT_OF_DATE(5,"已过期"),
+
     AVAILABLE(1,"可使用"),
 
     AREADY_USED(2,"已使用"),

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.UserVipCardMapper">
+
+    <resultMap id="userVipCardMap" type="top.yigege.model.UserVipCard">
+
+    </resultMap>
+
+    <select id="queryUserVipCardList" resultType="top.yigege.dto.modules.userVipCard.QueryUserVipCardInfoResDTO" parameterType="java.lang.Long">
+       SELECT
+            cd.vip_card_id vipCardId,
+            cd.card_no vipCardNo,
+            cd.name vipCardName,
+            cc.image_url imageUrl,
+            uvc.balance,
+            uvc.primary_flag primaryFlag,
+            uvc.create_time createTime
+        FROM
+            t_user_vip_card uvc
+            LEFT JOIN t_vip_card cd on uvc.vip_card_id = cd.vip_card_id
+            LEFT JOIN t_card_cover cc on cd.card_cover_id = cc.card_cover_id
+            where
+            1 = 1
+            and uvc.user_id = #{value}
+    </select>
+
+
+
+</mapper>
