@@ -16,7 +16,11 @@ public enum RedisKeyEnum {
 
     WEATHER_NATIONAL_PRECIPITATION("weather:national-precipitation","全国降水量"),
 
-    PEA_EXPIRE_EVENT("pea-expire-event:","豆豆失效事件");
+    PEA_EXPIRE_EVENT("pea-expire-event:","豆豆失效事件"),
+
+    BIRTHDAY_EVENT("birthday-event:","生日到期事件"),
+
+    GIVE_USER_COUPON_EVENT("give-user-coupon-event:","赠送优惠券失效事件");
 
     private String key;
 

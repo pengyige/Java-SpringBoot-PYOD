@@ -44,4 +44,11 @@ public interface IUserService extends IService<User> {
      * @param primaryVipCardId
      */
     void updateUserPrimaryVipCard(Long userId, Long primaryVipCardId);
+
+    /**
+     * 增加豆豆
+     * @param userId
+     * @param peaNum
+     */
+    void addPea(Long userId,int peaNum);
 }

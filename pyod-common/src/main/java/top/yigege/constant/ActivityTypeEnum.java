@@ -26,7 +26,11 @@ public enum ActivityTypeEnum {
 
         BIRTHDAY(6,"生日发放"),
 
-        SOLAR_TERM(7,"节气发放");
+        SOLAR_TERM(7,"节气发放"),
+
+        EXCHNAGE_INTEGRAL(8,"积分兑换"),
+
+        PEA(9,"积豆赠券");
 
         Integer code;
 

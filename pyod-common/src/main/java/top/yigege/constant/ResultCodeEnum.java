@@ -107,7 +107,27 @@ public enum ResultCodeEnum {
     /**
      * 卡片已被使用
      */
-    CARD_UESD (1007,"此VIP卡已被绑定");
+    CARD_UESD (1007,"此VIP卡已被绑定"),
+
+    /**
+     * 用户优惠券不存在
+     */
+    NO_USER_COUPON (1008,"用户优惠券不存在"),
+
+    /**
+     * 赠送失败，只有可使用的优惠券才能赠送
+     */
+    GIVE_FAIL(1009,"赠送失败，只有可使用且有效的优惠券才能赠送"),
+
+    GET_FAIL(1010,"领取失败，只有赠送中且有效的优惠券才能领取"),
+
+    NOT_FOUND_CDKEY(1011,"未找到对应CDKEY"),
+
+    CDKEY_INVALID(1012,"CDKEY无效"),
+
+    ALREADY_CDKEY_USED(1013,"CDKEY已被兑换过了"),
+
+    NO_COUPON_ACTIVITY(1020,"活动还未开始");
 
 
     private Integer code;

@@ -1,6 +1,7 @@
 package top.yigege.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -178,6 +179,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 iRedisService.setObj(key,newUser.getUserId(),Long.parseLong(sysDict.getValue()));
             }
 
+            //设置生日到期事件
+            String birthdayKey = RedisKeyEnum.BIRTHDAY_EVENT.getKey() + newUser.getUserId();
+            Date registerDate = newUser.getCreateTime();
+            Date birthdayDate = DateUtil.offsetMonth(registerDate,12);
+            iRedisService.setObj(birthdayKey,newUser.getUserId(),birthdayDate.getTime()-registerDate.getTime());
+
+
             //新用户注册赠券活动是否开启
             CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(ActivityTypeEnum.NEW_USER_REGISTER);
             if (null != couponActivity) {
@@ -243,6 +251,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = getById(userId);
         user.setVipCardId(primaryVipCardId);
         updateById(user);
+    }
+
+    @Override
+    public void addPea(Long userId, int peaNum) {
+        //TODO 1.增加累计豆豆，根据豆豆数据升级，升级时判断升级活动是否开启并赠券
+
+        //TODO 2.积豆赠券活动是否开启,结合当前登记当前豆豆是否兑换券
     }
 
 

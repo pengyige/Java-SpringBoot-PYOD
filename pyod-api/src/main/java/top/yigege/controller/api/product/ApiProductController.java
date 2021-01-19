@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
  * @author yigege
  * @since 2021-01-12
  */
-@Api("API-商品模块")
+@Api(tags = "API-商品模块")
 @RestController
 @RequestMapping("/product")
 public class ApiProductController {

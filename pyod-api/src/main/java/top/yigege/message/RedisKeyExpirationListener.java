@@ -7,12 +7,15 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
+import top.yigege.constant.CouponStatusEnum;
 import top.yigege.constant.DictCodeEnum;
 import top.yigege.constant.RedisKeyEnum;
 import top.yigege.model.SysDict;
 import top.yigege.model.User;
+import top.yigege.model.UserCoupon;
 import top.yigege.service.IRedisService;
 import top.yigege.service.ISysDictService;
+import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserService;
 
 import java.util.Date;
@@ -36,6 +39,10 @@ public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListen
     @Autowired
     IRedisService iRedisService;
 
+    @Autowired
+    IUserCouponService iUserCouponService;
+
+
     public RedisKeyExpirationListener(RedisMessageListenerContainer listenerContainer) {
         super(listenerContainer);
     }
@@ -53,7 +60,38 @@ public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListen
         if (expiredKey.startsWith(RedisKeyEnum.PEA_EXPIRE_EVENT.getKey())) {
             //处理用户豆豆清空
             handlerPeaExpireEvent(Long.valueOf(expiredKey.split(":")[1]));
+        }else if (expiredKey.startsWith(RedisKeyEnum.GIVE_USER_COUPON_EVENT.getKey())) {
+            //处理用户赠送优惠券未领取
+            handlerGiveUserCouponUnPickEvent(Long.valueOf(expiredKey.split(":")[1]));
+        }else if (expiredKey.startsWith(RedisKeyEnum.BIRTHDAY_EVENT.getKey())) {
+            //处理用户生日赠券
+            handlerUserBirthdayEvent(Long.valueOf(expiredKey.split(":")[1]));
         }
+    }
+
+    /**
+     * 用户生日
+     * @param userId
+     */
+    private void handlerUserBirthdayEvent(Long userId) {
+        log.info("用户id:{},生日处理...",userId);
+        //TODO 获取用户生日赠券活动并赠券,并重新设置新的过期时间
+    }
+
+    /**
+     * 处理赠送用户优惠券事件
+     * @param userCouponId
+     */
+    private void handlerGiveUserCouponUnPickEvent(Long userCouponId) {
+        log.info("用户优惠券id:{},赠送优惠券未领取处理...",userCouponId);
+        UserCoupon userCoupon = iUserCouponService.getById(userCouponId);
+        //更新状态为可使用
+        if (CouponStatusEnum.SEND_UN_PICK.getCode().equals(userCoupon.getStatus())) {
+            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+            iUserCouponService.updateById(userCoupon);
+            log.info("用户优惠券id:{},赠送优惠券未领取处更新为可使用成功",userCouponId);
+        }
+
     }
 
     /**
@@ -61,7 +99,7 @@ public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListen
      * @param userId
      */
     private void handlerPeaExpireEvent(Long userId) {
-        log.info("用户id:{},豆豆到期豆豆清理处理...");
+        log.info("用户id:{},豆豆到期豆豆清理处理...",userId);
         User user = iUserService.getById(userId);
         //重置
         user.setAvaliablePeaNum(0);

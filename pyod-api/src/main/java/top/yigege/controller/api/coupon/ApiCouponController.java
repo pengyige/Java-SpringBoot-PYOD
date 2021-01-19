@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.yigege.dto.modules.userVipCard.BindUserVipCardDTO;
+import top.yigege.model.CouponActivity;
 import top.yigege.service.ICouponService;
 import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserVipCardService;
@@ -37,6 +38,7 @@ public class ApiCouponController {
     @Autowired
     IUserCouponService iUserCouponService;
 
+
     @ApiOperation("查询优惠券详情")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "couponId", value = "优惠券状态id", required = true, dataType = "int")
@@ -54,14 +56,38 @@ public class ApiCouponController {
         return ApiResultUtil.success(iUserCouponService.queryUserCouponList(couponStatus,userId));
     }
 
-    @ApiOperation("查询用户优惠券列表")
+    @ApiOperation("赠送优惠券")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userCouponId", value = "用户优惠券ID", required = true, dataType = "int")
     })
-    @PostMapping("/queryUserCouponList")
-    public ResultBean giveCoupon(Long userCouponId) {
-        ;
+    @PostMapping("/giveCoupon")
+    public ResultBean giveCoupon(@NotNull(message = "用户优惠券id不能为空") Long userCouponId) {
         return ApiResultUtil.success(iUserCouponService.giveCoupon(userCouponId));
+    }
+
+    @ApiOperation("领取优惠券")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userCouponId", value = "用户优惠券ID", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "couponActivityId", value = "优惠券活动id", required = true, dataType = "int")
+
+    })
+    @PostMapping("/getCoupon")
+    public ResultBean getCoupon(@NotNull(message = "用户优惠券id不能为空") Long userCouponId
+            ,@NotNull(message = "活动id不能为空") Long couponActivityId
+            ,@RequestAttribute Long userId) {
+        iUserCouponService.getCoupon(userCouponId,couponActivityId,userId);
+        return ApiResultUtil.success();
+    }
+
+
+    @ApiOperation("兑换CDkey")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "cdkey", value = "cdkey", required = true, dataType = "string")
+    })
+    @PostMapping("/getCoupon")
+    public ResultBean exchangeCDKey(@NotNull(message = "兑换码不能为空") String cdkey,@RequestAttribute Long userId) {
+        iUserCouponService.exchangeCDkey(cdkey,userId);
+        return ApiResultUtil.success();
     }
 
 

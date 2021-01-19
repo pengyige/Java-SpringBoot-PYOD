@@ -1,6 +1,8 @@
 package top.yigege.controller.wx;
 
 import com.github.wxpay.sdk.WXPayUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,7 @@ import java.util.Map;
  * @author: yigege
  * @date: 2021年01月16日 19:48
  */
+@Api(tags ="API-微信回调通知")
 @Controller
 @Slf4j
 @RequestMapping("/wx")
@@ -39,6 +42,7 @@ public class ApiNotifyController {
     @Autowired
     IProductService iProductService;
 
+    @ApiOperation("通知")
     @PostMapping("/notify")
     public String wxNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map orderMap = new HashMap();

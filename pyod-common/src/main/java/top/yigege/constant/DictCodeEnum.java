@@ -20,6 +20,11 @@ public enum DictCodeEnum {
     SPEND_MONEY_GET_COIN("SPEND_MONEY_GET_COIN"),
 
     /**
+     * 赠送优惠券未领取时间 单位秒
+     */
+    GIVE_USER_COUPON_RETURN_TIME("GIVE_USER_COUPON_RETURN_TIME"),
+
+    /**
      * 金币清空持续时间 单位秒
      */
     COIN_CLEAR_DURATION_TIME("COIN_CLEAR_DURATION_TIME");
