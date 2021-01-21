@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.LevelMapper">
+
+    <!--  -->
+    <resultMap id="levelMap"  type="top.yigege.model.Level">
+        <id column="level_id" property="levelId"/>
+        <result column="name" property="name" />
+        <result column="image_url" property="imageUrl"/>
+        <result column="min_value" property="minValue"/>
+        <result column="max_value" property="maxValue"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+
+    </resultMap>
+
+
+    <select id="queryLevelPageList"  resultType="top.yigege.model.Level"
+            parameterType="top.yigege.dto.modules.level.QueryLevelPageListDTO">
+        SELECT
+            *
+        FROM
+            t_level t
+        WHERE
+            1 = 1
+            order by t.min_value asc
+    </select>
+
+
+
+</mapper>

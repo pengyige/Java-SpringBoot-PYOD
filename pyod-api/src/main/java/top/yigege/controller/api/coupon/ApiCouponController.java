@@ -84,7 +84,7 @@ public class ApiCouponController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "cdkey", value = "cdkey", required = true, dataType = "string")
     })
-    @PostMapping("/getCoupon")
+    @PostMapping("/exchangeCDKey")
     public ResultBean exchangeCDKey(@NotNull(message = "兑换码不能为空") String cdkey,@RequestAttribute Long userId) {
         iUserCouponService.exchangeCDkey(cdkey,userId);
         return ApiResultUtil.success();

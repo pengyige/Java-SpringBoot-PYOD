@@ -1,6 +1,6 @@
 var config = {
-    "ip" : "admin.yigege.top",
-    //"ip" : "localhost",
+    //"ip" : "admin.yigege.top",
+    "ip" : "localhost",
     "port": "9999",
     "contextPath":"/pyod/web"
 };
@@ -330,7 +330,222 @@ function getDeleteCardCoverByIdsUrl() {
     return getBaseUrl() + "/cardCover/deleteCardCoverByIds";
 }
 
-/**************轮播模块 end****************/
+/**************封面模块 end****************/
+
+
+
+
+/**************定时任务模块 start****************/
+/**
+ * 查询任务列表
+ * @returns {string}
+ */
+function getQuerySysJobPageListUrl() {
+    return getBaseUrl() + "/sysJob/querySysJobPageList";
+}
+
+/**
+ * 查询任务详情
+ */
+function getQuerySysJobDetailUrl() {
+    return getBaseUrl() + "/sysJob/querySysJobDetail";
+
+}
+
+/**
+ * 添加任务
+ * @returns {string}
+ */
+function getAddSysJobUrl() {
+    return getBaseUrl() + "/sysJob/addSysJob";
+}
+
+/**
+ * 修改任务
+ */
+function getModifySysJobUrl() {
+    return getBaseUrl() + "/sysJob/modifySysJob";
+
+}
+
+/**
+ * 删除任务
+ */
+function getDeleteSysJobByIdsUrl() {
+    return getBaseUrl() + "/sysJob/deleteSysJobByIds";
+}
+
+/**************任务模块 end****************/
+
+
+/**************标签模块 start****************/
+/**
+ * 查询标签列表
+ * @returns {string}
+ */
+function getQueryLabelPageListUrl() {
+    return getBaseUrl() + "/label/queryLabelPageList";
+}
+
+/**
+ * 查询标签详情
+ */
+function getQueryLabelDetailUrl() {
+    return getBaseUrl() + "/label/queryLabelDetail";
+
+}
+
+/**
+ * 添加标签
+ * @returns {string}
+ */
+function getAddLabelUrl() {
+    return getBaseUrl() + "/label/addLabel";
+}
+
+/**
+ * 修改标签
+ */
+function getModifyLabelUrl() {
+    return getBaseUrl() + "/label/modifyLabel";
+
+}
+
+/**
+ * 删除标签
+ */
+function getDeleteLabelByIdsUrl() {
+    return getBaseUrl() + "/label/deleteLabelByIds";
+}
+
+/**************标签模块 end****************/
+
+
+/**************等级模块 start****************/
+/**
+ * 查询等级列表
+ * @returns {string}
+ */
+function getQueryLevelPageListUrl() {
+    return getBaseUrl() + "/level/queryLevelPageList";
+}
+
+/**
+ * 查询等级详情
+ */
+function getQueryLevelDetailUrl() {
+    return getBaseUrl() + "/level/queryLevelDetail";
+
+}
+
+/**
+ * 添加等级
+ * @returns {string}
+ */
+function getAddLevelUrl() {
+    return getBaseUrl() + "/level/addLevel";
+}
+
+/**
+ * 修改等级
+ */
+function getModifyLevelUrl() {
+    return getBaseUrl() + "/level/modifyLevel";
+
+}
+
+/**
+ * 删除等级
+ */
+function getDeleteLevelByIdsUrl() {
+    return getBaseUrl() + "/level/deleteLevelByIds";
+}
+
+/**************等级模块 end****************/
+
+/**************城市模块 start****************/
+/**
+ * 查询城市列表
+ * @returns {string}
+ */
+function getQueryCityPageListUrl() {
+    return getBaseUrl() + "/city/queryCityPageList";
+}
+
+/**
+ * 查询城市详情
+ */
+function getQueryCityDetailUrl() {
+    return getBaseUrl() + "/city/queryCityDetail";
+
+}
+
+/**
+ * 添加城市
+ * @returns {string}
+ */
+function getAddCityUrl() {
+    return getBaseUrl() + "/city/addCity";
+}
+
+/**
+ * 修改城市
+ */
+function getModifyCityUrl() {
+    return getBaseUrl() + "/city/modifyCity";
+
+}
+
+/**
+ * 删除等级
+ */
+function getDeleteCityByIdsUrl() {
+    return getBaseUrl() + "/level/deleteCityByIds";
+}
+
+/**************城市模块 end****************/
+
+/**************优惠券模块 start****************/
+/**
+ * 查询优惠券列表
+ * @returns {string}
+ */
+function getQueryCouponPageListUrl() {
+    return getBaseUrl() + "/coupon/queryCouponPageList";
+}
+
+/**
+ * 查询优惠券详情
+ */
+function getQueryCouponDetailUrl() {
+    return getBaseUrl() + "/coupon/queryCouponDetail";
+
+}
+
+/**
+ * 添加优惠券
+ * @returns {string}
+ */
+function getAddCouponUrl() {
+    return getBaseUrl() + "/coupon/addCoupon";
+}
+
+/**
+ * 修改优惠券
+ */
+function getModifyCouponUrl() {
+    return getBaseUrl() + "/coupon/modifyCoupon";
+
+}
+
+/**
+ * 删除优惠券
+ */
+function getDeleteCouponByIdsUrl() {
+    return getBaseUrl() + "/cooupon/deleteCouponByIds";
+}
+
+/**************优惠券模块 end****************/
 
 
 

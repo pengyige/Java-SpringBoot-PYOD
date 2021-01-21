@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">查看标签</div>
+            <form id="form" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标签名:</label>
+                    <div class="layui-input-inline">
+                        <input id="name" name="name" type="text" required lay-verify="required" placeholder="请输入标签名"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="type" value="1" title="商铺" checked>
+                        <input type="radio" name="type" value="2" title="职位" >
+                        <input type="radio" name="type" value="3" title="学历" >
+                        <input type="radio" name="type" value="4" title="月收入" >
+                        <input type="radio" name="type" value="5" title="兴趣" >
+                        <input type="radio" name="type" value="6" title="偏好" >
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top: 10px">
+                    <div class="layui-input-block">
+                      <!--  <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue"  >提交<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var form = layui.form;
+    var layer = layui.layer;
+    var id = null;
+
+    form.on('submit()', function(data){
+
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+    /**
+     * 加载详情
+     */
+    function loadDetail() {
+        $.ajax({
+            url: getQueryLabelDetailUrl() + "?labelId=" + id,
+            method: 'post',
+            success: function (res) {
+                if (200 == res.code) {
+                    var model = res.data;
+                    $("#name").val(model.name);
+
+                    var index = model.type-1;
+                    $("input[name=type]").eq(index).attr("checked", 'checked');
+
+                    form.render();
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+
+
+    $(function () {
+        id = getUrlParam("id");
+
+        loadDetail();
+    });
+
+</script>
+
+</body>
+</html>

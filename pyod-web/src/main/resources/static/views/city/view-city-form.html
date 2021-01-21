@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">修改城市</div>
+            <form id="form" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">pid:</label>
+                    <div class="layui-input-inline">
+                        <input id="pid" name="pid" type="text" required lay-verify="required" placeholder="请输入父id"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">城市名:</label>
+                    <div class="layui-input-inline">
+                        <input id="name" name="name" type="text" required lay-verify="required" placeholder="请输入城市名"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="type" value="0" title="国家" >
+                        <input type="radio" name="type" value="1" title="省" >
+                        <input type="radio" name="type" value="2" title="市" checked>
+                        <input type="radio" name="type" value="3" title="县" >
+                    </div>
+
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">热门城市:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="hotFlag" value="0" title="否" checked>
+                        <input type="radio" name="hotFlag" value="1" title="是" >
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item" style="margin-top: 10px">
+                    <div class="layui-input-block">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var form = layui.form;
+    var layer = layui.layer;
+    var id = null;
+
+    form.on('submit()', function(data){
+
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+    /**
+     * 加载详情
+     */
+    function loadDetail() {
+        $.ajax({
+            url: getQueryCityDetailUrl() + "?cityId=" + id,
+            method: 'post',
+            success: function (res) {
+                if (200 == res.code) {
+                    var model = res.data;
+                    $("#pid").val(model.pid);
+                    $("#name").val(model.name);
+                    $("input[name=type]").eq(model.type).attr("checked", 'checked');
+                    $("input[name=hotFlag]").eq(model.hotFlag).attr("checked", 'checked');
+                    form.render();
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+
+    $(function () {
+        id = getUrlParam("id");
+
+        loadDetail();
+    });
+
+</script>
+
+</body>
+</html>

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import top.yigege.constant.BusinessFlagEnum;
 
+import top.yigege.constant.PyodConstant;
 import top.yigege.dao.SysMenuMapper;
 
 import top.yigege.dao.SysRoleMapper;
@@ -181,14 +182,21 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         List<LayuiTreeBean> totalCheckedMenuList = roleMapper.queryTreeMenusByRoleId(roleId);
 
         //设置当前已选中
-        for (LayuiTreeBean currentCheckMenu : totalCheckedMenuList) {
-            for (LayuiTreeBean item : totalMenuList) {
+        for (LayuiTreeBean item : totalMenuList) {
+            boolean isChecked = false;
+            for (LayuiTreeBean currentCheckMenu : totalCheckedMenuList) {
                 if (currentCheckMenu.getId() == item.getId()) {
+                    isChecked = true;
                     item.setChecked(true);
                     break;
                 }
             }
+            if (!isChecked) {
+                item.setChecked(false);
+                item.setTitle(item.getTitle()+"-未绑定");
+            }
         }
+
 
         //建树
         List<LayuiTreeBean> menuTree = new ArrayList<>();

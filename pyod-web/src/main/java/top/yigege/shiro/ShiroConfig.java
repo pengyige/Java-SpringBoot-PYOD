@@ -42,10 +42,13 @@ public class ShiroConfig {
         /* filterChainDefinitionMap.put("/role/**", "authc");
         filterChainDefinitionMap.put("/user/**", "authc");
         filterChainDefinitionMap.put("/permission/**", "authc");*/
+        filterChainDefinitionMap.put("/web/sysUser/login","anon");
+
         filterChainDefinitionMap.put("/", "authc");
         filterChainDefinitionMap.put("/web", "authc");
         filterChainDefinitionMap.put("/web/**", "authc");
         filterChainDefinitionMap.put("/index.html", "authc");
+
 
         //TODO 先放开
         /*if (!envConfig.isDev()) {

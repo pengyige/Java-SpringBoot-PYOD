@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">添加优惠券</div>
+            <form id="form" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">优惠券名:</label>
+                    <div class="layui-input-inline">
+                        <input id="name" name="name" type="text" required lay-verify="required" placeholder="请输入优惠券名"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="type" lay-filter="type" value="1" title="兑换券" checked>
+                        <input type="radio" name="type" lay-filter="type" value="2" title="立减券" >
+                        <input type="radio" name="type" lay-filter="type" value="3" title="满减券" >
+                        <input type="radio" name="type" lay-filter="type" value="4" title="折扣券" >
+                        <input type="radio" name="type" lay-filter="type" value="5" title="随机券" >
+                    </div>
+                </div>
+
+                <div id="priceBox" style="display: none"  class="layui-form-item">
+                    <label class="layui-form-label">面额:</label>
+                    <div class="layui-input-inline">
+                        <input id="price" name="price" type="text"  placeholder="请输入面额"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div id="overMoneyBox" style="display: none"  class="layui-form-item">
+                    <label class="layui-form-label">超过金额:</label>
+                    <div class="layui-input-inline">
+                        <input id="overMoney" name="overMoney" type="text"  placeholder="请输入超过金额"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div id="discountBox"style="display: none"  class="layui-form-item">
+                    <label class="layui-form-label">折扣(折扣券):</label>
+                    <div class="layui-input-inline">
+                        <input id="discount" name="discount" type="text"  placeholder="请输入折扣比(折扣券)"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div id="randomBox" style="display: none" >
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">最小值(随机券):</label>
+                        <div class="layui-input-inline">
+                            <input id="minMoney" name="minMoney" type="text" placeholder="请输入最小值(随机券)"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">最大值(随机券):</label>
+                        <div class="layui-input-inline">
+                            <input id="maxMoney" name="maxMoney" type="text"  placeholder="请输入最大值(随机券)"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">有效期类型:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="indateType"  lay-filter="indateType" value="1" title="固定时间" >
+                        <input type="radio" name="indateType"   lay-filter="indateType" value="2" title="相对时间" checked>
+                    </div>
+                </div>
+
+
+                <div id="fixDateBox" style="display: none">
+                    <div class="layui-form-item" >
+                        <label class="layui-form-label">有效期开始时间:</label>
+                        <div class="layui-input-inline">
+                            <input id="indateStartTime" name="indateStartTime" type="text"  placeholder="请输入有效期开始时间"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">有效期结束时间:</label>
+                        <div class="layui-input-inline">
+                            <input id="indateEndTime" name="indateEndTime" type="text"  placeholder="请输入有效期结束时间"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="durationBox" style="display: none" class="layui-form-item">
+                    <label class="layui-form-label">持续时间(天):</label>
+                    <div class="layui-input-inline">
+                        <input id="duration" name="duration" type="text" placeholder="持续时间(天)"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否互斥:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="mutexFlag" value="0" title="不互斥" >
+                        <input type="radio" name="mutexFlag" value="1" title="互斥" checked >
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">使用描述:</label>
+                    <div class="layui-input-block">
+                        <textarea  id="useDesc" name="useDesc"placeholder="请输入使用描述" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top: 10px">
+                    <div class="layui-input-block">
+                        <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue"  >提交<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <script src="../../assets/layui.all.js"></script>
+    <script src="../../assets/jquery.js"></script>
+    <script src="../../assets/common.js"></script>
+
+    <script>
+        var form = layui.form;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#indateStartTime', //指定元素
+            type: 'datetime'
+        });
+        laydate.render({
+            elem: '#indateEndTime', //指定元素
+            type: 'datetime'
+        });
+
+
+        form.on('submit(submitBtn)', function(data){
+
+            submit();
+
+            return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+        });
+
+        form.on('radio(type)', function (data) {
+            if( data.elem.checked){　　　　　　//判断当前多选框是选中还是取消选中
+                chooseCouponType(parseInt(data.value));
+            }
+        });
+
+        form.on('radio(indateType)', function (data) {
+            if( data.elem.checked){　　　　　　//判断当前多选框是选中还是取消选中
+                chooseIndateType(parseInt(data.value));
+            }
+        });
+
+        $(function (){
+            //默认选中兑换券
+            chooseCouponType(1);
+            //默认选中相对时间
+            chooseIndateType(2);
+        });
+        
+
+        /**
+         * 选中优惠券类型
+         * @param type
+         */
+        function chooseCouponType(type) {
+            //隐藏所有
+            $("#priceBox").hide();
+            $("#overMoneyBox").hide();
+            $("#discountBox").hide();
+            $("#randomBox").hide();
+
+            switch (type) {
+               case 1:
+                   $("#priceBox").show();
+                   break;
+               case 2:
+                   $("#priceBox").show();
+                   break;
+               case 3:
+                   $("#priceBox").show();
+                   $("#overMoneyBox").show();
+                   break;
+                case 4:
+                    $("#discountBox").show();
+                    $("#overMoneyBox").show();
+                    break;
+                case 5:
+                    $("#randomBox").show();
+                    break;
+
+            }
+
+        }
+
+        /**
+         * 选中到期类型
+         * @param type
+         */
+        function chooseIndateType(type) {
+            //隐藏所有
+            $("#fixDateBox").hide();
+            $("#durationBox").hide();
+
+            switch (type) {
+                case 1:
+                    $("#fixDateBox").show();
+                    break;
+                case 2:
+                    $("#durationBox").show();
+                    break;
+            }
+        }
+
+
+        function submit(){
+
+            $.ajax({
+                url:getAddCouponUrl(),
+                method:'post',
+                data:$('#form').serialize(),
+                dataType:'json',
+                beforeSend:function(){
+                    $("#submitBtn").attr("disabled","true");
+                    $("#btnIcon").addClass("iconjiazaizhong");
+
+                },
+                complete:function() {
+                    $("#submitBtn").removeAttr("disabled");
+                    $("#btnIcon").removeClass("iconjiazaizhong");
+                },
+                success:function (res) {
+                    if (200 == res.code) {
+                        //获取窗口索引
+                        layer.msg("添加成功");
+                        var outIndex = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(outIndex);
+
+                    }else {
+                        layer.msg(res.message);
+                    }
+                },
+                error:function () {
+                    layer.msg("网络错误");
+                }
+            });
+        }
+
+
+    </script>
+
+</body>
+</html>

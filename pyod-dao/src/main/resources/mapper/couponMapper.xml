@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.CouponMapper">
+
+    <!--  -->
+    <resultMap id="couponMap"  type="top.yigege.model.Coupon">
+        <id column="level_id" property="couponId"/>
+        <result column="name" property="name" />
+        <result column="price" property="price"/>
+        <result column="use_desc" property="useDesc"/>
+        <result column="type" property="type"/>
+        <result column="indate_type" property="indateType"/>
+        <result column="mutex_flag" property="mutexFlag"/>
+        <result column="over_money" property="overMoney"/>
+        <result column="duration" property="duration"/>
+        <result column="discount" property="discount"/>
+        <result column="min_money" property="minMoney"/>
+        <result column="max_money" property="maxMoney"/>
+        <result column="indate_start_time" property="indateStartTime"/>
+        <result column="indate_end_time" property="indateEndTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+
+    </resultMap>
+
+
+    <select id="queryCouponPageList"  resultType="top.yigege.model.Coupon"
+            parameterType="top.yigege.dto.modules.coupon.QueryCouponPageListDTO">
+        SELECT
+            *
+        FROM
+            t_coupon t
+        WHERE
+            1 = 1
+    </select>
+
+
+
+</mapper>

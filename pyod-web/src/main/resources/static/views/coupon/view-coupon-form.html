@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">查看等级</div>
+            <form id="form" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">等级名:</label>
+                    <div class="layui-input-inline">
+                        <input id="name" name="name" type="text" required lay-verify="required" placeholder="请输入等级名"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片URL:</label>
+                    <div class="layui-input-block">
+                        <input id="imageUrl" name="imageUrl" type="hidden"/>
+                        <div class="layui-input-block">
+                            <div class="layui-upload">
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" id="demo1">
+                                    <p id="demoText"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">最小值:</label>
+                    <div class="layui-input-inline">
+                        <input id="minValue" name="minValue" type="text" required lay-verify="required" placeholder="请输入最小值"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">最大值:</label>
+                    <div class="layui-input-inline">
+                        <input id="maxValue" name="minValue" type="text" required lay-verify="required" placeholder="请输入最小值"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item" style="margin-top: 10px">
+                    <div class="layui-input-block">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var form = layui.form;
+    var layer = layui.layer;
+    var id = null;
+
+    form.on('submit()', function(data){
+
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+    /**
+     * 加载详情
+     */
+    function loadDetail() {
+        $.ajax({
+            url: getQueryLevelDetailUrl() + "?levelId=" + id,
+            method: 'post',
+            success: function (res) {
+                if (200 == res.code) {
+                    var model = res.data;
+                    $("#name").val(model.name);
+                    $("#demo1").attr("src",model.imageUrl);
+                    $("#minValue").val(model.minValue);
+                    $("#maxValue").val(model.maxValue);
+                    form.render();
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+
+    $(function () {
+        id = getUrlParam("id");
+
+        loadDetail();
+    });
+
+</script>
+
+</body>
+</html>
