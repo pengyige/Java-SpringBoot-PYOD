@@ -16,7 +16,7 @@ public class QueryWeatherDataJob {
 
 
 
-    @Scheduled(cron="0 0/1 * * * ?")
+    //@Scheduled(cron="0 0/1 * * * ?")
     public void run() throws Exception {
         log.info("QueryWeatherDataJob run() start");
 

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @ClassName: UserLoginDetailReqDTO
@@ -15,6 +16,10 @@ import javax.validation.constraints.NotBlank;
 @Data
 @ApiModel("绑定微信手机号")
 public class BindWxUserMobileReqDTO {
+
+    @ApiModelProperty(value = "merchantId", required = true)
+    @NotNull(message = "商家ID不能为空")
+    private Long merchantId;
 
     @ApiModelProperty(value = "openid",dataType = "string",required = true,example = "ojWgU5dNVC0IhdKpczE3YU7dMa2I")
     @NotBlank(message = "openid不能为空")

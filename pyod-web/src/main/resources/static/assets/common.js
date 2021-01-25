@@ -549,6 +549,12 @@ function getDeleteCouponByIdsUrl() {
 
 
 
+
+function  getQueryQrCodeUserInfoUrl() {
+    return getBaseUrl() + "/shop/queryQrCodeUserInfo";
+}
+
+
 /**
  * 上传文件
  * @returns {string}

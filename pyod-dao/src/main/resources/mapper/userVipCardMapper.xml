@@ -14,7 +14,8 @@
             cc.image_url imageUrl,
             uvc.balance,
             uvc.primary_flag primaryFlag,
-            uvc.create_time createTime
+            uvc.create_time createTime,
+            uvc.birthday birthday
         FROM
             t_user_vip_card uvc
             LEFT JOIN t_vip_card cd on uvc.vip_card_id = cd.vip_card_id
@@ -22,6 +23,25 @@
             where
             1 = 1
             and uvc.user_id = #{value}
+    </select>
+
+    <select id="queryUserVipCardDetail" resultType="top.yigege.dto.modules.userVipCard.QueryUserVipCardInfoResDTO" parameterType="java.lang.Long">
+       SELECT
+            cd.vip_card_id vipCardId,
+            cd.card_no vipCardNo,
+            cd.name vipCardName,
+            cc.image_url imageUrl,
+            uvc.balance,
+            uvc.primary_flag primaryFlag,
+            uvc.create_time createTime,
+            uvc.birthday birthday
+        FROM
+            t_user_vip_card uvc
+            LEFT JOIN t_vip_card cd on uvc.vip_card_id = cd.vip_card_id
+            LEFT JOIN t_card_cover cc on cd.card_cover_id = cc.card_cover_id
+            where
+            1 = 1
+            and uvc.vip_card_id = #{value}
     </select>
 
 

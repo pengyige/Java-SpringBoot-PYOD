@@ -156,4 +156,10 @@ public class UserLoginResDTO {
     @ApiModelProperty(value = "vip卡片数量",dataType = "string",required = true,example = "0")
     private int vipCardNum = 0;
 
+    @ApiModelProperty(value = "二维码编号",dataType = "string")
+    private String qrCodeNo = "";
+
+    @ApiModelProperty("商家id")
+    private Long merchantId;
+
 }

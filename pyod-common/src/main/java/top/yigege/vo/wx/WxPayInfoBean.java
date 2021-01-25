@@ -46,4 +46,9 @@ public class WxPayInfoBean {
      */
     String prepayId;
 
+    /**
+     * 系统订单号
+     */
+    String orderNo;
+
 }

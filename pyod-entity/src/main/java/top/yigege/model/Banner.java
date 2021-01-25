@@ -36,6 +36,12 @@ public class Banner extends Model {
     private Long bannerId;
 
     /**
+     * 商家id
+     */
+    @ApiModelProperty("商家id")
+    private Long merchantId;
+
+    /**
      * 图片Url
      */
     @ApiModelProperty("图片Url")

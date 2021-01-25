@@ -18,6 +18,7 @@ public interface ISysDictService extends IService<SysDict> {
 
     /**
      * 通过code查询字典
+     *
      * @param code
      * @return
      */
@@ -25,10 +26,16 @@ public interface ISysDictService extends IService<SysDict> {
 
     /**
      * 查询字典列表
+     *
      * @param page
      * @param pageSize
      * @param paramMap
      * @return
      */
     PageBean queryDictList(int page, int pageSize, Map paramMap);
+
+    String getValueByDB(String code);
+
+    String getValue(String code);
 }
+

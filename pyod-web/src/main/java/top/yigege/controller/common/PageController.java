@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
+import top.yigege.model.User;
 
 /**
  * @ClassName: PageController
@@ -29,5 +30,10 @@ public class PageController {
     @GetMapping("/api/doc")
     public String webDoc() {
         return "redirect:/doc.html";
+    }
+
+    @GetMapping("/web/shop/toOrderPage")
+    public String toOrderPage(String content) {
+        return "redirect:views/shop/orderPage.html?content="+content;
     }
 }

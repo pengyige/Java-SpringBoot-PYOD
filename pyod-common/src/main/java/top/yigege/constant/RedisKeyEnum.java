@@ -18,7 +18,7 @@ public enum RedisKeyEnum {
 
     PEA_EXPIRE_EVENT("pea-expire-event:","豆豆失效事件"),
 
-    BIRTHDAY_EVENT("birthday-event:","生日到期事件"),
+    BIRTHDAY_EVENT("birthday-event:","会员卡生日到期事件"),
 
     GIVE_USER_COUPON_EVENT("give-user-coupon-event:","赠送优惠券失效事件");
 

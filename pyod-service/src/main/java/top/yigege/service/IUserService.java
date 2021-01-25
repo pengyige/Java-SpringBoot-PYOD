@@ -1,7 +1,9 @@
 package top.yigege.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.yigege.config.WxConfig;
 import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
+import top.yigege.dto.modules.user.UpdateLocationDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserLoginResDTO;
 import top.yigege.model.User;
@@ -21,7 +23,7 @@ public interface IUserService extends IService<User> {
      * @param code
      * @return
      */
-    UserLoginResDTO loginByCode(String code);
+    UserLoginResDTO loginByCode(WxConfig wxConfig,Long merchantId,String code);
 
     /**
      * 通过用户基础信息注册并登入
@@ -50,5 +52,18 @@ public interface IUserService extends IService<User> {
      * @param userId
      * @param peaNum
      */
-    void addPea(Long userId,int peaNum);
+    void addPea(Long userId,Double peaNum);
+
+    /**
+     * 退出登入
+     * @param userId
+     * @return
+     */
+    UserLoginResDTO logout(Long userId);
+
+    /**
+     * 更新用户定位
+     * @param updateLocationDTO
+     */
+    void updateLocation(UpdateLocationDTO updateLocationDTO);
 }

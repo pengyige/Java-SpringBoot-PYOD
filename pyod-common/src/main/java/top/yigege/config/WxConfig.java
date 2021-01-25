@@ -14,15 +14,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class WxConfig {
 
-    @Value("${wx.appId}")
+    //@Value("${wx.appId}")
     private String appId;
 
-    @Value("${wx.secret}")
+    //@Value("${wx.secret}")
     private String secret;
 
-    @Value("${wx.mchId}")
+    //@Value("${wx.mchId}")
     private String mchId;
-    @Value("${wx.notify.domain}")
+
+    //@Value("${wx.mchKey}")
+    private String mchKey;
+
+    //@Value("${wx.notify.domain}")
     private String notifyUrl;
 
 }

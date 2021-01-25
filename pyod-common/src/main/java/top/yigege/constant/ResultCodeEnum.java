@@ -127,6 +127,13 @@ public enum ResultCodeEnum {
 
     ALREADY_CDKEY_USED(1013,"CDKEY已被兑换过了"),
 
+
+    VIP_ID_NOT_EXIST(1014,"购买充值返券商品时vip卡片ID必填"),
+
+    VIP_CARD_BIRTHDAY_MODIFY_LIMIT(1015,"会员卡生日只能修改一次"),
+
+    ACTIVITY_EXIST(1016,"该类型活动已存在，请先暂停后再操作"),
+
     NO_COUPON_ACTIVITY(1020,"活动还未开始");
 
 

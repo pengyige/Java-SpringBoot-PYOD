@@ -16,18 +16,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.yigege.config.QrCodeConfig;
 import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
+import top.yigege.dto.modules.user.QueryOwnConsumptionRecordDTO;
+import top.yigege.dto.modules.user.UpdateLocationDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserQrCodeDTO;
+import top.yigege.model.SysUser;
 import top.yigege.model.User;
 import top.yigege.model.UserVipCard;
+import top.yigege.service.ISysUserService;
 import top.yigege.service.IUserService;
 import top.yigege.service.IUserVipCardService;
+import top.yigege.service.impl.SysUserServiceImpl;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.util.QRCodeUtil;
 import top.yigege.vo.ResultBean;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -52,6 +58,9 @@ public class ApiUserController {
     @Autowired
     IUserVipCardService iUserVipCardService;
 
+    @Autowired
+    ISysUserService sysUserService;
+
     /**
      * 通过code登入，若找到user，token有值;若无,token为""
      * @param code
@@ -60,8 +69,8 @@ public class ApiUserController {
     @ApiOperation(value = "通过code登入",notes = "若找到user，token有值;若无,token为空")
     @ApiImplicitParams({@ApiImplicitParam(name = "code", value = "微信登入code",dataType = "string",required = true,example = "0214vrll2eMwj64kxUml27HvrT24vrlU")})
     @PostMapping("/loginByCode")
-    public ResultBean loginByCode(@NotBlank(message = "登入code不能为空") String code) {
-        return ApiResultUtil.success(iUserService.loginByCode(code));
+    public ResultBean loginByCode(@NotNull(message = "商家ID不能为空") Long merchantId,@NotBlank(message = "登入code不能为空") String code) {
+        return ApiResultUtil.success(iUserService.loginByCode(sysUserService.queryWxConfigByMerchantId(merchantId),merchantId,code));
     }
 
     @ApiOperation(value = "通过用户详细信息注册并登入")
@@ -79,6 +88,8 @@ public class ApiUserController {
 
     @ApiOperation(value = "获取个人二维码")
     @PostMapping("/getOwnVipCode")
+    @ApiImplicitParams({@ApiImplicitParam(name = "token", value = "token",dataType = "string",required = true)})
+
     public ResultBean getOwnVipCode(@RequestAttribute Long userId
             ,@NotBlank(message = "token不能为空") String token) throws Exception {
         User user = iUserService.getById(userId);
@@ -89,19 +100,33 @@ public class ApiUserController {
             userQrCodeDTO.setExpireTime(System.currentTimeMillis()+qrCodeConfig.getDuration()*1000);
             String json = JSON.toJSONString(userQrCodeDTO);
             String encryptContent = SecureUtil.aes(qrCodeConfig.getSecret().getBytes()).encryptHex(json);
-            qrCode = QRCodeUtil.encode(encryptContent);
+            String url = "https://admin.yigege.top/web/shop/toOrderPage?content="+encryptContent;
+            qrCode = QRCodeUtil.encode(url);
         }
         return ApiResultUtil.success(qrCode);
     }
 
-    @ApiOperation(value = "查询用户所有vip卡片信息")
-    @PostMapping("/queryUserVipCardList")
-    public ResultBean queryUserVipCardList(@RequestAttribute Long userId) {
-        return ApiResultUtil.success(iUserVipCardService.queryUserVipCardList(userId));
+
+    @ApiOperation(value = "查询用户消费记录")
+    @PostMapping("/queryOwnConsumptionRecord")
+    public ResultBean queryOwnConsumptionRecord(@Valid QueryOwnConsumptionRecordDTO queryOwnConsumptionRecordDTO,
+                                                Long userId) {
+        queryOwnConsumptionRecordDTO.setUserId(userId);
+        //TODO 待完善
+        return ApiResultUtil.success();
     }
 
+    @ApiOperation(value = "退出登入")
+    @PostMapping("/logout")
+    public ResultBean logout(@RequestAttribute Long userId) {
+        return ApiResultUtil.success(iUserService.logout(userId));
+    }
 
-
-
-
+    @ApiOperation(value = "更新用户定位")
+    @PostMapping("/updateLocation")
+    public ResultBean updateLocation(UpdateLocationDTO updateLocationDTO,@RequestAttribute Long userId) {
+        updateLocationDTO.setUserId(userId);
+        iUserService.updateLocation(updateLocationDTO);
+        return ApiResultUtil.success();
+    }
 }

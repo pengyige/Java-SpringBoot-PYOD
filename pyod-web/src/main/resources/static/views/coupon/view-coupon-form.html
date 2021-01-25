@@ -12,51 +12,125 @@
 <div class="layui-content">
     <div class="layui-row">
         <div class="layui-card">
-            <div class="layui-card-header">查看等级</div>
+            <div class="layui-card-header">查看优惠券</div>
             <form id="form" class="layui-form layui-card-body" action="">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">等级名:</label>
+                    <label class="layui-form-label">优惠券名:</label>
                     <div class="layui-input-inline">
-                        <input id="name" name="name" type="text" required lay-verify="required" placeholder="请输入等级名"
+                        <input id="name" name="name" type="text" required lay-verify="required" placeholder="请输入优惠券名"
                                autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">图片URL:</label>
+                    <label class="layui-form-label">类型:</label>
                     <div class="layui-input-block">
-                        <input id="imageUrl" name="imageUrl" type="hidden"/>
-                        <div class="layui-input-block">
-                            <div class="layui-upload">
-                                <div class="layui-upload-list">
-                                    <img class="layui-upload-img" id="demo1">
-                                    <p id="demoText"></p>
-                                </div>
-                            </div>
+                        <input type="radio" name="type" lay-filter="type" value="1" title="兑换券">
+                        <input type="radio" name="type" lay-filter="type" value="2" title="立减券" >
+                        <input type="radio" name="type" lay-filter="type" value="3" title="满减券" >
+                        <input type="radio" name="type" lay-filter="type" value="4" title="折扣券" >
+                        <input type="radio" name="type" lay-filter="type" value="5" title="随机券" >
+                    </div>
+                </div>
+
+                <div id="priceBox" style="display: none"  class="layui-form-item">
+                    <label class="layui-form-label">面额:</label>
+                    <div class="layui-input-inline">
+                        <input id="price" name="price" type="text"  placeholder="请输入面额"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div id="overMoneyBox" style="display: none"  class="layui-form-item">
+                    <label class="layui-form-label">超过金额:</label>
+                    <div class="layui-input-inline">
+                        <input id="overMoney" name="overMoney" type="text"  placeholder="请输入超过金额"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div id="discountBox"style="display: none"  class="layui-form-item">
+                    <label class="layui-form-label">折扣(折扣券):</label>
+                    <div class="layui-input-inline">
+                        <input id="discount" name="discount" type="text"  placeholder="请输入折扣比(折扣券)"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div id="randomBox" style="display: none" >
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">最小值(随机券):</label>
+                        <div class="layui-input-inline">
+                            <input id="minMoney" name="minMoney" type="text" placeholder="请输入最小值(随机券)"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">最大值(随机券):</label>
+                        <div class="layui-input-inline">
+                            <input id="maxMoney" name="maxMoney" type="text"  placeholder="请输入最大值(随机券)"
+                                   autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">最小值:</label>
+                    <label class="layui-form-label">有效期类型:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="indateType"  lay-filter="indateType" value="1" title="固定时间" >
+                        <input type="radio" name="indateType"   lay-filter="indateType" value="2" title="相对时间">
+                    </div>
+                </div>
+
+
+                <div id="fixDateBox" style="display: none">
+                    <div class="layui-form-item" >
+                        <label class="layui-form-label">有效期开始时间:</label>
+                        <div class="layui-input-inline">
+                            <input id="indateStartTime" name="indateStartTime" type="text"  placeholder="请输入有效期开始时间"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">有效期结束时间:</label>
+                        <div class="layui-input-inline">
+                            <input id="indateEndTime" name="indateEndTime" type="text"  placeholder="请输入有效期结束时间"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="durationBox" style="display: none" class="layui-form-item">
+                    <label class="layui-form-label">持续时间(天):</label>
                     <div class="layui-input-inline">
-                        <input id="minValue" name="minValue" type="text" required lay-verify="required" placeholder="请输入最小值"
+                        <input id="duration" name="duration" type="text" placeholder="持续时间(天)"
                                autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否互斥:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="mutexFlag" value="0" title="不互斥" >
+                        <input type="radio" name="mutexFlag" value="1" title="互斥" checked >
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">最大值:</label>
-                    <div class="layui-input-inline">
-                        <input id="maxValue" name="minValue" type="text" required lay-verify="required" placeholder="请输入最小值"
-                               autocomplete="off" class="layui-input">
+                    <label class="layui-form-label">使用描述:</label>
+                    <div class="layui-input-block">
+                        <textarea  id="useDesc" name="useDesc"placeholder="请输入使用描述" class="layui-textarea"></textarea>
                     </div>
                 </div>
 
-
                 <div class="layui-form-item" style="margin-top: 10px">
                     <div class="layui-input-block">
-
+                    <!--    <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue"  >提交<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>-->
                     </div>
                 </div>
             </form>
@@ -84,15 +158,33 @@
      */
     function loadDetail() {
         $.ajax({
-            url: getQueryLevelDetailUrl() + "?levelId=" + id,
+            url: getQueryCouponDetailUrl() + "?couponId=" + id,
             method: 'post',
             success: function (res) {
                 if (200 == res.code) {
                     var model = res.data;
                     $("#name").val(model.name);
-                    $("#demo1").attr("src",model.imageUrl);
-                    $("#minValue").val(model.minValue);
-                    $("#maxValue").val(model.maxValue);
+                    $("#price").val(model.price);
+                    $("#useDesc").val(model.useDesc);
+                    $("#overMoney").val(model.overMoney);
+                    $("#duration").val(model.duration);
+                    $("#discount").val(model.discount);
+                    $("#minMoney").val(model.minMoney);
+                    $("#maxMoney").val(model.maxMoney);
+                    $("#indateStartTime").val(model.indateStartTime);
+                    $("#indateEndTime").val(model.indateEndTime);
+
+                    var index = model.type-1;
+                    $("input[name=type]").eq(index).attr("checked", 'checked');
+                    index = model.indateType-1;
+                    $("input[name=indateType]").eq(index).attr("checked", 'checked');
+                    index = model.mutexFlag;
+                    $("input[name=mutexFlag]").eq(index).attr("checked", 'checked');
+
+                    //默认选中兑换券
+                    chooseCouponType(model.type);
+                    //默认选中相对时间
+                    chooseIndateType(model.indateType);
                     form.render();
                 } else {
                     layer.msg(res.message);
@@ -101,6 +193,59 @@
         });
     }
 
+
+    /**
+     * 选中优惠券类型
+     * @param type
+     */
+    function chooseCouponType(type) {
+        //隐藏所有
+        $("#priceBox").hide();
+        $("#overMoneyBox").hide();
+        $("#discountBox").hide();
+        $("#randomBox").hide();
+
+        switch (type) {
+            case 1:
+                $("#priceBox").show();
+                break;
+            case 2:
+                $("#priceBox").show();
+                break;
+            case 3:
+                $("#priceBox").show();
+                $("#overMoneyBox").show();
+                break;
+            case 4:
+                $("#discountBox").show();
+                $("#overMoneyBox").show();
+                break;
+            case 5:
+                $("#randomBox").show();
+                break;
+
+        }
+
+    }
+
+    /**
+     * 选中到期类型
+     * @param type
+     */
+    function chooseIndateType(type) {
+        //隐藏所有
+        $("#fixDateBox").hide();
+        $("#durationBox").hide();
+
+        switch (type) {
+            case 1:
+                $("#fixDateBox").show();
+                break;
+            case 2:
+                $("#durationBox").show();
+                break;
+        }
+    }
 
     $(function () {
         id = getUrlParam("id");

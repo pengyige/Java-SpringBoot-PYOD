@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 ;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import top.yigege.config.WxConfig;
 import top.yigege.dto.modules.sysUser.AddUserDTO;
 import top.yigege.dto.modules.sysUser.QueryUserPageListDTO;
 import top.yigege.model.SysMenu;
@@ -25,10 +26,18 @@ import java.util.Map;
 public interface ISysUserService extends IService<SysUser> {
 
     /**
-     * 通过用户名查询用户
-     * @param nickname
+     * 查询商户号微信信息
+     * @param merchantId
      * @return
      */
+    WxConfig queryWxConfigByMerchantId(Long merchantId);
+
+
+        /**
+         * 通过用户名查询用户
+         * @param nickname
+         * @return
+         */
     List<SysUser> queryUserByNickname(List<String> nickname);
 
     /**

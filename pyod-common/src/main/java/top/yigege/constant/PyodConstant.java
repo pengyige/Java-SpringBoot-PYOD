@@ -56,6 +56,11 @@ public class PyodConstant {
     public interface  WeiXin {
 
         /**
+         * 订单通知
+         */
+        String NOTIFY_URL = "https://api.yigege.top/wx/notify";
+
+        /**
          * 微信接口地址
          */
         String CODE2SESSION_URL = "https://api.weixin.qq.com/sns/jscode2session?appid={appId}&secret={secret}" +
@@ -135,7 +140,14 @@ public class PyodConstant {
 
         String SIGN = "sign";
 
+        String MERCHANT_ID = "merchantId";
+
         String TOKEN = "token";
+    }
+
+    public interface Default{
+
+        String VIP_PASS_DEFAULT = "123456";
     }
 
 }

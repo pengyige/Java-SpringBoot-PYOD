@@ -24,13 +24,15 @@ public enum ActivityTypeEnum {
 
         UPGRADE(5,"升级发放"),
 
-        BIRTHDAY(6,"生日发放"),
+        BIRTHDAY(6,"会员卡生日发放"),
 
         SOLAR_TERM(7,"节气发放"),
 
         EXCHNAGE_INTEGRAL(8,"积分兑换"),
 
-        PEA(9,"积豆赠券");
+        PEA(9,"积豆赠券"),
+
+        FESTIVAL(10,"节日发放");
 
         Integer code;
 

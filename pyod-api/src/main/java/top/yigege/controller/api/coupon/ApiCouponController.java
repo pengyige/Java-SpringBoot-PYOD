@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.yigege.dto.modules.userVipCard.BindUserVipCardDTO;
-import top.yigege.model.CouponActivity;
+import top.yigege.dto.modules.coupon.QueryUserCouponPageListDTO;
 import top.yigege.service.ICouponService;
 import top.yigege.service.IUserCouponService;
-import top.yigege.service.IUserVipCardService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.vo.ResultBean;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -47,22 +46,21 @@ public class ApiCouponController {
         return ApiResultUtil.success(iCouponService.getById(couponId));
     }
 
-    @ApiOperation("查询用户优惠券列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "couponStatus", value = "优惠券状态(1-可使用,2-已使用,5-已过期)", required = true, dataType = "int")
-    })
-    @PostMapping("/queryUserCouponList")
-    public ResultBean queryUserCouponList(@NotNull(message = "优惠券状态不能为空") Integer couponStatus, @RequestAttribute Long userId){
-        return ApiResultUtil.success(iUserCouponService.queryUserCouponList(couponStatus,userId));
+    @ApiOperation("查询用户优惠券列表(只展示当前主卡)")
+    @PostMapping("/queryUserCouponPageList")
+    public ResultBean queryUserCouponPageList(@Valid QueryUserCouponPageListDTO queryUserCouponPageList, @RequestAttribute Long userId){
+        queryUserCouponPageList.setUserId(userId);
+        return ApiResultUtil.success(iUserCouponService.queryUserCouponPageList(queryUserCouponPageList));
     }
 
     @ApiOperation("赠送优惠券")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "merchantId", value = "商户id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "userCouponId", value = "用户优惠券ID", required = true, dataType = "int")
     })
     @PostMapping("/giveCoupon")
-    public ResultBean giveCoupon(@NotNull(message = "用户优惠券id不能为空") Long userCouponId) {
-        return ApiResultUtil.success(iUserCouponService.giveCoupon(userCouponId));
+    public ResultBean giveCoupon(@NotNull(message = "商户id不能为空") Long merchantId,@NotNull(message = "用户优惠券id不能为空") Long userCouponId) {
+        return ApiResultUtil.success(iUserCouponService.giveCoupon(merchantId,userCouponId));
     }
 
     @ApiOperation("领取优惠券")

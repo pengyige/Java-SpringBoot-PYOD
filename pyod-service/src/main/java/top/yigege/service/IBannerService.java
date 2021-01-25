@@ -3,6 +3,8 @@ package top.yigege.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.yigege.model.Banner;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,6 @@ import top.yigege.model.Banner;
  */
 public interface IBannerService extends IService<Banner> {
 
+
+    List<Banner> queryBannerByMerchantId(Long merchantId);
 }

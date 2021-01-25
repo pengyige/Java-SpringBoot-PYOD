@@ -9,6 +9,7 @@ import com.beust.jcommander.internal.Maps;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -17,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import top.yigege.config.WxConfig;
 import top.yigege.constant.PyodConstant;
@@ -44,14 +44,14 @@ import static top.yigege.constant.PyodConstant.WeiXin.ORDER_QUERY_URL;
 @Slf4j
 public class WeixinUtil {
 
-    @Autowired
-    WxConfig wxConfig;
+    /*@Autowired
+    WxConfig wxConfig;*/
 
     /**
      * 获取微信token
      * @return
      */
-    public String getToken() {
+    public String getToken(WxConfig wxConfig) {
         String wxRequestUrl = "";
             wxRequestUrl = PyodConstant.WeiXin.GET_TOKEN_URL.replace("{appId}", wxConfig.getAppId())
                     .replace("{secret}", wxConfig.getSecret());
@@ -69,8 +69,8 @@ public class WeixinUtil {
      * @return
      * @throws UnsupportedEncodingException
      */
-    public String getQrCode(String page) throws UnsupportedEncodingException {
-        String url = PyodConstant.WeiXin.GET_WX_ACODE.replace("{access_token}",getToken());
+    public String getQrCode(WxConfig wxConfig,String page) throws UnsupportedEncodingException {
+        String url = PyodConstant.WeiXin.GET_WX_ACODE.replace("{access_token}",getToken(wxConfig));
         Map requestParam = new HashMap();
         requestParam.put("path", page);
         RestTemplate restTemplate = new RestTemplate();
@@ -86,7 +86,7 @@ public class WeixinUtil {
      * @param code
      * @return
      */
-    public Code2SessionResultBean getCode2Session(String code) {
+    public Code2SessionResultBean getCode2Session(WxConfig wxConfig,String code) {
         String wxRequestUrl = "";
         wxRequestUrl = PyodConstant.WeiXin.CODE2SESSION_URL.replace("{appId}", wxConfig.getAppId())
                 .replace("{secret}", wxConfig.getSecret())
@@ -106,7 +106,7 @@ public class WeixinUtil {
      * @return
      * @throws Exception
      */
-    public WxPayInfoBean getPrePayInfo(String body,String outTradeNo,Double totalFee,String openId) throws Exception {
+    public WxPayInfoBean getPrePayInfo(WxConfig wxConfig,String body,String outTradeNo,Integer totalFee,String openId) throws Exception {
         WxPayInfoBean wxPayInfoBean = new WxPayInfoBean();
 
         Map<String, String> map = Maps.newHashMap();
@@ -115,14 +115,14 @@ public class WeixinUtil {
         map.put("nonce_str", WXPayUtil.generateNonceStr());
         map.put("body",body);
         map.put("out_trade_no",outTradeNo);
-        map.put("total_fee", totalFee+"");
+        map.put("total_fee",totalFee+"");
         map.put("spbill_create_ip", IpUtil.getLocalIP());
 
         map.put("trade_type","JSAPI");
         map.put("notify_url", wxConfig.getNotifyUrl());
         map.put("openid", openId);
         String unifiedorderUrl = PyodConstant.WeiXin.UNIFIED_ORDER_URL;
-        String sign = generateSignature(map, wxConfig.getSecret());
+        String sign = generateSignature(map, wxConfig.getMchKey());
         map.put("sign", sign);
 
         String xml = mapToXml(map);
@@ -137,17 +137,22 @@ public class WeixinUtil {
         String err_code_des = (String) map1.get("err_code_des");//返回状态码
         if (return_code.equals("SUCCESS") || return_code.equals(result_code)) {
             String prepay_id = (String) map1.get("prepay_id");//返回的预付单信息
-
             wxPayInfoBean.setAppId(wxConfig.getAppId());
             wxPayInfoBean.setTimeStamp(System.currentTimeMillis()+"");
             wxPayInfoBean.setNonceStr(WXPayUtil.generateNonceStr());
             wxPayInfoBean.setSignType("MD5");
             wxPayInfoBean.setWxPackage("prepay_id=" + prepay_id);
-            Map<String,String> payMap = Convert.convert(HashMap.class,wxPayInfoBean);
-            String paySign = generateSignature(payMap, wxConfig.getSecret());
-            wxPayInfoBean.setPaySign(paySign);
             wxPayInfoBean.setPrepayId(prepay_id);
 
+            Map<String,String> payMap = new HashMap<>();
+            payMap.put("appId",wxPayInfoBean.getAppId());
+            payMap.put("timeStamp", wxPayInfoBean.getTimeStamp());
+            payMap.put("nonceStr",wxPayInfoBean.getNonceStr());
+            payMap.put("signType",wxPayInfoBean.getSignType());
+            payMap.put("package",wxPayInfoBean.getWxPackage());
+            String paySign = generateSignature(payMap, wxConfig.getMchKey());
+            wxPayInfoBean.setPaySign(paySign);
+            wxPayInfoBean.setOrderNo(outTradeNo);
         }
         return wxPayInfoBean;
     }
@@ -159,20 +164,20 @@ public class WeixinUtil {
      * @return
      * @throws Exception
      */
-    public boolean queryOrderStatus(String outTradeNo) throws Exception {
+    public boolean queryOrderStatus(WxConfig wxConfig,String outTradeNo) throws Exception {
         Map<String, String> map = Maps.newHashMap();
         map.put("appid", wxConfig.getAppId());
         map.put("mch_id",wxConfig.getMchId());
         map.put("out_trade_no",outTradeNo);
         map.put("nonce_str", WXPayUtil.generateNonceStr());
 
-        map.put("sign",generateSignature(map, wxConfig.getSecret()));
+        map.put("sign",generateSignature(map, wxConfig.getMchKey()));
         String xmlStr = HttpUtil.post(ORDER_QUERY_URL,   mapToXml(map));
         log.info("wx queryOrderStatus result = {}",xmlStr);
 
         Map resultMap = xmlToMap(xmlStr);
         String tradeState =  (String)resultMap.get("trade_state");
-        if (tradeState.equals("SUCCESS")) {
+        if (StringUtils.isNotBlank(tradeState) && tradeState.equals("SUCCESS")) {
             return true;
         }
 

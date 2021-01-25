@@ -29,6 +29,10 @@ public class QueryNearbyShopPageListDTO {
     @NotNull(message = "纬度不能为空")
     Double latitude;
 
+    @ApiModelProperty(value = "商家id",required = true)
+    @NotNull(message = "商家id不能为空")
+    Long merchantId;
+
     @ApiModelProperty(value = "城市id")
     Long cityId;
 }

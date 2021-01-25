@@ -101,14 +101,15 @@
             });
         } else if(layEvent === 'edit'){ //编辑
             //do something
-            layer.open({
+            layer.msg("已创建的优惠券无法修改");
+           /* layer.open({
                 id:"edit-"+moduleName+"-form",
                 type: 2,
                 title:'',
                 area:['700px','500px'],
 
                 content: './'+moduleName+'/edit-'+moduleName+'-form.html?id='+id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-            });
+            });*/
         }
     });
 

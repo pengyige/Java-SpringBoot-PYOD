@@ -12,9 +12,9 @@ public enum BusinessFlagEnum {
 
 
     ROLE(1, "R"),
-    PRODUCT(2, "P"),
+    PRODUCT(2, "P");
 
-    VIP_CARD(3, "C");
+    //VIP_CARD(3, "C");
 
     private Integer code;
 

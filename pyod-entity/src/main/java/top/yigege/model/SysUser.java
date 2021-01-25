@@ -94,6 +94,14 @@ public class SysUser extends Model<SysUser> {
     @ApiModelProperty("备注")
     private String remark;
 
+    private String wxAppId;
+
+    private String wxSecret;
+
+    private String wxMchId;
+
+    private String wxMchKey;
+
     /**
      * 创建时间
      */

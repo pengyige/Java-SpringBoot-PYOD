@@ -3,14 +3,17 @@ package top.yigege.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.yigege.config.WxConfig;
 import top.yigege.constant.BusinessFlagEnum;
 
+import top.yigege.constant.PyodConstant;
 import top.yigege.dto.modules.sysUser.AddUserDTO;
 import top.yigege.dto.modules.sysUser.QueryUserPageListDTO;
 import top.yigege.model.SysMenu;
@@ -42,7 +45,7 @@ import static top.yigege.constant.PyodConstant.Common.PARENT_MENU_FLAG;
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
 
-    @Autowired
+    @Resource
     SysUserMapper sysUserMapper;
 
     @Autowired
@@ -51,6 +54,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public List<SysUser> queryUserByNickname(List<String> nickname) {
         return sysUserMapper.queryUserByNickname(nickname);
+    }
+
+    @Override
+    public WxConfig queryWxConfigByMerchantId(Long merchantId) {
+        LambdaQueryWrapper<SysUser> lambdaQueryWrapper = new LambdaQueryWrapper();
+        SysUser sysUser = getById(merchantId);
+        WxConfig wxConfig = new WxConfig();
+        wxConfig.setAppId(sysUser.getWxAppId());
+        wxConfig.setSecret(sysUser.getWxSecret());
+        wxConfig.setMchId(sysUser.getWxMchId());
+        wxConfig.setMchKey(sysUser.getWxMchKey());
+        wxConfig.setNotifyUrl(PyodConstant.WeiXin.NOTIFY_URL);
+        return wxConfig;
     }
 
     @Override

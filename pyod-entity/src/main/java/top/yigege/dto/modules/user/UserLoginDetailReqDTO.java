@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @ClassName: UserLoginDetailReqDTO
@@ -14,6 +15,10 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 public class UserLoginDetailReqDTO {
+
+    @ApiModelProperty(value = "merchantId", required = true)
+    @NotNull(message = "商家ID不能为空")
+    private Long merchantId;
 
     @ApiModelProperty(value = "openid", required = true)
     @NotBlank(message = "openid不能为空")

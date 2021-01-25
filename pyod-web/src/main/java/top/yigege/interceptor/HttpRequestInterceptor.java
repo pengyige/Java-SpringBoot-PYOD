@@ -86,6 +86,7 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
                    || params.get(PyodConstant.ApiRequestCommonParam.NONCE) == null
                    || params.get(PyodConstant.ApiRequestCommonParam.SIGN) == null
                    || params.get(PyodConstant.ApiRequestCommonParam.TOKEN) == null
+                   || params.get(PyodConstant.ApiRequestCommonParam.MERCHANT_ID) == null
            ) {
                write(resp, ApiResultUtil.custom(ResultCodeEnum.SIGN_ERROR));
                return false;

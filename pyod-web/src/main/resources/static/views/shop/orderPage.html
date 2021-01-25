@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>下单</title>
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+
+    <script src="../../assets/layui.all.js"></script>
+    <script src="../../assets/jquery.js"></script>
+    <script>
+        /**
+         * 获取url参数
+         * @param name
+         * @returns {*}
+         */
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg); //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+
+
+        $(function (){
+           var content = getUrlParam("content");
+           var userInfo;
+            $.ajax({
+                url: getQueryQrCodeUserInfoUrl()+"?content="+content,
+                method:'post',
+                dataType:'json',
+                beforeSend:function(){
+                },
+                complete:function() {
+
+                },
+                success:function (res) {
+                    if (200 == res.code) {
+                        userInfo = res.data;
+                        alert(JSON.stringify(userInfo));
+                    }
+                },
+                error:function () {
+                    layer.msg("网络错误");
+                }
+            });
+
+        });
+        </script>
+</head>
+<body>
+    <div id="userId"></div>
+    <div id="name"></div>
+    <div id="avatar"></div>
+</body>
+</html>

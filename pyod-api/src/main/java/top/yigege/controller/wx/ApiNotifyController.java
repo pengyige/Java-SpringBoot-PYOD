@@ -7,13 +7,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import top.yigege.config.WxConfig;
 import top.yigege.model.PurchaseHistory;
 import top.yigege.service.IProductService;
 import top.yigege.service.IShopService;
 import top.yigege.service.impl.ShopServiceImpl;
+import top.yigege.util.ApiResultUtil;
+import top.yigege.vo.ResultBean;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +64,7 @@ public class ApiNotifyController {
         String orderNo = resultMap.get("out_trade_no");//订单号
         String sign = resultMap.get("sign");//获取微信签名
         resultMap.remove("sign");//去除签名字段
-        String signNew = WXPayUtil.generateSignature(resultMap, wxConfig.getSecret()); //重新签名
+        String signNew = WXPayUtil.generateSignature(resultMap, wxConfig.getMchKey()); //重新签名
         log.info("wx pay notify：{}",resXml);
         if (signNew.equals(sign)) {
             if ("SUCCESS".equals(returnCode)) {
@@ -88,5 +92,13 @@ public class ApiNotifyController {
         out.close();
         br.close();
         return null;
+    }
+
+    @ApiOperation("通知测试")
+    @PostMapping("/wxNotifyTest")
+    @ResponseBody
+    public ResultBean wxNotifyTest(String orderNo) {
+        iProductService.buyProductFinishHanlder(orderNo);
+        return ApiResultUtil.success();
     }
 }

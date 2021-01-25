@@ -9,13 +9,18 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://yigege.top:3306/pyod?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
-    password: root
+    password: Pyod@2020!
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    validationQuery: select version()
   redis:
     #数据库索引
     database: 0
     host: yigege.top
     port: 6379
-    password: 123456
+    password: Pyod@2020!
     jedis:
       pool:
         #最大连接数
@@ -27,7 +32,7 @@ spring:
         #最小空闲
         min-idle: 0
     #连接超时时间
-    timeout: 10000
+    timeout: 30000
   # 文件上传
   servlet:
     multipart:

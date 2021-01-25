@@ -17,6 +17,8 @@ import top.yigege.service.IProductService;
 import top.yigege.util.ApiResultUtil;
 import top.yigege.vo.ResultBean;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -50,26 +52,32 @@ public class ApiCommonController {
 
     @ApiOperation("查询所有轮播列表")
     @PostMapping("/queryBannerList")
-    public ResultBean queryBannerList() {
-        return ApiResultUtil.success(iBannerService.list());
+    public ResultBean queryBannerList(@NotNull(message = "商户ID不能为空") Long merchantId) {
+        return ApiResultUtil.success(iBannerService.queryBannerByMerchantId(merchantId));
     }
 
     @ApiOperation("查询所有封面列表")
     @PostMapping("/queryCardCoverList")
-    public ResultBean queryAllCardCoverList() {
-        return ApiResultUtil.success(iCardCoverService.list());
+    public ResultBean queryAllCardCoverList(@NotNull(message = "商户ID不能为空") Long merchantId) {
+        return ApiResultUtil.success(iCardCoverService.queryCardCoverByMerchantId(merchantId));
+    }
+
+    @ApiOperation("查询默认的封面")
+    @PostMapping("/queryDefaultCardCover")
+    public ResultBean queryDefaultCardCover(@NotNull(message = "商户ID不能为空") Long merchantId) {
+        return  ApiResultUtil.success(iCardCoverService.queryDefaultCardCover(merchantId));
     }
 
     @ApiOperation("查询所有等级列表")
     @PostMapping("/queryLevelList")
-    public ResultBean queryLevelList() {
-        return ApiResultUtil.success(iLevelService.list());
+    public ResultBean queryLevelList(@NotNull(message = "商户ID不能为空") Long merchantId) {
+        return ApiResultUtil.success(iLevelService.queryLevelByMerchantId(merchantId));
     }
 
     @ApiOperation("查询所有等级福利列表")
     @PostMapping("/queryLevelWelfareList")
-    public ResultBean queryLevelWelfareList() {
-        List<Level> levelList = iLevelService.list();
+    public ResultBean queryLevelWelfareList(@NotNull(message = "商户ID不能为空") Long merchantId) {
+        List<Level> levelList = iLevelService.queryLevelByMerchantId(merchantId);
         levelList.forEach(item -> {
             item.setLevelWelfareList(iLevelWelfareService.queryLevelWelfareByLevelId(item.getLevelId()));
         });
@@ -88,7 +96,7 @@ public class ApiCommonController {
 
     @ApiOperation("查询所有商品数据列表")
     @PostMapping("/queryProductData")
-    public ResultBean queryProductData() {
-        return ApiResultUtil.success(iProductService.queryAllProductInfo());
+    public ResultBean queryProductData(@NotNull(message = "商户ID不能为空") Long merchantId) {
+        return ApiResultUtil.success(iProductService.queryAllProductInfo(merchantId));
     }
 }

@@ -31,7 +31,7 @@ public interface ITokenService {
      * @param token
      * @return
      */
-    String getUserId(String token);
+    Long getUserId(String token);
 }
 
 

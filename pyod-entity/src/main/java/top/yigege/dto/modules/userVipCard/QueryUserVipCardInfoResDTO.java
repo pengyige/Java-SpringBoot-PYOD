@@ -19,5 +19,6 @@ public class QueryUserVipCardInfoResDTO {
     String imageUrl;
     Double balance;
     Integer primaryFlag;
+    Date birthday;
     Date createTime;
 }

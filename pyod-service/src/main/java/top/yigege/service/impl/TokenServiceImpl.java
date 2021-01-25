@@ -67,7 +67,7 @@ public class TokenServiceImpl implements ITokenService {
         }
 
         Claim userIdClaim = jwt.getClaims().get(PyodConstant.JWT.USER_ID);
-        if (null == userIdClaim || StringUtils.isBlank(userIdClaim.asString())) {
+        if (null == userIdClaim || null == userIdClaim.asLong()) {
             throw new BusinessException(ResultCodeEnum.ILLEGAL_TOKEN_ERROR);
         }
 
@@ -80,7 +80,7 @@ public class TokenServiceImpl implements ITokenService {
      * @return
      */
     @Override
-    public String getUserId(String token){
+    public Long getUserId(String token){
         DecodedJWT jwt = null;
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(jwtConfig.getSecret())).build();
@@ -91,10 +91,10 @@ public class TokenServiceImpl implements ITokenService {
         }
 
         Claim userIdClaim = jwt.getClaims().get(PyodConstant.JWT.USER_ID);
-        if (null == userIdClaim || StringUtils.isBlank(userIdClaim.asString())) {
+        if (null == userIdClaim || null == userIdClaim.asLong()) {
             throw new BusinessException(ResultCodeEnum.ILLEGAL_TOKEN_ERROR);
         }
 
-        return userIdClaim.asString();
+        return userIdClaim.asLong();
     }
 }

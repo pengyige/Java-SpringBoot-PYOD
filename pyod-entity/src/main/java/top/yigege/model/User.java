@@ -35,6 +35,12 @@ public class User extends Model {
     @TableId(value = "user_id", type = IdType.AUTO)
     private Long userId;
 
+    @ApiModelProperty(value = "商家id")
+    private Long merchantId;
+
+    @ApiModelProperty(value = "二维码编号")
+    private String qrCodeNo;
+
     /**
      * 昵称
      */
@@ -63,13 +69,13 @@ public class User extends Model {
      * 豆豆数量
      */
     @ApiModelProperty(value = "豆豆数量")
-    private Integer avaliablePeaNum;
+    private Double avaliablePeaNum;
 
     /**
      * 总共获得豆豆数量
      */
     @ApiModelProperty(value = "总共获得豆豆数量")
-    private Integer totalPeaNum;
+    private Double totalPeaNum;
 
     /**
      * vip卡片id(主卡)

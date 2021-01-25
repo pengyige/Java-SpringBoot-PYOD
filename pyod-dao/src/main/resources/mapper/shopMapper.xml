@@ -80,7 +80,7 @@
             `t_shop` s
         WHERE
             1 = 1
-
+            and s.merchant_id = #{merchantId}
             <if test="null != cityId">
                 and s.city_id = #{cityId}
             </if>
@@ -111,6 +111,7 @@
         `t_shop` s
         WHERE
         1 = 1
+        and s.merchant_id = #{merchantId}
         <if test="null != queryNearbyShopPageListDTO.cityId">
             and s.city_id = #{queryNearbyShopPageListDTO.cityId}
         </if>
