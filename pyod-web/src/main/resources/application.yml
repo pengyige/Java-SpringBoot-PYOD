@@ -13,6 +13,9 @@ server:
 spring:
   profiles:
     active: @pkg.env@
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
 # mybatis-plus配置
 mybatis-plus:
@@ -20,8 +23,10 @@ mybatis-plus:
   type-aliases-package: top.yigege.model
   global-config:
     db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
       id-type: auto
-      field-strategy: not_empty
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: NOT_NULL
       #驼峰下划线转换
       column-underline: true
       #逻辑删除配置
@@ -34,8 +39,58 @@ mybatis-plus:
     cache-enabled: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
 
-
 #swagger2
 swagger:
   enable: true
+
+#api接口不需要登入的url
+request:
+  exclude-url:
+    - /pyod/api/common/queryBannerList
+    - /pyod/api/common/queryLevelList
+    - /pyod/api/user/loginByCode
+    - /pyod/api/user/loginByUserDetail
+    - /pyod/api/shop/queryNearbyLatestShop
+    - /pyod/api/doc
+    - /pyod/app/user/login
+# 微信开放平台
+#wx:
+#  appId: wx0b4b633bfde7dcf3
+#  secret: a96eb6169581a9a588bfad749fc5b906
+#  mchId: 1605923032
+#  mchKey: 122gjvjtyuu343fgfgfg12ghggasoqw1
+#  notify:
+#    domain: https://api.yigege.top/wx/notify
+
+# 天气
+weather:
+  appId: 91581434
+  appSecret: LuBwya8G
+
+# aliyun oss
+aliyun:
+  oss:
+    accessKeyID: LTAI4GG75vh7B68Hq3eqkygt
+    accessKeySecret: KqAPkdvYT2echYssqGgjTmViw8dGKg
+    endPoint: https://oss-cn-beijing.aliyuncs.com
+    buckets: pyod-platform
+    prefix: pyod-platform/
+
+# jwt secret
+jwt:
+  secret: PYOD9999
+  expire: 3600
+
+# sign secret
+sign:
+  enable: true
   secret: PYOD8888
+
+# qrCode secret
+qrCode:
+  secret: 7oU7m0aFpbOaJunl
+  duration: 180
+
+# gaode
+gaode:
+  key: 33c0432eaed6765ccff5a04f67c03187

@@ -34,6 +34,11 @@
 
         <dependency>
             <groupId>top.yigege</groupId>
+            <artifactId>pyod-merchant-app</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>top.yigege</groupId>
             <artifactId>pyod-job</artifactId>
         </dependency>
 

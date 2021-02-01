@@ -10,6 +10,7 @@ import org.springframework.data.redis.listener.KeyExpirationEventMessageListener
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
 import top.yigege.constant.ActivityTypeEnum;
+import top.yigege.constant.BirthdayTypeEnum;
 import top.yigege.constant.CouponStatusEnum;
 import top.yigege.constant.DictCodeEnum;
 import top.yigege.constant.RedisKeyEnum;
@@ -83,17 +84,59 @@ public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListen
             //处理用户赠送优惠券未领取
             handlerGiveUserCouponUnPickEvent(Long.valueOf(expiredKey.split(":")[1]));
         }else if (expiredKey.startsWith(RedisKeyEnum.BIRTHDAY_EVENT.getKey())) {
-            //处理用户生日赠券
-            handlerUserBirthdayEvent(Long.valueOf(expiredKey.split(":")[1]),Long.valueOf(expiredKey.split(":")[2]));
+            //会员卡生日赠券
+            handlerVipBirthdayEvent(Long.valueOf(expiredKey.split(":")[1]),Long.valueOf(expiredKey.split(":")[2]));
+        }else if (expiredKey.startsWith(RedisKeyEnum.USER_BIRTHDAY_EVENT.getKey())) {
+            //用户生日赠券
+            handlerUserBirthdayEvent(Long.valueOf(expiredKey.split(":")[1]));
+
         }
     }
 
+
+     private void handlerUserBirthdayEvent(Long userId) {
+         log.info("用户id:{},用户生日处理...",userId);
+         User user = iUserService.getById(userId);
+         Date getDate = new Date();
+         CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(user.getMerchantId(),ActivityTypeEnum.BIRTHDAY);
+         if (null != couponActivity) {
+             //获取活动对应的优惠券
+             LambdaQueryWrapper<CouponActivityBirthday> couponActivityBirthdayLambdaQueryWrapper = new LambdaQueryWrapper<>();
+             couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getCouponActivityId,couponActivity.getCouponActivityId());
+             couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getType, BirthdayTypeEnum.USER.getCode());
+             List<CouponActivityBirthday> couponActivityBirthdayList = iCouponActivityBirthdayService.list(couponActivityBirthdayLambdaQueryWrapper);
+             if (!couponActivityBirthdayList.isEmpty()) {
+                 List<UserCoupon> userCouponList = couponActivityBirthdayList.stream().map(item ->{
+                     UserCoupon userCoupon = new UserCoupon();
+                     userCoupon.setUserId(userId);
+                     userCoupon.setVipCardId(user.getVipCardId());
+                     userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                     userCoupon.setCouponId(item.getCouponId());
+                     userCoupon.setNum(item.getNum());
+                     userCoupon.setAvailableNum(item.getNum());
+                     userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(),getDate));
+                     userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                     return userCoupon;
+                 }).collect(Collectors.toList());
+                 //保存
+                 iUserCouponService.batchAddUserCoupon(userCouponList);
+             }
+         }
+
+         //设置生日到期事件,到期后给该卡赠送优惠券
+         String birthdayKey = RedisKeyEnum.USER_BIRTHDAY_EVENT.getKey() + userId;
+         Date registerDate = getDate;
+         Date birthdayDate = DateUtil.offsetMonth(registerDate,12);
+         iRedisService.setObj(birthdayKey,userId,birthdayDate.getTime()-registerDate.getTime());
+         log.info("用户id:{},vipCardId:{},用户生日处理完成,下一次生日：{}",userId,user.getVipCardId(),birthdayDate);
+     }
+
     /**
-     * 用户生日
+     * 会员卡生日
      * @param userId
      */
-    private void handlerUserBirthdayEvent(Long userId,Long vipCardId) {
-        log.info("用户id:{},vipCardId:{},生日处理...",userId,vipCardId);
+    private void handlerVipBirthdayEvent(Long userId,Long vipCardId) {
+        log.info("用户id:{},vipCardId:{},会员卡生日处理...",userId,vipCardId);
         //获取会员卡生日赠券活动并赠券,并重新设置新的过期时间
         User user = iUserService.getById(userId);
         Date getDate = new Date();
@@ -102,6 +145,7 @@ public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListen
             //获取活动对应的优惠券
             LambdaQueryWrapper<CouponActivityBirthday> couponActivityBirthdayLambdaQueryWrapper = new LambdaQueryWrapper<>();
             couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getCouponActivityId,couponActivity.getCouponActivityId());
+            couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getType, BirthdayTypeEnum.VIP_CARD.getCode());
             List<CouponActivityBirthday> couponActivityBirthdayList = iCouponActivityBirthdayService.list(couponActivityBirthdayLambdaQueryWrapper);
             if (!couponActivityBirthdayList.isEmpty()) {
                 List<UserCoupon> userCouponList = couponActivityBirthdayList.stream().map(item ->{
@@ -111,6 +155,7 @@ public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListen
                     userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
                     userCoupon.setCouponId(item.getCouponId());
                     userCoupon.setNum(item.getNum());
+                    userCoupon.setAvailableNum(item.getNum());
                     userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(),getDate));
                     userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
                     return userCoupon;

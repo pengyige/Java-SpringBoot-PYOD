@@ -13,6 +13,7 @@ import top.yigege.dto.modules.banner.ModifyBannerDTO;
 import top.yigege.model.Banner;
 import top.yigege.service.IBannerService;
 import top.yigege.util.ApiResultUtil;
+import top.yigege.util.SessionUtil;
 import top.yigege.util.Utils;
 import top.yigege.vo.LayuiTableResultBean;
 import top.yigege.vo.PageBean;
@@ -43,7 +44,7 @@ public class WebBannerController {
     public ResultBean addBanner(@Valid AddBannerDTO addBannerDTO){
         Banner banner = new Banner();
         BeanUtil.copyProperties(addBannerDTO, banner);
-
+        banner.setMerchantId(Long.valueOf(SessionUtil.getUser().getUserId()));
         return ApiResultUtil.success(iBannerService.save(banner));
     };
 
@@ -67,7 +68,7 @@ public class WebBannerController {
         String msg = ResultCodeEnum.SUCCESS.getMsg();
         List<Banner> bannerList = new ArrayList<>();
         try {
-            bannerList = iBannerService.list();
+            bannerList = iBannerService.queryBannerByMerchantId(Long.valueOf(SessionUtil.getUser().getUserId()));
         } catch (Exception e) {
             code = ResultCodeEnum.ERROR.getCode();
             msg = ResultCodeEnum.ERROR.getMsg();

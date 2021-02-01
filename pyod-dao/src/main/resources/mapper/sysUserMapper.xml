@@ -54,11 +54,11 @@
                 AND t.tel = #{queryUserPageListDTO.tel}
             </if>
 
-            <if test="null != queryUserPageListDTO.sex and 0 != paramMap.sex">
+            <if test="null != queryUserPageListDTO.sex and 0 != queryUserPageListDTO.sex">
                 AND t.sex = #{queryUserPageListDTO.sex}
             </if>
 
-            <if test="null != queryUserPageListDTO.status and 0 != paramMap.status">
+            <if test="null != queryUserPageListDTO.status and 0 != queryUserPageListDTO.status">
                 AND t.status = #{queryUserPageListDTO.status}
             </if>
     </select>
@@ -125,6 +125,30 @@
         where
           u.user_id = #{value}
     </select>
+
+
+    <select id="querySysUserByRoleNo" parameterType="java.lang.String" resultMap="userRolesMap">
+        SELECT
+            u.user_id,
+            u.nickname,
+            u.NO,
+            u.sex,
+            u.tel,
+            u.PASSWORD,
+            u.STATUS,
+            u.last_login_time,
+            r.role_id,
+            r.role_no,
+            r.NAME r_name,
+            r.remark r_remark
+        FROM
+            t_sys_user u
+             left join t_sys_user_role_relation ur on u.user_id = ur.user_id
+             left join t_sys_role r on ur.role_id = r.role_id
+        where
+          r.role_no = #{value}
+    </select>
+
 
     <delete id="deleteUserRoles" parameterType="java.lang.Integer">
         DELETE

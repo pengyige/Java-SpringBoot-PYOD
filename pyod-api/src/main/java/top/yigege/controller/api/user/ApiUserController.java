@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.yigege.config.QrCodeConfig;
+import top.yigege.constant.ResultCodeEnum;
 import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
+import top.yigege.dto.modules.user.ModifyUserInfoDTO;
 import top.yigege.dto.modules.user.QueryOwnConsumptionRecordDTO;
 import top.yigege.dto.modules.user.UpdateLocationDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserQrCodeDTO;
+import top.yigege.exception.BusinessException;
 import top.yigege.model.SysUser;
 import top.yigege.model.User;
 import top.yigege.model.UserVipCard;
@@ -45,6 +49,7 @@ import javax.validation.constraints.NotNull;
  */
 @RestController
 @RequestMapping("/api/user")
+@Slf4j
 @Validated
 @Api(tags = "API-用户模块")
 public class ApiUserController {
@@ -97,12 +102,17 @@ public class ApiUserController {
         if (null != user) {
             UserQrCodeDTO userQrCodeDTO = new UserQrCodeDTO();
             userQrCodeDTO.setToken(token);
+            userQrCodeDTO.setMerchantId(user.getMerchantId());
             userQrCodeDTO.setExpireTime(System.currentTimeMillis()+qrCodeConfig.getDuration()*1000);
             String json = JSON.toJSONString(userQrCodeDTO);
             String encryptContent = SecureUtil.aes(qrCodeConfig.getSecret().getBytes()).encryptHex(json);
-            String url = "https://admin.yigege.top/web/shop/toOrderPage?content="+encryptContent;
-            qrCode = QRCodeUtil.encode(url);
+            log.info("encryptContent:{}",encryptContent);
+            //String url = "https://admin.yigege.top/web/shop/toOrderPage?content="+encryptContent;
+            qrCode = QRCodeUtil.encode(encryptContent);
+        }else {
+            throw new BusinessException(ResultCodeEnum.NO_USER);
         }
+
         return ApiResultUtil.success(qrCode);
     }
 
@@ -124,9 +134,16 @@ public class ApiUserController {
 
     @ApiOperation(value = "更新用户定位")
     @PostMapping("/updateLocation")
-    public ResultBean updateLocation(UpdateLocationDTO updateLocationDTO,@RequestAttribute Long userId) {
+    public ResultBean updateLocation(@Valid UpdateLocationDTO updateLocationDTO,@RequestAttribute Long userId) {
         updateLocationDTO.setUserId(userId);
         iUserService.updateLocation(updateLocationDTO);
+        return ApiResultUtil.success();
+    }
+
+    @ApiOperation("修改用户信息")
+    public ResultBean modifyUserInfo(@Valid  ModifyUserInfoDTO modifyUserInfoDTO, @RequestAttribute Long userId) {
+        modifyUserInfoDTO.setUserId(userId);
+        iUserService.modifyUserInfo(modifyUserInfoDTO);
         return ApiResultUtil.success();
     }
 }

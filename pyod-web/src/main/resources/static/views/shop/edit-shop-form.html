@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<script type="text/javascript"
+        src="https://webapi.amap.com/maps?v=1.4.2&key=	b02043f878f7f1f7d6daf8d1c4caf6d3"></script>
+<script src="//webapi.amap.com/ui/1.1/main.js"></script>
+<script type="text/javascript" src="https://webapi.amap.com/demos/js/liteToolbar.js"></script>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">修改店铺信息</div>
+            <form id="form" class="layui-form layui-card-body" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">店铺名:</label>
+                    <div class="layui-input-inline">
+                        <input id="name" name="name" type="text" required lay-verify="required"
+                               placeholder="请输入店铺名"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择城市:</label>
+                    <div class="layui-input-inline">
+                        <select id="cityId" name="cityId" lay-verify="required" lay-search
+                                lay-filter="cityId">
+                            <option value="">选择或输入城市</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">详细地址</label>
+                    <div class="layui-input-inline">
+                        <div id="container" class="map" tabindex="0"></div>
+                        <input name="longitude" type="hidden"/>
+                        <input name="latitude" type="hidden"/>
+                        <input id="address" type="text" placeholder="输入地址" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系方式:</label>
+                    <div class="layui-input-inline">
+                        <input id="contact" name="contact" type="text" required lay-verify="required"
+                               placeholder="请输入联系方式"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工作模式</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="workMode" value="0" title="周一至周日" checked>
+                        <input type="radio" name="workMode" value="1" title="周一至周五" >
+                        <input type="radio" name="workMode" value="2" title="周一至周六" >
+                        <input type="radio" name="workMode" value="3" title="周末" >
+                    </div>
+                </div>
+
+                <div class="layui-form-item" >
+                    <label class="layui-form-label">营业开始时间:</label>
+                    <div class="layui-input-inline">
+                        <input id="startDate" name="startDate" type="text"  placeholder="请输入开始时间"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item" >
+                    <label class="layui-form-label">营业结束时间:</label>
+                    <div class="layui-input-inline">
+                        <input id="endDate" name="endDate" type="text"  placeholder="请输入结束时间"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item" >
+                    <label class="layui-form-label">店铺封面:</label>
+                    <div class="layui-input-inline">
+                        <input id="pic" name="pic" type="hidden"/>
+                        <div class="layui-input-block">
+                            <div class="layui-upload">
+                                <button type="button" class="layui-btn" id="test1">上传封面</button>
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" id="demo1">
+                                    <p id="demoText"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top: 10px">
+                    <div class="layui-input-block">
+                        <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue">
+                            提交<i id="btnIcon" class="icon iconfont"></i></button>
+                        <button id="resetBtn" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var form = layui.form;
+    var layer = layui.layer;
+    var upload = layui.upload;
+    var laydate = layui.laydate;
+    var id = null;
+    var model = null;
+
+    //普通图片上传
+    var uploadInst = upload.render({
+        elem: '#test1'
+        ,url: getCommonUploadFile() //改成您自己的上传接口
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#demo1').attr('src', result); //图片链接（base64）
+            });
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg(res.data.msg);
+            }
+            //上传成功
+            $("#pic").val(res.data.src);
+
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+        }
+    });
+
+
+    form.on('submit(submitBtn)', function (data) {
+
+        submit();
+
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+    var map = new AMap.Map('container', {
+        zoom: 10
+    });
+    //加载PoiPicker，loadUI的路径参数为模块名中 'ui/' 之后的部分
+    AMapUI.loadUI(['misc/PoiPicker'], function(PoiPicker) {
+        var poiPicker = new PoiPicker({
+            input: 'address' //输入框id
+        });
+        //监听poi选中信息
+        poiPicker.on('poiPicked', function(poiResult) {
+            var source = poiResult.source,
+                poi = poiResult.item;
+            $("#address").val(poi.district+poi.address);
+            $("input[name='longitude']").val(poi.location.toString().split(",")[0]);
+            $("input[name='latitude']").val(poi.location.toString().split(",")[1]);
+
+            form.render();
+        });
+    });
+
+
+    $(function () {
+        id = getUrlParam("id");
+        loadDetail();
+    })
+
+
+    /**
+     * 加载用户详情
+     */
+    function loadDetail() {
+        $.ajax({
+            url: getQueryShopDetailUrl() + "?shopId=" + id,
+            method: 'post',
+            success: function (res) {
+                if (200 == res.code) {
+                    model = res.data;
+                    //加载所有城市
+                    loadAllCity();
+
+                    $("#name").val(model.name);
+                    $("#contact").val(model.contact);
+                    $("#address").val(model.address);
+                    $("#longitude").val(model.longitude);
+                    $("#latitude").val(model.latitude);
+                    //执行一个laydate实例
+                    laydate.render({
+                        elem: '#startDate', //指定元素
+                        type: 'datetime',
+                        value: model.startDate
+                    });
+                    laydate.render({
+                        elem: '#endDate', //指定元素
+                        type: 'datetime',
+                        value: model.endDate
+                    });
+
+                    $("input[name=workMode]").eq( model.workMode).attr("checked", 'checked');
+                    $("#demo1").attr("src",model.pic);
+                    $("#pic").val(model.pic);
+
+
+                    form.render();
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+    /**
+     * 加载所有城市
+     */
+    function loadAllCity() {
+        $.ajax({
+            url: getQueryAllCityListUrl(),
+            method: 'post',
+            dataType: 'json',
+            success: function (res) {
+                if (200 == res.code) {
+                    var data = res.data;
+                    var len = data.length;
+                    var sel = ''
+                    for (var i = 0; i < len; i++) {
+                        sel += '<option value="' + data[i].cityId + '" >' +data[i].name+'</option>';
+                    }
+                    $('#cityId').empty();
+                    $('#cityId').append(sel);
+
+                    $("#cityId").val(model.cityId);
+                    form.render(); //更新全部
+
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+    /**
+     * 提交
+     */
+    function submit() {
+
+        $.ajax({
+            url: getModifyShopUrl()+"?shopId="+id,
+            method: 'post',
+            data: $('#form').serialize(),
+            dataType: 'json',
+            beforeSend: function () {
+                $("#submitBtn").attr("disabled", "true");
+                $("#btnIcon").addClass("iconjiazaizhong");
+
+            },
+            complete: function () {
+                $("#submitBtn").removeAttr("disabled");
+                $("#btnIcon").removeClass("iconjiazaizhong");
+            },
+            success: function (res) {
+                if (200 == res.code) {
+                    layer.msg("修改成功");
+                } else {
+                    layer.msg(res.message);
+                }
+            },
+            error: function () {
+                layer.msg("网络错误");
+            }
+        });
+    }
+
+
+</script>
+
+</body>
+</html>

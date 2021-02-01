@@ -1,20 +1,25 @@
 package top.yigege.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
- * 优惠券注册活动
+ * 优惠券节气活动
  * </p>
  *
  * @author yigege
  * @since 2021-01-22
  */
+@Data
 @TableName("t_coupon_activity_solarterm")
 public class CouponActivitySolarterm extends Model {
 
@@ -23,8 +28,8 @@ public class CouponActivitySolarterm extends Model {
     /**
      * 优惠券活动节气id
      */
-    @TableId(value = "coupon_activity_register_id", type = IdType.AUTO)
-    private Long couponActivityRegisterId;
+    @TableId(value = "coupon_activity_solarterm_id", type = IdType.AUTO)
+    private Long couponActivitySolartermId;
 
     /**
      * 活动id
@@ -44,65 +49,19 @@ public class CouponActivitySolarterm extends Model {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
+    /**
+     * 修改时间
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
 
     /**
-     * 更新时间
+     * 优惠券信息
      */
-    private LocalDateTime updateTime;
+    @TableField(exist = false)
+    private Coupon coupon;
 
-    public Long getCouponActivityRegisterId() {
-        return couponActivityRegisterId;
-    }
 
-    public void setCouponActivityRegisterId(Long couponActivityRegisterId) {
-        this.couponActivityRegisterId = couponActivityRegisterId;
-    }
-    public Long getCouponActivityId() {
-        return couponActivityId;
-    }
-
-    public void setCouponActivityId(Long couponActivityId) {
-        this.couponActivityId = couponActivityId;
-    }
-    public Long getCouponId() {
-        return couponId;
-    }
-
-    public void setCouponId(Long couponId) {
-        this.couponId = couponId;
-    }
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
-    }
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "CouponActivitySolarterm{" +
-        "couponActivityRegisterId=" + couponActivityRegisterId +
-        ", couponActivityId=" + couponActivityId +
-        ", couponId=" + couponId +
-        ", num=" + num +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        "}";
-    }
 }

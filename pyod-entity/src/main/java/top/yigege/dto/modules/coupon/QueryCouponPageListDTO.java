@@ -14,4 +14,6 @@ public class QueryCouponPageListDTO {
     int page = 1;
 
     int pageSize = 10;
+
+    Long merchantId;
 }

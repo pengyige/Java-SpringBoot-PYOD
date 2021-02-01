@@ -74,7 +74,6 @@ public class SysUserController {
         return ApiResultUtil.success(iUserService.addUser(addUserDTO));
     }
 
-
     @PostMapping("/updateUser")
     public ResultBean updateUser(@Valid ModifyUserDTO modifyUserDTO) {
         SysUser modifyUser = new SysUser();
@@ -102,6 +101,7 @@ public class SysUserController {
         try {
             pageBean = iUserService.queryUserList(queryUserPageListDTO);
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             code = ResultCodeEnum.ERROR.getCode();
             msg = ResultCodeEnum.ERROR.getMsg();
         }

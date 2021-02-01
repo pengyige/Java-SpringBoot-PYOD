@@ -9,6 +9,8 @@
         <result column="user_id" property="userId"/>
         <result column="vip_card_id" property="vipCardId"/>
         <result column="num" property="num"/>
+        <result column="used_num" property="usedNum"/>
+        <result column="available_num" property="availableNum"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="expire_time" property="expireTime"/>
@@ -34,16 +36,18 @@
 
             <if test="1 == queryUserCouponPageListDTO.couponStatus">
                 AND uc.STATUS = #{queryUserCouponPageListDTO.couponStatus}
+                AND uc.available_num > 0
                 and uc.expire_time<![CDATA[>]]> now()
             </if>
             <if test="2 == queryUserCouponPageListDTO.couponStatus">
-                AND uc.STATUS = #{queryUserCouponPageListDTO.couponStatus}
+                AND  (uc.uesd_num > 0)
             </if>
             <if test="5 == queryUserCouponPageListDTO.couponStatus">
                 AND uc.STATUS = 1
+                AND uc.available_num > 0
                 and uc.expire_time <![CDATA[<]]> now()
             </if>
-
+            order by uc.expire_time desc
     </select>
 
 

@@ -11,6 +11,8 @@ import lombok.Data;
 @Data
 public class UserQrCodeDTO {
 
+    private Long merchantId;
+
     private String token;
 
     private long expireTime;

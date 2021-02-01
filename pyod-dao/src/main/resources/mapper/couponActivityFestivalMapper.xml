@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.CouponActivityFestivalMapper">
+
+    <resultMap id="couponActivityFestivalMap" type="top.yigege.model.CouponActivityFestival">
+        <id column="coupon_activity_festival_id" property="couponActivityFestivalId"/>
+        <result column="coupon_activity_id" property="couponActivityId" />
+        <result column="type" property="type"/>
+        <result column="coupon_id" property="couponId" />
+        <result column="num" property="num" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+
+
+
+        <association property="coupon" javaType="top.yigege.model.Coupon">
+            <id column="c_coupon_id" property="couponId"></id>
+            <result column="c_name" property="name"></result>
+            <result column="c_price" property="price"/>
+            <result column="c_use_desc" property="useDesc"/>
+            <result column="c_type" property="type"/>
+            <result column="c_indate_type" property="indateType"/>
+            <result column="c_mutex_flag" property="mutexFlag"/>
+            <result column="c_over_money" property="overMoney"/>
+            <result column="c_duration" property="duration"/>
+            <result column="c_discount" property="discount"/>
+            <result column="c_min_money" property="minMoney"/>
+            <result column="c_max_money" property="maxMoney"/>
+            <result column="c_indate_start_time" property="indateStartTime"/>
+            <result column="c_indate_end_time" property="indateEndTime"/>
+            <result column="c_create_time" property="createTime"/>
+            <result column="c_update_time" property="updateTime"/>
+        </association>
+    </resultMap>
+
+
+
+    <select id="queryCouponActivityFestivalPageList"  resultMap="couponActivityFestivalMap" parameterType="top.yigege.dto.modules.coupon.QueryCouponActivityFestivalPageListDTO">
+      SELECT
+            caf.*,
+            c.coupon_id c_coupon_id,
+            c.NAME c_name
+        FROM
+            `t_coupon_activity_festival` caf
+            LEFT JOIN t_coupon c ON caf.coupon_id = c.coupon_id
+            LEFT JOIN t_coupon_activity ca on caf.coupon_activity_id = ca.coupon_activity_id
+        WHERE 1 = 1
+        AND ca.merchant_id = #{queryCouponActivityFestivalPageListDTO.merchantId}
+    </select>
+
+
+
+
+</mapper>

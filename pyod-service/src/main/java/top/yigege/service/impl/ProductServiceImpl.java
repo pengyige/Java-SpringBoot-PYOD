@@ -1,6 +1,7 @@
 package top.yigege.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,9 +12,11 @@ import top.yigege.constant.DictCodeEnum;
 import top.yigege.constant.OrderStatusEnum;
 import top.yigege.constant.ProductTypeEnum;
 import top.yigege.constant.ResultCodeEnum;
+import top.yigege.dto.modules.product.QueryProductPageListDTO;
 import top.yigege.exception.BusinessException;
 import top.yigege.model.Coupon;
 import top.yigege.model.CouponActivity;
+import top.yigege.model.Level;
 import top.yigege.model.Product;
 import top.yigege.dao.ProductMapper;
 import top.yigege.model.PurchaseHistory;
@@ -32,7 +35,9 @@ import top.yigege.service.ISysUserService;
 import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserService;
 import top.yigege.service.IUserVipCardService;
+import top.yigege.util.PageUtil;
 import top.yigege.util.WeixinUtil;
+import top.yigege.vo.PageBean;
 import top.yigege.vo.wx.WxPayInfoBean;
 
 import javax.annotation.Resource;
@@ -196,6 +201,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                     userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
                     userCoupon.setCouponId(item.getCouponId());
                     userCoupon.setNum(item.getNum());
+                    userCoupon.setAvailableNum(item.getNum());
                     userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(),pickDate));
                     userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
                     return userCoupon;
@@ -206,5 +212,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
 
 
+    }
+
+    @Override
+    public PageBean queryProductPageList(QueryProductPageListDTO queryProductPageListDTO) {
+        Page pageInfo = new Page(queryProductPageListDTO.getPage(),
+                queryProductPageListDTO.getPageSize() == 0 ? 10 : queryProductPageListDTO.getPageSize());
+        List<Product> productList = productMapper.queryProductPageList(queryProductPageListDTO, pageInfo);
+        return PageUtil.getPageBean(pageInfo, productList);
     }
 }

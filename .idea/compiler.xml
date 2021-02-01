@@ -12,6 +12,7 @@
         <module name="pyod-dao" />
         <module name="pyod-entity" />
         <module name="pyod-job" />
+        <module name="pyod-merchant-app" />
         <module name="pyod-service" />
         <module name="pyod-web" />
       </profile>
@@ -28,6 +29,7 @@
       <module name="pyod-dao" options="-parameters" />
       <module name="pyod-entity" options="-parameters" />
       <module name="pyod-job" options="-parameters" />
+      <module name="pyod-merchant-app" options="-parameters" />
       <module name="pyod-service" options="-parameters" />
       <module name="pyod-web" options="-parameters" />
     </option>

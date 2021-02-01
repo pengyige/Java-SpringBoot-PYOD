@@ -52,6 +52,17 @@
                     </div>
                 </div>
 
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>福利绑定</legend>
+                </fieldset>
+
+                <div style="text-align: center">
+                    <input id="welfareIds" name="welfareIds" type="hidden"/>
+                    <div id="welfareBox">
+
+                    </div>
+                    <button id="bindBtn" type="button" class="layui-btn layui-btn-blue"  >立即绑定</button>
+                </div>
 
                 <div class="layui-form-item" style="margin-top: 10px">
                     <div class="layui-input-block">
@@ -117,10 +128,27 @@
 
         loadDetail();
 
+        top.chooseData  = [];
 
-        /*$("#bindRoleBtn").click(function () {
+        $("#bindBtn").click(function (){
+            top.layer.open({
+                id:"add-welfare-diloag",
+                type: 2,
+                title:'',
+                area:['600px','500px'],
+                content: 'views/welfare/choose-welfare-form.html',
+                end:function(){
+                    //处理选中的福利
+                    var text = "";
+                    top.chooseData.forEach(function (item,index) {
+                        var item = "<button class='layui-btn layui-btn-xs'>"+item.name+"</button>"
+                        text += item;
+                    });
 
-        });*/
+                    $("#welfareBox").html(text);
+                }
+            });
+        });
     })
 
 
@@ -129,7 +157,7 @@
      */
     function loadDetail() {
         $.ajax({
-            url: getQueryLevelDetailUrl() + "?levelId=" + id,
+            url: getQueryLevelDetailUrl() + "?"+parent.primaryKey+"=" + id,
             method: 'post',
             success: function (res) {
                 if (200 == res.code) {
@@ -139,6 +167,14 @@
                     globalSrc = model.imageUrl;
                     $("#minValue").val(model.minValue);
                     $("#maxValue").val(model.maxValue);
+                    //处理选中的福利
+                    var text = "";
+                    model.levelWelfareList.forEach(function (item,index) {
+                        var content = "<button class='layui-btn layui-btn-xs'>"+item.welfare.name+"</button>"
+                        text += content;
+                    });
+
+                    $("#welfareBox").html(text);
                     form.render();
                 } else {
                     layer.msg(res.message);
@@ -156,6 +192,15 @@
             return;
         }
         $("#imageUrl").val(globalSrc);
+
+        var welfareIds = "";
+        top.chooseData.forEach(function (item,index){
+            welfareIds += item.welfareId + ",";
+        });
+        if ("" != welfareIds) {
+            welfareIds = welfareIds.substring(0, welfareIds.length - 1);
+        }
+        $("#welfareIds").val(welfareIds);
 
         $.ajax({
             url: getModifyLevelUrl() + "?levelId=" + id ,

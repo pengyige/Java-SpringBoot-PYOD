@@ -70,10 +70,12 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">父ID:</label>
-                    <div class="layui-input-block">
-                        <input id="pid" name="pid" type="text" required lay-verify="required" placeholder="请输入父ID"
-                               autocomplete="off" class="layui-input">
+                    <label class="layui-form-label">父菜单:</label>
+                    <div class="layui-input-inline">
+                        <select id="pid" name="pid" lay-verify="required" lay-search
+                                lay-filter="pidSelect">
+                            <option value="">选择或输入父菜单</option>
+                        </select>
                     </div>
                 </div>
 
@@ -227,7 +229,34 @@
             $("input[name=status]").eq(1).attr("checked", 'checked');
         }
 
+
+
         form.render();
+    }
+
+    /**
+     * 加载所有菜单
+     */
+    function loadAllMenuList(currentPid) {
+        $.ajax({
+            url: getQueryAllMenuListUrl(),    //后台数据请求地址
+            type: "post",
+            success: function (res) {
+                if (200 == res.code) {
+                    var data = res.data;
+                    var len = data.length;
+                    var sel ='<option value="-1">根菜单</option>';
+                    for (var i = 0; i < len; i++) {
+                        sel += '<option value="' + data[i].menuId + '" >' + data[i].name + '</option>';
+                    }
+                    $('#pid').empty();
+                    $('#pid').append(sel);
+
+                    $("#pid").val(currentPid);
+                    form.render(); //更新全部
+                }
+            }
+        });
     }
 
     /**
@@ -240,6 +269,7 @@
             success: function (res) {
                 if (200 == res.code) {
                     var data = res.data;
+                    loadAllMenuList(data.pid);
                     fillData(data);
                 }
             }
@@ -314,7 +344,7 @@
 
     $(function () {
         initTree();
-
+        loadAllMenuList(-1);
         $("#deleteBtn").click(function (){
             sendDeleteMenuRequest($("#id").val());
         });

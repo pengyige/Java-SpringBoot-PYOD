@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">查看积分送券</div>
+            <form id="form" class="layui-form layui-card-body" action="">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">活动:</label>
+                    <div class="layui-input-inline">
+                        <select id="couponActivityId" name="couponActivityId" lay-verify="required" lay-search
+                                lay-filter="couponActivityIdSelect">
+                            <option value="">选择或输入活动</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">优惠券:</label>
+                    <div class="layui-input-inline">
+                        <select id="couponId" name="couponId" lay-verify="required" lay-search
+                                lay-filter="couponIdSelect">
+                            <option value="">选择或输入优惠券</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">优惠券数量:</label>
+                    <div class="layui-input-inline">
+                        <input id="num" name="num" type="text" required lay-verify="required" placeholder="请输入优惠券数量"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">积分数:</label>
+                    <div class="layui-input-inline">
+                        <input id="minNeedIntegral" name="minNeedIntegral" type="text" required lay-verify="required" placeholder="请输入积分数"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item" style="margin-top: 10px">
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var form = layui.form;
+    var layer = layui.layer;
+    var id = null;
+
+    form.on('submit()', function(data){
+
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+    /**
+     * 加载活动数据
+     */
+    function loadCouponActivityData() {
+        $.ajax({
+            url: getQueryCouponActivityListByActivityTypeUrl() + "?activityType=8",
+            method: 'post',
+            data: $('#form').serialize(),
+            dataType: 'json',
+            success: function (res) {
+                if (200 == res.code) {
+                    var data = res.data;
+                    var len = data.length;
+                    var sel = ''
+                    for (var i = 0; i < len; i++) {
+                        var status = data[i].status == 1 ? '正常' : '暂停';
+                        sel += '<option value="' + data[i].couponActivityId + '" >' + data[i].title + "-" + (status) + '</option>';
+                    }
+                    $('#couponActivityId').empty();
+                    $('#couponActivityId').append(sel);
+
+                    $("#couponActivityId").val(model.couponActivityId);
+                    form.render(); //更新全部
+
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+    /**
+     * 加载优惠券数据
+     */
+    function loadCouponData() {
+        $.ajax({
+            url: getQueryAllCouponListUrl() ,
+            method: 'post',
+            data: $('#form').serialize(),
+            dataType: 'json',
+            success: function (res) {
+                if (200 == res.code) {
+                    var data = res.data;
+                    var len = data.length;
+                    var sel = ''
+                    for (var i = 0; i < len; i++) {
+                        sel += '<option value="' + data[i].couponId + '" >' + data[i].name + '</option>';
+                    }
+                    $('#couponId').empty();
+                    $('#couponId').append(sel);
+                    $("#couponId").val(model.couponId);
+                    form.render(); //更新全部
+
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 加载详情
+     */
+    function loadDetail() {
+        $.ajax({
+            url: getQueryCouponActivityIntegralDetailUrl() + "?"+parent.primaryKey+"=" + id,
+            method: 'post',
+            async:false,
+            success: function (res) {
+                if (200 == res.code) {
+                    model = res.data;
+                    $("#num").val(model.num);
+                    $("#minNeedIntegral").val(model.minNeedIntegral);
+                    form.render();
+
+                    //加载活动数据
+                    loadCouponActivityData();
+
+                    //加载优惠券数据
+                    loadCouponData();
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+
+    $(function () {
+        id = getUrlParam("id");
+
+        loadDetail();
+    });
+
+</script>
+
+</body>
+</html>

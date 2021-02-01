@@ -85,6 +85,7 @@
                     if (200 == res.code) {
                         //获取窗口索引
                         layer.msg("添加成功");
+                        parent.reloadTable();
                         var outIndex = parent.layer.getFrameIndex(window.name);
                         parent.layer.close(outIndex);
 

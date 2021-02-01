@@ -29,8 +29,8 @@ public class CouponActivityFestival extends Model {
     /**
      * 优惠券活动节日id
      */
-    @TableId(value = "coupon_activity_register_id", type = IdType.AUTO)
-    private Long couponActivityRegisterId;
+    @TableId(value = "coupon_activity_festival_id", type = IdType.AUTO)
+    private Long couponActivityFestivalId;
 
     /**
      * 活动id
@@ -64,4 +64,7 @@ public class CouponActivityFestival extends Model {
     @ApiModelProperty("修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
+
+    @TableField(exist = false)
+    private Coupon coupon;
 }

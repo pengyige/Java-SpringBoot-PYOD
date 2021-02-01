@@ -1,7 +1,11 @@
 package top.yigege.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import top.yigege.dto.modules.coupon.QueryCouponActivityFestivalPageListDTO;
 import top.yigege.model.CouponActivityFestival;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import top.yigege.model.CouponActivityFestival;
  */
 public interface CouponActivityFestivalMapper extends BaseMapper<CouponActivityFestival> {
 
+    List<CouponActivityFestival> queryCouponActivityFestivalPageList(QueryCouponActivityFestivalPageListDTO queryCouponActivityFestivalPageListDTO, Page page);
 }

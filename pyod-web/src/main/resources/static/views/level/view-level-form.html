@@ -53,6 +53,16 @@
                     </div>
                 </div>
 
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>福利绑定</legend>
+                </fieldset>
+
+                <div style="text-align: center">
+                    <input id="welfareIds" name="welfareIds" type="hidden"/>
+                    <div id="welfareBox">
+
+                    </div>
+                </div>
 
                 <div class="layui-form-item" style="margin-top: 10px">
                     <div class="layui-input-block">
@@ -93,6 +103,15 @@
                     $("#demo1").attr("src",model.imageUrl);
                     $("#minValue").val(model.minValue);
                     $("#maxValue").val(model.maxValue);
+                    //处理选中的福利
+                    var text = "";
+                    model.levelWelfareList.forEach(function (item,index) {
+                        var content = "<button class='layui-btn layui-btn-xs'>"+item.welfare.name+"</button>"
+                        text += content;
+                    });
+
+                    $("#welfareBox").html(text);
+
                     form.render();
                 } else {
                     layer.msg(res.message);

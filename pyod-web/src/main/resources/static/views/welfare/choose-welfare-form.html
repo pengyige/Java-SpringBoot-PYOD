@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">选择福利</div>
+            <div class="form-box" style="padding: 5px">
+                <div class="layui-form layui-form-item">
+                    <div class="layui-inline">
+
+                    </div>
+                    <button id="queryBtn" class="layui-btn layui-btn-blue">查询</button>
+                    <button id="resetBtn" class="layui-btn layui-btn-primary">重置</button>
+                    <button id="okBtn" class="layui-btn layui-btn-blue">确定</button>
+                    <table id="demo"></table>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var tree = layui.tree;
+    var form = layui.form;
+    var layer = layui.layer;
+
+
+    var table = layui.table;
+    var layer = layui.layer;
+
+    /**
+     * 初始化表格
+     */
+    function initTable() {
+        //展示已知数据
+        table.render({
+            elem: '#demo'
+            , id: 'demo'
+            , url: getQueryWelfarePageListUrl()
+            , method: 'post'
+            , request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , cols: [[ //标题栏
+                {type: 'checkbox'},
+                , {field: 'welfareId', title: '福利id'}
+                , {field: 'name', title: '福利名称'}
+            ]]
+            , skin: 'line' //表格风格
+            , even: true
+            , page: true //是否显示分页
+            , limits: [10, 20, 50]
+            , limit: 10 //每页默认显示的数量
+        });
+    }
+
+    /**
+     * 重新加载
+     */
+    function reloadTable() {
+
+        table.reload('demo', {
+            page: {
+                curr: 1 //重新从第 1 页开始
+            }
+            , where: {
+
+            }
+        }, 'data');
+    }
+
+    /**
+     * 重置
+     */
+    function clearConditionInput() {
+
+    }
+
+    $(function () {
+        initTable();
+
+        //查询
+        $("#queryBtn").click(function () {
+            reloadTable();
+        });
+
+        //重置
+        $("#resetBtn").click(function () {
+            clearConditionInput()
+            reloadTable();
+        });
+
+        //确定
+        $("#okBtn").click(function() {
+            var checkData = table.checkStatus('demo');
+            top.chooseData = checkData.data;
+
+            var outIndex = top.layer.getFrameIndex(window.name);
+            top.layer.close(outIndex);
+        });
+
+    });
+
+
+</script>
+
+</body>
+</html>

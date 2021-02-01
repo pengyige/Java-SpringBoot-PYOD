@@ -42,4 +42,10 @@ public class AddLevelDTO {
     @ApiModelProperty(value = "最大值",required = true)
     @NotNull(message = "最大值不能为空")
     private Integer maxValue;
+
+
+    /**
+     * 福利ids
+     */
+    String welfareIds;
 }

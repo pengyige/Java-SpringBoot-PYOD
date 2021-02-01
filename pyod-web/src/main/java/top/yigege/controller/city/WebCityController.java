@@ -89,4 +89,10 @@ public class WebCityController {
         return ApiResultUtil.success(iCityService.getById(cityId));
     }
 
+    @ApiOperation("查询所有城市列表")
+    @PostMapping("/queryAllCityList")
+    public ResultBean queryAllCityList() {
+        return ApiResultUtil.success(iCityService.queryAllCity());
+    }
+
 }

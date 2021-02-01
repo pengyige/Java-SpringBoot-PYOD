@@ -13,6 +13,7 @@ import top.yigege.dto.modules.cardCover.ModifyCardCoverDTO;
 import top.yigege.model.CardCover;
 import top.yigege.service.ICardCoverService;
 import top.yigege.util.ApiResultUtil;
+import top.yigege.util.SessionUtil;
 import top.yigege.util.Utils;
 import top.yigege.vo.LayuiTableResultBean;
 import top.yigege.vo.ResultBean;
@@ -42,7 +43,7 @@ public class WebCardCoverController {
     public ResultBean addCardCover(@Valid AddCardCoverDTO addCardCoverDTO){
         CardCover CardCover = new CardCover();
         BeanUtil.copyProperties(addCardCoverDTO, CardCover);
-
+        CardCover.setMerchantId(Long.valueOf(SessionUtil.getUser().getUserId()));
         return ApiResultUtil.success(iCardCoverService.save(CardCover));
     };
 
@@ -66,7 +67,7 @@ public class WebCardCoverController {
         String msg = ResultCodeEnum.SUCCESS.getMsg();
         List<CardCover> CardCoverList = new ArrayList<>();
         try {
-            CardCoverList = iCardCoverService.list();
+            CardCoverList = iCardCoverService.queryCardCoverByMerchantId(Long.valueOf(SessionUtil.getUser().getUserId()));
         } catch (Exception e) {
             code = ResultCodeEnum.ERROR.getCode();
             msg = ResultCodeEnum.ERROR.getMsg();

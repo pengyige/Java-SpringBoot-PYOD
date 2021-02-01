@@ -2,13 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.yigege.dao.CouponActivityProductMapper">
 
-    <resultMap id="couponActivityProductMap" type="top.yigege.model.CouponActivityRegister">
-        <id column="coupon_activity_register_id" property="couponActivityRegisterId"/>
+    <resultMap id="couponActivityProductMap" type="top.yigege.model.CouponActivityProduct">
+        <id column="coupon_activity_product_id" property="couponActivityProductId"/>
         <result column="coupon_activity_id" property="couponActivityId" />
+        <result column="product_id" property="productId"/>
         <result column="coupon_id" property="couponId" />
         <result column="num" property="num" />
         <result column="create_time" property="createTime" />
-        <result column="updateTime" property="updateTime" />
+        <result column="update_time" property="updateTime" />
 
 
 
@@ -29,9 +30,21 @@
             <result column="c_indate_end_time" property="indateEndTime"/>
             <result column="c_create_time" property="createTime"/>
             <result column="c_update_time" property="updateTime"/>
-            <result column="num" property="num"/>
         </association>
     </resultMap>
 
+    <select id="queryCouponActivityProductPageList" resultMap="couponActivityProductMap"
+        parameterType="top.yigege.dto.modules.coupon.QueryCouponActivityProductPageListDTO">
+          SELECT
+            cap.*,
+            c.coupon_id c_coupon_id,
+            c.NAME c_name
+        FROM
+            `t_coupon_activity_product` cap
+            LEFT JOIN t_coupon c ON cap.coupon_id = c.coupon_id
+            LEFT JOIN t_coupon_activity ca on cap.coupon_activity_id = ca.coupon_activity_id
+        WHERE 1 = 1
+        AND ca.merchant_id = #{queryCouponActivityProductPageListDTO.merchantId}
+    </select>
 
 </mapper>

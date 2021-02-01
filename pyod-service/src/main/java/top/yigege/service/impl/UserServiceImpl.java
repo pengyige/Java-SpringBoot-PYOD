@@ -20,7 +20,9 @@ import top.yigege.constant.PyodConstant;
 import top.yigege.constant.RedisKeyEnum;
 import top.yigege.constant.ResultCodeEnum;
 import top.yigege.dao.UserMapper;
+import top.yigege.dto.modules.console.QueryHomeDataResDTO;
 import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
+import top.yigege.dto.modules.user.ModifyUserInfoDTO;
 import top.yigege.dto.modules.user.UpdateLocationDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserLoginResDTO;
@@ -58,6 +60,7 @@ import top.yigege.vo.wx.Code2SessionResultBean;
 import top.yigege.vo.wx.WxMobileDataBean;
 import top.yigege.vo.wx.WxUserInfoDataBean;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +79,9 @@ import static top.yigege.constant.ResultCodeEnum.REDIS_SESSION_KEY_EXPIRE;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+
+    @Resource
+    UserMapper userMapper;
 
     @Autowired
     WxConfig wxConfig;
@@ -130,6 +136,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userLambdaQueryWrapper.eq(User::getMerchantId, merchantId);
         User user = getOne(userLambdaQueryWrapper);
         return user;
+    }
+
+    @Override
+    public List<User> queryUserByMerchantId(Long merchantId) {
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userLambdaQueryWrapper.eq(User::getMerchantId, merchantId);
+        return list(userLambdaQueryWrapper);
+    }
+
+    @Override
+    public Long queryUserNumByMerchantId(Long merchantId) {
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userLambdaQueryWrapper.eq(User::getMerchantId, merchantId);
+        return Long.valueOf(count(userLambdaQueryWrapper));
     }
 
     @Override
@@ -233,6 +253,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                         userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
                         userCoupon.setCouponId(item.getCouponId());
                         userCoupon.setNum(item.getNum());
+                        userCoupon.setAvailableNum(item.getNum());
                         userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), newUser.getCreateTime()));
                         userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
                         return userCoupon;
@@ -334,6 +355,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                             userCoupon.setCouponActivityId(upgradeCouponActivity.getCouponActivityId());
                             userCoupon.setCouponId(item.getCouponId());
                             userCoupon.setNum(item.getNum());
+                            userCoupon.setAvailableNum(item.getNum());
                             userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), getDate));
                             userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
                             return userCoupon;
@@ -367,6 +389,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                         userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
                         userCoupon.setCouponId(item.getCouponId());
                         userCoupon.setNum(item.getNum());
+                        userCoupon.setAvailableNum(item.getNum());
                         userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), peaCouponGetDate));
                         userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
                         userCouponList.add(userCoupon);
@@ -401,6 +424,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         updateById(user);
     }
 
+    @Override
+    public void modifyUserInfo(ModifyUserInfoDTO modifyUserInfoDTO) {
+        User user = getById(modifyUserInfoDTO.getUserId());
+        if (null != user.getBirthday() && null != modifyUserInfoDTO.getBirthday()) {
+            throw new BusinessException(ResultCodeEnum.USER_BIRTHDAY_MODIFY_LIMIT);
+        }else if(null == user.getBirthday() && null != modifyUserInfoDTO.getBirthday()){
+            user.setBirthday(modifyUserInfoDTO.getBirthday());
+            //设置生日到期事件,到期后给用户赠送优惠券
+            String birthdayKey = RedisKeyEnum.USER_BIRTHDAY_EVENT.getKey() + user.getUserId();
+            Date birthday = modifyUserInfoDTO.getBirthday();
+            Date birthdayDate = DateUtil.offsetMonth(birthday, 12);
+            iRedisService.setObj(birthdayKey, user.getUserId(), birthdayDate.getTime() - birthday.getTime());
+        }
+        BeanUtil.copyProperties(modifyUserInfoDTO,user);
+        updateById(user);
+
+
+    }
+
+    @Override
+    public User queryUserByMobile(Long merchantId, String mobile) {
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userLambdaQueryWrapper.eq(User::getMerchantId, merchantId);
+        userLambdaQueryWrapper.eq(User::getMobile, mobile);
+        return getOne(userLambdaQueryWrapper);
+    }
+
+    @Override
+    public QueryHomeDataResDTO queryHomeData(Integer merchantId) {
+        return userMapper.queryHomeData(merchantId);
+    }
+
 
     /**
      * 设置返回数据
@@ -432,8 +487,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 break;
             }
         }
-        userLoginResDTO.setLevelName(currentLevel.getName());
-
+        if (null != currentLevel) {
+         userLoginResDTO.setLevelName(currentLevel.getName());
+        }
         if (null == nextLevel) {
             userLoginResDTO.setFullLevelFlag(true);
             userLoginResDTO.setUpgradeTip("满级达成");

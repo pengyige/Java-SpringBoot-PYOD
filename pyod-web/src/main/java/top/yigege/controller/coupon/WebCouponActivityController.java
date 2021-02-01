@@ -2,6 +2,7 @@ package top.yigege.controller.coupon;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import top.yigege.exception.BusinessException;
 import top.yigege.model.CouponActivity;
 import top.yigege.service.ICouponActivityService;
 import top.yigege.util.ApiResultUtil;
+import top.yigege.util.SessionUtil;
 import top.yigege.util.Utils;
 import top.yigege.vo.LayuiTableResultBean;
 import top.yigege.vo.PageBean;
@@ -54,16 +56,16 @@ public class WebCouponActivityController {
 
         ActivityTypeEnum typeEnum = null;
         for (ActivityTypeEnum activityTypeEnum : ActivityTypeEnum.values()) {
-            if (addCouponActivityDTO.getStatus().equals(activityTypeEnum.getCode())) {
+            if (addCouponActivityDTO.getActivityType().equals(activityTypeEnum.getCode())) {
                 typeEnum = activityTypeEnum;
                 break;
             }
         }
 
-        if (iCouponActivityService.isExist(typeEnum)) {
+        if (iCouponActivityService.isExist(Long.valueOf(SessionUtil.getUser().getUserId()),typeEnum)) {
             throw new BusinessException(ResultCodeEnum.ACTIVITY_EXIST);
         };
-
+        couponActivity.setMerchantId(Long.valueOf(SessionUtil.getUser().getUserId()));
         return ApiResultUtil.success(iCouponActivityService.save(couponActivity));
     };
 
@@ -75,8 +77,8 @@ public class WebCouponActivityController {
         CouponActivity dbCouponActivity = iCouponActivityService.getById(modifyCouponActivityDTO.getCouponActivityId());
 
         if (null != modifyCouponActivityDTO.getStatus()
-        && modifyCouponActivityDTO.getStatus().equals(ActivityStatusEnum.NORMAL)
-        && dbCouponActivity.getStatus().equals(ActivityStatusEnum.STOP)) {
+        && modifyCouponActivityDTO.getStatus().equals(ActivityStatusEnum.NORMAL.getCode())
+        && dbCouponActivity.getStatus().equals(ActivityStatusEnum.STOP.getCode())) {
             ActivityTypeEnum typeEnum = null;
             for (ActivityTypeEnum activityTypeEnum : ActivityTypeEnum.values()) {
                 if (modifyCouponActivityDTO.getStatus().equals(activityTypeEnum.getCode())) {
@@ -84,7 +86,7 @@ public class WebCouponActivityController {
                     break;
                 }
             }
-            if (iCouponActivityService.isExist(typeEnum)) {
+            if (iCouponActivityService.isExist(Long.valueOf(SessionUtil.getUser().getUserId()),typeEnum)) {
                 throw new BusinessException(ResultCodeEnum.ACTIVITY_EXIST);
             };
         }
@@ -102,7 +104,7 @@ public class WebCouponActivityController {
     @ApiOperation("查询活动分页列表")
     @PostMapping("/queryCouponActivityPageList")
     public LayuiTableResultBean queryCouponActivityPageList(QueryCouponActivityPageListDTO queryCouponActivityPageListDTO) {
-
+        queryCouponActivityPageListDTO.setMerchantId(Long.valueOf(SessionUtil.getUser().getUserId()));
         PageBean pageBean = new PageBean();
 
         int code = 0;
@@ -120,6 +122,15 @@ public class WebCouponActivityController {
     @PostMapping("/queryCouponActivityDetail")
     public ResultBean queryCouponActivityDetail(@NotNull(message = "活动id不能为空") Long couponActivityId) {
         return ApiResultUtil.success(iCouponActivityService.getById(couponActivityId));
+    }
+
+    @ApiOperation("查询活动数据通过类型")
+    @PostMapping("/queryCouponActivityListByActivityType")
+    public ResultBean queryCouponActivityListByActivityType(@NotNull(message = "活动类型不能为空") Integer activityType) {
+        LambdaQueryWrapper<CouponActivity> couponActivityLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        couponActivityLambdaQueryWrapper.eq(CouponActivity::getMerchantId,SessionUtil.getUser().getUserId());
+        couponActivityLambdaQueryWrapper.eq(CouponActivity::getActivityType,activityType);
+        return ApiResultUtil.success(iCouponActivityService.list(couponActivityLambdaQueryWrapper));
     }
 
 }

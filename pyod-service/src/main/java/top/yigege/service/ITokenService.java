@@ -1,5 +1,6 @@
 package top.yigege.service;
 
+import top.yigege.model.SysUser;
 import top.yigege.model.User;
 
 /**
@@ -17,6 +18,13 @@ public interface ITokenService {
      * @return
      */
     String getToken(User user);
+
+    /**
+     * 根据商家用户信息生成token
+     * @param user
+     * @return
+     */
+    String getToken(SysUser user);
 
     /**
      * 校验token

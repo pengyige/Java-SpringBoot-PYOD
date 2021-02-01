@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import top.yigege.config.WxConfig;
+import top.yigege.dto.modules.coupon.ChargeOffReqDTO;
 import top.yigege.dto.modules.sysUser.AddUserDTO;
+import top.yigege.dto.modules.sysUser.MerchantUserLoginReqDTO;
+import top.yigege.dto.modules.sysUser.MerchantUserLoginResDTO;
 import top.yigege.dto.modules.sysUser.QueryUserPageListDTO;
 import top.yigege.model.SysMenu;
 import top.yigege.model.SysUser;
@@ -32,6 +35,13 @@ public interface ISysUserService extends IService<SysUser> {
      */
     WxConfig queryWxConfigByMerchantId(Long merchantId);
 
+    /**
+     * 通过角色查询用户
+     * @param roleNo
+     * @return
+     */
+    List<SysUser> querySysUserByRoleNo(String roleNo);
+
 
         /**
          * 通过用户名查询用户
@@ -42,10 +52,10 @@ public interface ISysUserService extends IService<SysUser> {
 
     /**
      * 通过用户编号查询用户
-     * @param no
+     * @param roleNo
      * @return
      */
-    SysUser queryUserRoles(String no);
+   SysUser queryUserRoles(String roleNo);
 
     /**
      * 通过ID查询用户角色
@@ -94,4 +104,29 @@ public interface ISysUserService extends IService<SysUser> {
      */
     void bindUserRoles(Integer userId,List<Integer> roleIds);
 
+    /**
+     * 商家登入
+     * @param merchantUserLoginReqDTO
+     * @return
+     */
+    MerchantUserLoginResDTO login(MerchantUserLoginReqDTO merchantUserLoginReqDTO);
+
+    /**
+     * 商家退出
+     * @param userId
+     * @return
+     */
+    MerchantUserLoginResDTO logout(Long userId);
+
+    /**
+     * 商家核销优惠券
+     * @param chargeOffReqDTO
+     */
+    void chargeOff(ChargeOffReqDTO chargeOffReqDTO,Long merchantId);
+
+    /**
+     * 退化核销的优惠券
+     * @param couponDeductionId
+     */
+    void backChargeOff(Long couponDeductionId);
 }

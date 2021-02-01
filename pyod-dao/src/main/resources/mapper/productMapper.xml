@@ -62,4 +62,16 @@
             and p.product_id = #{productId}
     </select>
 
+    <select id="queryProductPageList" resultMap="productMap" parameterType="top.yigege.dto.modules.product.QueryProductPageListDTO">
+       SELECT
+            p.*
+        FROM
+            t_product p
+        WHERE
+            1 = 1
+            <if test="null != queryProductPageListDTO.merchantId">
+              and  p.merchant_id = #{queryProductPageListDTO.merchantId}
+            </if>
+    </select>
+
 </mapper>

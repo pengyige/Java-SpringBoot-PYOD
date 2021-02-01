@@ -8,7 +8,7 @@
         <result column="coupon_id" property="couponId" />
         <result column="num" property="num" />
         <result column="create_time" property="createTime" />
-        <result column="updateTime" property="updateTime" />
+        <result column="update_time" property="updateTime" />
 
 
 
@@ -37,13 +37,27 @@
         SELECT
             car.*,
             c.coupon_id c_coupon_id,
-            c.NAME c_name,
-
+            c.NAME c_name
         FROM
             `t_coupon_activity_register` car
             LEFT JOIN t_coupon c ON car.coupon_id = c.coupon_id
-            LEFT JOIN car.coupon_activity_id = #{value}
+        WHERE  car.coupon_activity_register_id = #{value}
     </select>
+
+    <select id="queryCouponActivityRegisterPageList"  resultMap="couponActivityRegisterMap" parameterType="top.yigege.dto.modules.coupon.QueryCouponActivityRegisterPageListDTO">
+      SELECT
+            car.*,
+            c.coupon_id c_coupon_id,
+            c.NAME c_name
+        FROM
+            `t_coupon_activity_register` car
+            LEFT JOIN t_coupon c ON car.coupon_id = c.coupon_id
+            LEFT JOIN t_coupon_activity ca on car.coupon_activity_id = ca.coupon_activity_id
+        WHERE 1 = 1
+        AND ca.merchant_id = #{queryCouponActivityRegisterPageListDTO.merchantId}
+    </select>
+
+
 
 
 </mapper>

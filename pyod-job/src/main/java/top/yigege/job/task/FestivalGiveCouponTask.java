@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import top.yigege.constant.ActivityTypeEnum;
 import top.yigege.constant.CouponStatusEnum;
 import top.yigege.constant.FestivalTypeEnum;
+import top.yigege.constant.PyodConstant;
 import top.yigege.model.CouponActivity;
 import top.yigege.model.CouponActivityFestival;
 import top.yigege.model.CouponActivitySolarterm;
@@ -80,7 +81,7 @@ public class FestivalGiveCouponTask {
     public void run(FestivalTypeEnum festivalTypeEnum){
         log.info("{}节日送券run...",festivalTypeEnum.getDesc());
         //获取所有的商家
-        List<SysUser> sysUserList = iSysUserService.list();
+        List<SysUser> sysUserList = iSysUserService.querySysUserByRoleNo(PyodConstant.Default.MERCHANT_ROLE_NO);
         sysUserList.forEach(sysUser -> {
             CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(Long.valueOf(sysUser.getUserId()),ActivityTypeEnum.SOLAR_TERM);
             if (null != couponActivity) {
@@ -90,7 +91,7 @@ public class FestivalGiveCouponTask {
                 couponActivityFestivalLambdaQueryWrapper.eq(CouponActivityFestival::getType, festivalTypeEnum.getCode());
                 List<CouponActivityFestival> couponActivityFestivalList = iCouponActivityFestivalService.list(couponActivityFestivalLambdaQueryWrapper);
                 if (!couponActivityFestivalList.isEmpty()) {
-                    List<User> userList = iUserService.list();
+                    List<User> userList = iUserService.queryUserByMerchantId(Long.valueOf(sysUser.getUserId()));
                     List<UserCoupon> totalUserCouponList = new ArrayList<>();
                     Date getDate = new Date();
                     for(User user : userList) {
@@ -101,6 +102,7 @@ public class FestivalGiveCouponTask {
                             userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
                             userCoupon.setCouponId(item.getCouponId());
                             userCoupon.setNum(item.getNum());
+                            userCoupon.setAvailableNum(item.getNum());
                             userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), getDate));
                             userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
                             return userCoupon;

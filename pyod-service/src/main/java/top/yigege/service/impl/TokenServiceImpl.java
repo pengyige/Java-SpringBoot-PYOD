@@ -12,6 +12,7 @@ import top.yigege.config.JwtConfig;
 import top.yigege.constant.PyodConstant;
 import top.yigege.constant.ResultCodeEnum;
 import top.yigege.exception.BusinessException;
+import top.yigege.model.SysUser;
 import top.yigege.model.User;
 import top.yigege.service.ITokenService;
 
@@ -31,6 +32,22 @@ public class TokenServiceImpl implements ITokenService {
 
     @Override
     public String getToken(User user) {
+        //过期时间
+        long exp = 0;
+        long now = System.currentTimeMillis();
+        exp = now + 1000 * 60 * jwtConfig.getExpire();
+
+        String token = "";
+        token = JWT.create()
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(exp))
+                .withClaim(PyodConstant.JWT.USER_ID,user.getUserId())
+                .sign(Algorithm.HMAC256(jwtConfig.getSecret()));
+        return token;
+    }
+
+    @Override
+    public String getToken(SysUser user) {
         //过期时间
         long exp = 0;
         long now = System.currentTimeMillis();

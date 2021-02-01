@@ -127,6 +127,9 @@
             success: function (res) {
                 if (200 == res.code) {
                     layer.msg("添加成功");
+                    parent.reloadTable();
+                    var outIndex = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(outIndex);
                 } else {
                     layer.msg(res.message);
                 }

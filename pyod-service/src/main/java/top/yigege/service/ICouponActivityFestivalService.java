@@ -1,7 +1,9 @@
 package top.yigege.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.yigege.dto.modules.coupon.QueryCouponActivityFestivalPageListDTO;
 import top.yigege.model.CouponActivityFestival;
+import top.yigege.vo.PageBean;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import top.yigege.model.CouponActivityFestival;
  */
 public interface ICouponActivityFestivalService extends IService<CouponActivityFestival> {
 
+    PageBean queryCouponActivityFestivalPageList(QueryCouponActivityFestivalPageListDTO queryCouponActivityFestivalPageListDTO);
 }

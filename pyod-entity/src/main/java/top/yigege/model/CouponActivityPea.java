@@ -67,4 +67,7 @@ public class CouponActivityPea extends Model {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+    @TableField(exist = false)
+    private Coupon coupon;
+
 }

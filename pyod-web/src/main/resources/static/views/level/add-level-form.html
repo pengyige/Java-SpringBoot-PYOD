@@ -22,19 +22,19 @@
                     </div>
                 </div>
 
-               <div class="layui-form-item">
-                <label class="layui-form-label">图片URL:</label>
-                <div class="layui-input-block">
-                    <input id="imageUrl" name="imageUrl" type="hidden"/>
-                    <div class="layui-upload">
-                        <button type="button" class="layui-btn" id="test1">上传图片</button>
-                        <div class="layui-upload-list">
-                            <img class="layui-upload-img" id="demo1">
-                            <p id="demoText"></p>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片URL:</label>
+                    <div class="layui-input-block">
+                        <input id="imageUrl" name="imageUrl" type="hidden"/>
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
-               </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">最小值:</label>
@@ -50,6 +50,18 @@
                         <input id="maxValue" name="maxValue" type="text" required lay-verify="required" placeholder="请输入最小值"
                                autocomplete="off" class="layui-input">
                     </div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>福利绑定</legend>
+                </fieldset>
+
+                <div style="text-align: center">
+                    <input id="welfareIds" name="welfareIds" type="hidden"/>
+                    <div id="welfareBox">
+
+                    </div>
+                    <button id="bindBtn" type="button" class="layui-btn layui-btn-blue"  >立即绑定</button>
                 </div>
 
 
@@ -112,6 +124,27 @@
         });
 
         $(function (){
+            top.chooseData  = [];
+
+            $("#bindBtn").click(function (){
+                top.layer.open({
+                    id:"add-welfare-diloag",
+                    type: 2,
+                    title:'',
+                    area:['80%','80%'],
+                    content: 'views/welfare/choose-welfare-form.html',
+                    end:function(){
+                        //处理选中的福利
+                        var text = "";
+                        top.chooseData.forEach(function (item,index) {
+                             var item = "<button class='layui-btn layui-btn-xs'>"+item.name+"</button>"
+                            text += item;
+                        });
+
+                        $("#welfareBox").html(text);
+                    }
+                });
+            });
 
         });
 
@@ -122,6 +155,17 @@
                 return;
             }
             $("#imageUrl").val(globalSrc);
+
+            var welfareIds = "";
+            top.chooseData.forEach(function (item,index){
+                welfareIds += item.welfareId + ",";
+            });
+            if ("" != welfareIds) {
+                welfareIds = welfareIds.substring(0, welfareIds.length - 1);
+            }
+
+
+            $("#welfareIds").val(welfareIds);
 
             $.ajax({
                 url:getAddLevelUrl(),
@@ -141,6 +185,7 @@
                     if (200 == res.code) {
                         //获取窗口索引
                         layer.msg("添加成功");
+                        parent.reloadTable();
                         var outIndex = parent.layer.getFrameIndex(window.name);
                         parent.layer.close(outIndex);
 

@@ -1,6 +1,7 @@
 package top.yigege.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.yigege.dto.modules.console.QueryHomeDataResDTO;
 import top.yigege.model.User;
 
 /**
@@ -13,4 +14,5 @@ import top.yigege.model.User;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+    QueryHomeDataResDTO queryHomeData(Integer merchantId);
 }

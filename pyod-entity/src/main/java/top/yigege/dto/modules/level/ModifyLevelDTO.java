@@ -42,4 +42,9 @@ public class ModifyLevelDTO {
      */
     @ApiModelProperty(value = "最大值")
     private Integer maxValue;
+
+    /**
+     * 福利ids
+     */
+    String welfareIds;
 }

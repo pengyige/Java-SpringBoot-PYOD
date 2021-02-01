@@ -32,6 +32,9 @@
             t_coupon t
         WHERE
             1 = 1
+        <if test="queryCouponPageListDTO.merchantId != null">
+            and   merchant_id = #{queryCouponPageListDTO.merchantId}
+        </if>
     </select>
 
 

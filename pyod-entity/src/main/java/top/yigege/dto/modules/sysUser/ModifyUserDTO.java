@@ -2,6 +2,7 @@ package top.yigege.dto.modules.sysUser;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**

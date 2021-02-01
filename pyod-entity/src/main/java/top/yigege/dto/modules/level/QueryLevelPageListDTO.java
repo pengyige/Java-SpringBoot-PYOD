@@ -17,4 +17,6 @@ public class QueryLevelPageListDTO {
 
     @ApiModelProperty("页面大小")
     int pageSize = 10;
+
+    Long merchantId;
 }

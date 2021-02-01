@@ -30,6 +30,7 @@
         <module>pyod-dao</module>
         <module>pyod-api</module>
         <module>pyod-job</module>
+        <module>pyod-merchant-app</module>
     </modules>
 
 
@@ -47,6 +48,7 @@
         <pyod-web.version>1.0</pyod-web.version>
         <pyod-api.version>1.0</pyod-api.version>
         <pyod-job.version>1.0</pyod-job.version>
+        <pyod-merchant-app.version>1.0</pyod-merchant-app.version>
 
         <mybatis-plus-boot-starter.version>3.0.6</mybatis-plus-boot-starter.version>
         <!--<mybatis-plus.version>3.3.0</mybatis-plus.version>
@@ -133,6 +135,11 @@
                 <groupId>top.yigege</groupId>
                 <artifactId>pyod-job</artifactId>
                 <version>${pyod-job.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.yigege</groupId>
+                <artifactId>pyod-merchant-app</artifactId>
+                <version>${pyod-merchant-app.version}</version>
             </dependency>
             <!-- module end -->
 

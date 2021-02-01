@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.CouponDeductionMapper">
+
+    <resultMap id="couponDeductionMap" type="top.yigege.model.CouponDeduction">
+        <id column="coupon_deduction_id" property="couponDeductionId"/>
+        <result column="shop_id" property="shopId" />
+        <result column="user_id" property="userId"/>
+        <result column="qr_code_no" property="userCouponId" />
+
+        <result column="vip_card_id" property="vipCardId"/>
+        <result column="cousumption_record_id" property="cousumptionRecordId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="num" property="num"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+
+        <association property="coupon" javaType="top.yigege.model.Coupon">
+            <id column="c_coupon_id" property="couponId"></id>
+            <result column="c_name" property="name"></result>
+            <result column="c_price" property="price"/>
+            <result column="c_use_desc" property="useDesc"/>
+            <result column="c_type" property="type"/>
+            <result column="c_indate_type" property="indateType"/>
+            <result column="c_mutex_flag" property="mutexFlag"/>
+            <result column="c_over_money" property="overMoney"/>
+            <result column="c_duration" property="duration"/>
+            <result column="c_discount" property="discount"/>
+            <result column="c_min_money" property="minMoney"/>
+            <result column="c_max_money" property="maxMoney"/>
+            <result column="c_indate_start_time" property="indateStartTime"/>
+            <result column="c_indate_end_time" property="indateEndTime"/>
+            <result column="c_create_time" property="createTime"/>
+            <result column="c_update_time" property="updateTime"/>
+        </association>
+
+        <association property="user" javaType="top.yigege.model.User">
+            <id column="u_user_id" property="userId"/>
+            <result column="u_qr_code_no" property="qrCodeNo"></result>
+        </association>
+    </resultMap>
+
+
+
+    <select id="queryChargeOffRecordPageList"  resultMap="couponDeductionMap" parameterType="top.yigege.dto.modules.couponDeduction.QueryChargeOffRecordPageListDTO">
+     SELECT
+        cd.*,
+        c.coupon_id c_coupon_id,
+        c.NAME c_name ,
+        u.user_id u_user_id,
+        u.qr_code_no u_qr_code_no
+    FROM
+        `t_coupon_deduction` cd
+        LEFT JOIN t_coupon c ON cd.coupon_id = c.coupon_id
+        LEFT JOIN t_user u on cd.user_id = u.user_id
+        WHERE 1 = 1
+        AND cd.shop_id = #{queryChargeOffRecordPageListDTO.shopId}
+    </select>
+
+
+
+
+</mapper>

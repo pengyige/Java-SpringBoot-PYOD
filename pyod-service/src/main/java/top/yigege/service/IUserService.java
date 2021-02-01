@@ -2,11 +2,16 @@ package top.yigege.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.yigege.config.WxConfig;
+import top.yigege.dto.modules.console.QueryHomeDataResDTO;
 import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
+import top.yigege.dto.modules.user.ModifyUserInfoDTO;
 import top.yigege.dto.modules.user.UpdateLocationDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserLoginResDTO;
 import top.yigege.model.User;
+import top.yigege.vo.ResultBean;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,6 +22,20 @@ import top.yigege.model.User;
  * @since 2021-01-05
  */
 public interface IUserService extends IService<User> {
+
+    /**
+     * 查询该商家下所有用户
+     * @param merchantId
+     * @return
+     */
+    List<User> queryUserByMerchantId(Long merchantId);
+
+    /**
+     * 查询商家下所有用户数量
+     * @param merchantId
+     * @return
+     */
+    Long queryUserNumByMerchantId(Long merchantId);
 
     /**
      * 通过code登入
@@ -66,4 +85,25 @@ public interface IUserService extends IService<User> {
      * @param updateLocationDTO
      */
     void updateLocation(UpdateLocationDTO updateLocationDTO);
+
+    /**
+     * 修改用户信息
+     * @param modifyUserInfoDTO
+     */
+    void modifyUserInfo(ModifyUserInfoDTO modifyUserInfoDTO);
+
+    /**
+     * 通过手机号查询用户
+     * @param merchantId
+     * @param mobile
+     * @return
+     */
+    User queryUserByMobile(Long merchantId, String mobile);
+
+    /**
+     * 查询主页数据
+     * @param merchantId
+     * @return
+     */
+    public QueryHomeDataResDTO queryHomeData(Integer merchantId) ;
 }

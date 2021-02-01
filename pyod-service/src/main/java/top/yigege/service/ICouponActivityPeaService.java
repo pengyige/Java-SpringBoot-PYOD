@@ -1,7 +1,9 @@
 package top.yigege.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.yigege.dto.modules.coupon.QueryCouponActivityPeaPageListDTO;
 import top.yigege.model.CouponActivityPea;
+import top.yigege.vo.PageBean;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import top.yigege.model.CouponActivityPea;
  */
 public interface ICouponActivityPeaService extends IService<CouponActivityPea> {
 
+    PageBean queryCouponActivityPeaPageList(QueryCouponActivityPeaPageListDTO queryCouponActivityPeaPageListDTO);
 }

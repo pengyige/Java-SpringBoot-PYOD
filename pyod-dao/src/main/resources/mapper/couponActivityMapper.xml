@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.CouponActivityMapper">
+
+    <!--  -->
+    <resultMap id="couponActivityMap"  type="top.yigege.model.CouponActivity">
+        <id column="coupon_activity_id" property="couponActivityId"/>
+        <result column="merchant_id" property="merchantId" />
+        <result column="title" property="title"/>
+        <result column="activity_type" property="activityType"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="start_time" property="startTime"/>
+    </resultMap>
+
+
+    <select id="queryCouponActivityPageList"  resultMap="couponActivityMap"
+            parameterType="top.yigege.dto.modules.coupon.QueryCouponActivityPageListDTO">
+        SELECT
+            *
+        FROM
+            t_coupon_activity t
+        WHERE
+            1 = 1
+            <if test="queryCouponActivityPageListDTO.merchantId != null">
+             and   merchant_id = #{queryCouponActivityPageListDTO.merchantId}
+            </if>
+    </select>
+
+
+
+</mapper>

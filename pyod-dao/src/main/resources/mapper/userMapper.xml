@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.yigege.dao.UserMapper">
+
+
+
+    <select id="queryHomeData" resultType="top.yigege.dto.modules.console.QueryHomeDataResDTO" parameterType="java.lang.Integer">
+        SELECT
+            ( SELECT count( 1 ) FROM t_user WHERE merchant_id = #{value} ) totalUserNum,
+            ( SELECT count( 1 ) FROM t_user WHERE merchant_id = #{value} AND to_days( create_time ) = to_days( now( ) ) ) todayRegisterNum
+
+    </select>
+
+
+
+
+</mapper>

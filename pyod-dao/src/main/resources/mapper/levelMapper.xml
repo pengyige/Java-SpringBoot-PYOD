@@ -23,6 +23,9 @@
             t_level t
         WHERE
             1 = 1
+            <if test="null != queryLevelPageListDTO.merchantId">
+             and   t.merchant_id = #{queryLevelPageListDTO.merchantId}
+            </if>
             order by t.min_value asc
     </select>
 

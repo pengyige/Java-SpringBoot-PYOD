@@ -8,131 +8,90 @@
     <title></title>
 </head>
 <body class="layui-view-body">
-    <div class="layui-content">
-        <div class="layui-row layui-col-space20">
-            <div class="layui-col-sm6 layui-col-md3">
-                <div class="layui-card">
-                    <div class="layui-card-body chart-card">
-                        <div class="chart-header">
-                            <div class="metawrap">
-                                <div class="meta">
-                                    <span>总用户数</span>
-                                </div>
-                                <div class="total">126,560</div>
+<div class="layui-content">
+    <div class="layui-row layui-col-space20">
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-body chart-card">
+                    <div class="chart-header">
+                        <div class="metawrap">
+                            <div class="meta">
+                                <span>总用户数</span>
                             </div>
+                            <div id="totalUserNum" class="total">0</div>
                         </div>
-                        <div class="chart-body">
-                            <div class="contentwrap">
-                                用户
-                            </div>
+                    </div>
+                    <div class="chart-body">
+                        <div class="contentwrap">
+                            用户
                         </div>
-                        <div class="chart-footer">
-                            <div class="field">
-                                <span>日注册量</span>
-                                <span>99</span>
-                            </div>
+                    </div>
+                    <div class="chart-footer">
+                        <div class="field">
+                            <span>日注册量</span>
+                            <span id="todayRegisterNum">0</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="layui-col-sm6 layui-col-md3">
-                <div class="layui-card">
-                    <div class="layui-card-body chart-card">
-                        <div class="chart-header">
-                            <div class="metawrap">
-                                <div class="meta">
-                                    <span>总商铺数</span>
-                                </div>
-                                <div class="total">876</div>
-                            </div>
+        </div>
+
+        <div class="layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-tab layui-tab-brief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">新增数</li>
+                        <li>活跃度</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            暂无数据
                         </div>
-                        <div class="chart-body">
-                            <div class="contentwrap">
-                                商铺
-                            </div>
-                        </div>
-                        <div class="chart-footer">
-                            <div class="field">
-                                <span>日注册量</span>
-                                <span>3</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-col-sm6 layui-col-md3">
-                <div class="layui-card">
-                    <div class="layui-card-body chart-card">
-                        <div class="chart-header">
-                            <div class="metawrap">
-                                <div class="meta">
-                                    <span>总优惠券数</span>
-                                </div>
-                                <div class="total">21239</div>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div class="contentwrap">
-                                优惠券
-                            </div>
-                        </div>
-                        <div class="chart-footer">
-                            <div class="field">
-                                <span>日注册量</span>
-                                <span>312</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-col-sm6 layui-col-md3">
-                <div class="layui-card">
-                    <div class="layui-card-body chart-card">
-                        <div class="chart-header">
-                            <div class="metawrap">
-                                <div class="meta">
-                                    <span>总VIP数</span>
-                                </div>
-                                <div class="total">560</div>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div class="contentwrap">
-                                VIP
-                            </div>
-                        </div>
-                        <div class="chart-footer">
-                            <div class="field">
-                                <span>日注册量</span>
-                                <span>31</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-col-sm12 layui-col-md12">
-                <div class="layui-card">
-                    <div class="layui-tab layui-tab-brief">
-                        <ul class="layui-tab-title">
-                            <li class="layui-this">新增数</li>
-                            <li>活跃度</li>
-                        </ul>
-                        <div class="layui-tab-content">
-                            <div class="layui-tab-item layui-show">
-                                暂无数据
-                            </div>
-                            <div class="layui-tab-item">
-                                暂无数据
-                            </div>
+                        <div class="layui-tab-item">
+                            暂无数据
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="../assets/layui.all.js"></script>
-    <script>
-     var element = layui.element;
-    </script>
+</div>
+<script src="../assets/layui.all.js"></script>
+<script src="../assets/jquery.js"></script>
+<script src="../assets/common.js"></script>
+<script>
+    var element = layui.element;
+
+    $(function () {
+        loadHomeData();
+    })
+
+    function loadHomeData() {
+        var loading = null;
+        $.ajax({
+            url: getQueryHomeDataUrl(),
+            method: 'post',
+            dataType: 'json',
+            beforeSend: function () {
+                //loading = layer.msg('加载中...', {icon: 16, shade: 0.3, time: 0});
+            },
+            complete: function () {
+                //layer.close(loading);
+            },
+            success: function (res) {
+                if (200 == res.code) {
+                    var data = res.data;
+                    $("#totalUserNum").html(data.totalUserNum);
+                    $("#todayRegisterNum").html(data.todayRegisterNum);
+
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        })
+
+    }
+
+</script>
 </body>
 </html>

@@ -89,5 +89,10 @@ public class SysMenuController {
         return ApiResultUtil.success(iMenuService.removeById(menuId));
     }
 
+    @ApiOperation(value = "查询所有菜单列表")
+    @PostMapping("/queryAllMenuList")
+    public ResultBean queryAllMenuList() {
+        return ApiResultUtil.success(iMenuService.list());
+    }
 
 }

@@ -15,6 +15,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -73,10 +74,6 @@ public class SysRole extends Model<SysRole> {
 
     @ApiModelProperty("权限列表")
     @TableField(exist = false)
-    private List<SysPermission> permissionList;
-
-    public List<SysPermission> getPermissionList() {
-        return permissionList;
-    }
+    private List<SysPermission> permissionList = new ArrayList<>();
 
 }

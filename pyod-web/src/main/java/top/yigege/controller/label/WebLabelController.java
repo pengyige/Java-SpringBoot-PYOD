@@ -48,7 +48,6 @@ public class WebLabelController {
     public ResultBean addLabel(@Valid AddLabelDTO addLabelDTO){
         Label label = new Label();
         BeanUtil.copyProperties(addLabelDTO, label);
-
         return ApiResultUtil.success(iLabelService.save(label));
     };
 

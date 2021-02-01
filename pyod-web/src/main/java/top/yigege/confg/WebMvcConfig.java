@@ -73,6 +73,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         //添加小程序端拦截器
         registry.addInterceptor(httpRequestInterceptor).addPathPatterns("/api/**")
+                .addPathPatterns("/app/**")
                 .excludePathPatterns("/static/**");
     }
 

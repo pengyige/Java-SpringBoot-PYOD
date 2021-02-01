@@ -39,4 +39,5 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
     List<SysMenu> queryMenusByRoleNo(String no);
 
 
+    List<SysUser> querySysUserByRoleNo(String roleNo);
 }

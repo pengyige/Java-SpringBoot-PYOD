@@ -29,6 +29,7 @@
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:;" onclick="viewMyProfile()">我的资料</a></dd>
+                    <dd><a href="javascript:;" onclick="modifyMyShop()">我的店铺</a></dd>
                     <dd><a href="javascript:;" onclick="layoutHanlder()">退出</a></dd>
                 </dl>
             </li>
@@ -43,42 +44,7 @@
                 <h1>PYOD通用后台管理</h1>
             </div>
             <ul id="Nav" class="layui-nav layui-nav-tree">
-                <!-- <li class="layui-nav-item">
-                     <a href="javascript:;">
-                         <i class="layui-icon">&#xe609;</i>
-                         <em>主页</em>
-                     </a>
-                     <dl class="layui-nav-child">
-                         <dd><a href="views/console.html">控制台</a></dd>
-                     </dl>
-                 </li>
-                 <li class="layui-nav-item">
-                     <a href="javascript:;">
-                         <i class="layui-icon">&#xe857;</i>
-                         <em>组件</em>
-                     </a>
-                     <dl class="layui-nav-child">
-                         <dd><a href="views/form.html">表单</a></dd>
-                         <dd>
-                             <a href="javascript:;">页面</a>
-                             <dl class="layui-nav-child">
-                                 <dd>
-                                     <a href="login.html">登录页</a>
-                                 </dd>
-                             </dl>
-                         </dd>
-                     </dl>
-                 </li>
-                 <li class="layui-nav-item">
-                     <a href="javascript:;">
-                         <i class="layui-icon">&#xe612;</i>
-                         <em>用户</em>
-                     </a>
-                     <dl class="layui-nav-child">
-                         <dd><a href="views/users.html">用户组</a></dd>
-                         <dd><a href="views/operaterule.html">权限配置</a></dd>
-                     </dl>
-                 </li>-->
+
             </ul>
 
         </div>
@@ -412,6 +378,44 @@
             content: './views/user/view-user-form.html?id='+user.userId //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
         });
     }
+
+    function modifyMyShop() {
+        var loading = null;
+        $.ajax({
+            url:getQueryAllShopList(),
+            method:'post',
+            dataType:'json',
+            beforeSend: function () {
+                loading = layer.msg('加载中...', {icon: 16, shade: 0.3, time: 0});
+            },
+            complete: function () {
+                layer.close(loading);
+            },
+            success:function (res) {
+                if (200 == res.code) {
+                    var data = res.data;
+                    if (data.length <= 0) {
+                        layer.msg("未找到店铺，请联系管理员");
+                    }else {
+                        //TODO 只取第一个店铺
+                        layer.open({
+                            type: 2,
+                            title:'',
+                            area:['90%','90%'],
+                            content: './views/shop/edit-shop-form.html?id='+data[0].shopId //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        });
+                    }
+                }else {
+                    layer.msg(res.message);
+                }
+            }
+        })
+
+
+    }
+
+
+
 
     /**
      * 注销

@@ -69,7 +69,6 @@
                     <button id="bindRoleBtn" type="button" class="layui-btn layui-btn-blue"  >立即绑定</button>
                 </div>
 
-
                 <div class="layui-form-item" style="margin-top: 10px">
                     <div class="layui-input-block">
                         <button id="submitBtn" lay-submit="" lay-filter="submitBtn" class="layui-btn layui-btn-blue"  >提交<i id="btnIcon" class="icon iconfont"></i></button>
@@ -166,6 +165,7 @@
                 success:function (res) {
                     if (200 == res.code) {
                         //获取窗口索引
+                        parent.reloadTable();
                         var outIndex = parent.layer.getFrameIndex(window.name);
                         layer.confirm("添加成功,用户编号:"+res.data.no+"。是否继续添加用户？", {
                             btn: ['继续添加', '不了'] //可以无限个按钮
