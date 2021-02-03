@@ -148,6 +148,11 @@ public class PyodConstant {
     public interface Default{
 
         String VIP_PASS_DEFAULT = "123456";
+
+        /**
+         * 商家角色编号
+         */
+        String MERCHANT_ROLE_NO = "R20210127761360";
     }
 
 }

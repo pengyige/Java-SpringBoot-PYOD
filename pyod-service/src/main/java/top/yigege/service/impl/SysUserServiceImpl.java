@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.yigege.config.WxConfig;
 import top.yigege.constant.BusinessFlagEnum;
 
+import top.yigege.constant.ChareOffStatusEnum;
 import top.yigege.constant.CouponStatusEnum;
 import top.yigege.constant.PyodConstant;
 import top.yigege.constant.ResultCodeEnum;
@@ -166,57 +167,66 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Transactional
     @Override
     public void chargeOff(ChargeOffReqDTO chargeOffReqDTO, Long merchantId) {
-        UserCoupon userCoupon = iUserCouponService.getById(chargeOffReqDTO.getUserCouponId());
-        if (null == userCoupon) {
-            throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
-        }
+        List<Integer> ids = Utils.parseIntegersList(Utils.splitStringToList(chargeOffReqDTO.getUserCouponIds()));
+        List<UserCoupon> userCouponList = (List<UserCoupon>) iUserCouponService.listByIds(ids);
+        String couponDeductionNo = iGenerateIDService.getNo("");
+        for (UserCoupon userCoupon : userCouponList) {
+            if (null == userCoupon) {
+                throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
+            }
 
-        User user = iUserService.getById(userCoupon.getUserId());
-        if (!user.getMerchantId().equals(merchantId)) {
-            throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
-        }
+            User user = iUserService.getById(userCoupon.getUserId());
+            if (!user.getMerchantId().equals(merchantId)) {
+                throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
+            }
 
-        if (!userCoupon.getStatus().equals(CouponStatusEnum.AVAILABLE.getCode())) {
-            throw new BusinessException(ResultCodeEnum.CHARGE_FAIL);
-        }
+            if (!userCoupon.getStatus().equals(CouponStatusEnum.AVAILABLE.getCode())) {
+                throw new BusinessException(ResultCodeEnum.CHARGE_FAIL);
+            }
 
-        if (chargeOffReqDTO.getNum() > userCoupon.getAvailableNum()) {
-            throw new BusinessException(ResultCodeEnum.CHARGE_FAIL);
-        }
 
-        userCoupon.setAvailableNum(userCoupon.getAvailableNum() - chargeOffReqDTO.getNum());
-        userCoupon.setUsedNum(userCoupon.getNum() - userCoupon.getAvailableNum());
-        if (userCoupon.getAvailableNum() == 0) {
             userCoupon.setStatus(CouponStatusEnum.AREADY_USED.getCode());
+
+            iUserCouponService.updateById(userCoupon);
+
+            CouponDeduction couponDeduction = new CouponDeduction();
+            couponDeduction.setCouponDeductionNo(couponDeductionNo);
+            couponDeduction.setShopId(chargeOffReqDTO.getShopId());
+            couponDeduction.setUserCouponId(userCoupon.getUserCouponId());
+            couponDeduction.setUserId(userCoupon.getUserId());
+            couponDeduction.setVipCardId(userCoupon.getVipCardId());
+            couponDeduction.setCouponId(userCoupon.getCouponId());
+            couponDeduction.setStatus(ChareOffStatusEnum.FINISH.getCode());
+            iCouponDeductionService.save(couponDeduction);
         }
-        iUserCouponService.updateById(userCoupon);
-
-        CouponDeduction couponDeduction = new CouponDeduction();
-        couponDeduction.setShopId(chargeOffReqDTO.getShopId());
-        couponDeduction.setUserCouponId(userCoupon.getUserCouponId());
-        couponDeduction.setUserId(userCoupon.getUserId());
-        couponDeduction.setVipCardId(userCoupon.getVipCardId());
-        couponDeduction.setCouponId(userCoupon.getCouponId());
-        couponDeduction.setNum(chargeOffReqDTO.getNum());
-        iCouponDeductionService.save(couponDeduction);
-
     }
 
     @Transactional
     @Override
     public void backChargeOff(Long couponDeductionId) {
-       CouponDeduction couponDeduction = iCouponDeductionService.getById(couponDeductionId);
-       if (null == couponDeduction) {
-           throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
-       }
-       UserCoupon userCoupon = iUserCouponService.getById(couponDeduction.getUserCouponId());
-       if (null != userCoupon) {
-           userCoupon.setAvailableNum(userCoupon.getAvailableNum() + couponDeduction.getNum());
-           userCoupon.setUsedNum(userCoupon.getNum() - userCoupon.getAvailableNum());
-           userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-           iUserCouponService.updateById(userCoupon);
-       }
-       iCouponDeductionService.removeById(couponDeduction.getCouponDeductionId());
+        CouponDeduction couponDeduction = iCouponDeductionService.getById(couponDeductionId);
+        if (null == couponDeduction) {
+            throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
+        }
+        UserCoupon userCoupon = iUserCouponService.getById(couponDeduction.getUserCouponId());
+        if (null != userCoupon) {
+            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+            iUserCouponService.updateById(userCoupon);
+
+            couponDeduction.setStatus(ChareOffStatusEnum.BACK.getCode());
+            iCouponDeductionService.updateById(couponDeduction);
+        }
+       /* List<CouponDeduction> couponDeductionList = iCouponDeductionService.queryCouponDedctionByNo(couponDeductionNo);
+        for (CouponDeduction couponDeduction : couponDeductionList) {
+            if (null == couponDeduction) {
+                throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
+            }
+            UserCoupon userCoupon = iUserCouponService.getById(couponDeduction.getUserCouponId());
+            if (null != userCoupon) {
+                userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                iUserCouponService.updateById(userCoupon);
+            }
+        }*/
     }
 
     @Override

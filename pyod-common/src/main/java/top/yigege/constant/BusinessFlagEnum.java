@@ -12,6 +12,8 @@ public enum BusinessFlagEnum {
 
 
     ROLE(1, "R"),
+
+    CDKEY(3,"CDKEY"),
     PRODUCT(2, "P");
 
     //VIP_CARD(3, "C");

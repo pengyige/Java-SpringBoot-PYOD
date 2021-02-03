@@ -3,6 +3,7 @@ package top.yigege.dto.modules.coupon;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -20,12 +21,9 @@ public class ChargeOffReqDTO {
     Long shopId;
 
     @ApiModelProperty(value = "用户优惠券id",required = true)
-    @NotNull(message = "用户优惠券id不能为空")
-    Long userCouponId;
+    @NotBlank(message = "用户优惠券id不能为空")
+    String userCouponIds;
 
-    @ApiModelProperty(value = "使用数量",required = true)
-    @NotNull(message = "数量不能为空")
-    Integer num;
 
 
 }

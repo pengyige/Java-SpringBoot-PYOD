@@ -125,8 +125,8 @@ public interface ISysUserService extends IService<SysUser> {
     void chargeOff(ChargeOffReqDTO chargeOffReqDTO,Long merchantId);
 
     /**
-     * 退化核销的优惠券
+     * couponDeductionId
      * @param couponDeductionId
      */
-    void backChargeOff(Long couponDeductionId);
+     void backChargeOff(Long couponDeductionId);
 }

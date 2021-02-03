@@ -128,7 +128,7 @@ public class AppMerchantUserController {
     @ApiOperation("退回核销的优惠券")
     @PostMapping("/backChargeOff")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "couponDeductionId", value = "核销记录id", required = true, dataType = "Int"),
+            @ApiImplicitParam(paramType = "query", name = "couponDeductionId", value = "核销记录id", required = true, dataType = "int"),
     })
     public ResultBean backChargeOff(@NotNull(message = "核销记录id不能为空") Long couponDeductionId){
         iSysUserService.backChargeOff(couponDeductionId);

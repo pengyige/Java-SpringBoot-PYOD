@@ -72,18 +72,19 @@ public class SolarTermGiveCouponTask {
                     List<UserCoupon> totalUserCouponList = new ArrayList<>();
                     Date getDate = new Date();
                     for(User user : userList) {
-                        List<UserCoupon> userCouponList = couponActivitySolartermList.stream().map(item -> {
-                            UserCoupon userCoupon = new UserCoupon();
-                            userCoupon.setUserId(user.getUserId());
-                            userCoupon.setVipCardId(user.getVipCardId());
-                            userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
-                            userCoupon.setCouponId(item.getCouponId());
-                            userCoupon.setNum(item.getNum());
-                            userCoupon.setAvailableNum(item.getNum());
-                            userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), getDate));
-                            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                            return userCoupon;
-                        }).collect(Collectors.toList());
+                        List<UserCoupon> userCouponList = new ArrayList<>();
+                        for (CouponActivitySolarterm couponActivitySolarterm : couponActivitySolartermList) {
+                            for (int i = 0 ; i < couponActivitySolarterm.getNum(); i++) {
+                                UserCoupon userCoupon = new UserCoupon();
+                                userCoupon.setUserId(user.getUserId());
+                                userCoupon.setVipCardId(user.getVipCardId());
+                                userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                                userCoupon.setCouponId(couponActivitySolarterm.getCouponId());
+                                userCoupon.setExpireTime(iCouponService.queryExpireDate(couponActivitySolarterm.getCouponId(), getDate));
+                                userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                                userCouponList.add(userCoupon);
+                            }
+                        }
                         totalUserCouponList.addAll(userCouponList);
                     }
                     //保存

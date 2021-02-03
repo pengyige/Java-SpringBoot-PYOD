@@ -17,6 +17,7 @@ import top.yigege.model.UserCoupon;
 import top.yigege.service.ICouponActivityFestivalService;
 import top.yigege.service.ICouponActivityService;
 import top.yigege.service.ICouponService;
+import top.yigege.service.IGenerateIDService;
 import top.yigege.service.ISysUserService;
 import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserService;
@@ -53,6 +54,9 @@ public class FestivalGiveCouponTask {
 
     @Autowired
     ISysUserService iSysUserService;
+
+    @Autowired
+    IGenerateIDService iGenerateIDService;
 
     /**
      * 中秋
@@ -95,18 +99,19 @@ public class FestivalGiveCouponTask {
                     List<UserCoupon> totalUserCouponList = new ArrayList<>();
                     Date getDate = new Date();
                     for(User user : userList) {
-                        List<UserCoupon> userCouponList = couponActivityFestivalList.stream().map(item -> {
-                            UserCoupon userCoupon = new UserCoupon();
-                            userCoupon.setUserId(user.getUserId());
-                            userCoupon.setVipCardId(user.getVipCardId());
-                            userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
-                            userCoupon.setCouponId(item.getCouponId());
-                            userCoupon.setNum(item.getNum());
-                            userCoupon.setAvailableNum(item.getNum());
-                            userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), getDate));
-                            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                            return userCoupon;
-                        }).collect(Collectors.toList());
+                        List<UserCoupon> userCouponList = new ArrayList<>();
+                        for (CouponActivityFestival couponActivityFestival : couponActivityFestivalList) {
+                            for (int i = 0 ; i < couponActivityFestival.getNum(); i++) {
+                                UserCoupon userCoupon = new UserCoupon();
+                                userCoupon.setUserId(user.getUserId());
+                                userCoupon.setVipCardId(user.getVipCardId());
+                                userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                                userCoupon.setCouponId(couponActivityFestival.getCouponId());
+                                userCoupon.setExpireTime(iCouponService.queryExpireDate(couponActivityFestival.getCouponId(), getDate));
+                                userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                                userCouponList.add(userCoupon);
+                            }
+                        }
                         totalUserCouponList.addAll(userCouponList);
                     }
                     //保存

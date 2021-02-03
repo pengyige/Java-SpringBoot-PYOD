@@ -20,6 +20,8 @@ public enum RedisKeyEnum {
 
     BIRTHDAY_EVENT("birthday-event:","会员卡生日到期事件"),
 
+    USER_BIRTHDAY_EVENT("user-birthday-event:","用户生日到期事件"),
+
     GIVE_USER_COUPON_EVENT("give-user-coupon-event:","赠送优惠券失效事件");
 
     private String key;

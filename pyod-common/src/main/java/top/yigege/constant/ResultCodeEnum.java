@@ -134,6 +134,12 @@ public enum ResultCodeEnum {
 
     ACTIVITY_EXIST(1016,"该类型活动已存在，请先暂停后再操作"),
 
+    USER_BIRTHDAY_MODIFY_LIMIT(1017,"用户生日只能修改一次"),
+
+    QRCODE_INVALID(1018,"二维码无效"),
+
+    CHARGE_FAIL(1019,"核销失败"),
+
     NO_COUPON_ACTIVITY(1020,"活动还未开始");
 
 

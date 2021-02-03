@@ -27,6 +27,7 @@ import top.yigege.service.ISysDictService;
 import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -106,18 +107,20 @@ public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListen
              couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getType, BirthdayTypeEnum.USER.getCode());
              List<CouponActivityBirthday> couponActivityBirthdayList = iCouponActivityBirthdayService.list(couponActivityBirthdayLambdaQueryWrapper);
              if (!couponActivityBirthdayList.isEmpty()) {
-                 List<UserCoupon> userCouponList = couponActivityBirthdayList.stream().map(item ->{
-                     UserCoupon userCoupon = new UserCoupon();
-                     userCoupon.setUserId(userId);
-                     userCoupon.setVipCardId(user.getVipCardId());
-                     userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
-                     userCoupon.setCouponId(item.getCouponId());
-                     userCoupon.setNum(item.getNum());
-                     userCoupon.setAvailableNum(item.getNum());
-                     userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(),getDate));
-                     userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                     return userCoupon;
-                 }).collect(Collectors.toList());
+                 List<UserCoupon> userCouponList = new ArrayList<>();
+                 for (CouponActivityBirthday couponActivityBirthday: couponActivityBirthdayList) {
+                     for (int i = 0;i < couponActivityBirthday.getNum();i++) {
+                         UserCoupon userCoupon = new UserCoupon();
+                         userCoupon.setUserId(userId);
+                         userCoupon.setVipCardId(user.getVipCardId());
+                         userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                         userCoupon.setCouponId(couponActivityBirthday.getCouponId());
+                         userCoupon.setExpireTime(iCouponService.queryExpireDate(couponActivityBirthday.getCouponId(),getDate));
+                         userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                         userCouponList.add(userCoupon);
+                     }
+                 }
+
                  //保存
                  iUserCouponService.batchAddUserCoupon(userCouponList);
              }
@@ -148,18 +151,19 @@ public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListen
             couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getType, BirthdayTypeEnum.VIP_CARD.getCode());
             List<CouponActivityBirthday> couponActivityBirthdayList = iCouponActivityBirthdayService.list(couponActivityBirthdayLambdaQueryWrapper);
             if (!couponActivityBirthdayList.isEmpty()) {
-                List<UserCoupon> userCouponList = couponActivityBirthdayList.stream().map(item ->{
-                    UserCoupon userCoupon = new UserCoupon();
-                    userCoupon.setUserId(userId);
-                    userCoupon.setVipCardId(vipCardId);
-                    userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
-                    userCoupon.setCouponId(item.getCouponId());
-                    userCoupon.setNum(item.getNum());
-                    userCoupon.setAvailableNum(item.getNum());
-                    userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(),getDate));
-                    userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                    return userCoupon;
-                }).collect(Collectors.toList());
+                List<UserCoupon> userCouponList = new ArrayList<>();
+                for (CouponActivityBirthday couponActivityBirthday: couponActivityBirthdayList) {
+                    for (int i = 0 ; i < couponActivityBirthday.getNum(); i++) {
+                        UserCoupon userCoupon = new UserCoupon();
+                        userCoupon.setUserId(userId);
+                        userCoupon.setVipCardId(vipCardId);
+                        userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                        userCoupon.setCouponId(couponActivityBirthday.getCouponId());
+                        userCoupon.setExpireTime(iCouponService.queryExpireDate(couponActivityBirthday.getCouponId(),getDate));
+                        userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                        userCouponList.add(userCoupon);
+                    }
+                }
                 //保存
                 iUserCouponService.batchAddUserCoupon(userCouponList);
             }

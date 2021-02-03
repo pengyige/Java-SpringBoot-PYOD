@@ -246,18 +246,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 couponActivityRegisterLambdaQueryWrapper.eq(CouponActivityRegister::getCouponActivityId, couponActivity.getCouponActivityId());
                 List<CouponActivityRegister> couponActivityRegisters = iCouponActivityRegisterService.list(couponActivityRegisterLambdaQueryWrapper);
                 if (!couponActivityRegisters.isEmpty()) {
-                    List<UserCoupon> userCouponList = couponActivityRegisters.stream().map(item -> {
-                        UserCoupon userCoupon = new UserCoupon();
-                        userCoupon.setUserId(newUser.getUserId());
-                        userCoupon.setVipCardId(newUser.getVipCardId());
-                        userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
-                        userCoupon.setCouponId(item.getCouponId());
-                        userCoupon.setNum(item.getNum());
-                        userCoupon.setAvailableNum(item.getNum());
-                        userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), newUser.getCreateTime()));
-                        userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                        return userCoupon;
-                    }).collect(Collectors.toList());
+                    List<UserCoupon> userCouponList = new ArrayList<>();
+                    for (CouponActivityRegister couponActivityRegister: couponActivityRegisters) {
+                        for (int i = 0 ; i < couponActivityRegister.getNum(); i++) {
+                            UserCoupon userCoupon = new UserCoupon();
+                            userCoupon.setUserId(newUser.getUserId());
+                            userCoupon.setVipCardId(newUser.getVipCardId());
+                            userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                            userCoupon.setCouponId(couponActivityRegister.getCouponId());
+                            userCoupon.setExpireTime(iCouponService.queryExpireDate(couponActivityRegister.getCouponId(), newUser.getCreateTime()));
+                            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                            userCouponList.add(userCoupon);
+                        }
+                    }
                     //保存
                     iUserCouponService.batchAddUserCoupon(userCouponList);
                 }
@@ -348,18 +349,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                     couponActivityUpgradeLambdaQueryWrapper.eq(CouponActivityUpgrade::getLevelId, user.getLevelId());
                     List<CouponActivityUpgrade> couponActivityUpgradeList = iCouponActivityUpgradeService.list(couponActivityUpgradeLambdaQueryWrapper);
                     if (!couponActivityUpgradeList.isEmpty()) {
-                        List<UserCoupon> userCouponList = couponActivityUpgradeList.stream().map(item -> {
-                            UserCoupon userCoupon = new UserCoupon();
-                            userCoupon.setUserId(user.getUserId());
-                            userCoupon.setVipCardId(user.getVipCardId());
-                            userCoupon.setCouponActivityId(upgradeCouponActivity.getCouponActivityId());
-                            userCoupon.setCouponId(item.getCouponId());
-                            userCoupon.setNum(item.getNum());
-                            userCoupon.setAvailableNum(item.getNum());
-                            userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), getDate));
-                            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                            return userCoupon;
-                        }).collect(Collectors.toList());
+                        List<UserCoupon> userCouponList = new ArrayList<>();
+                        for (CouponActivityUpgrade couponActivityUpgrade : couponActivityUpgradeList) {
+                            for (int i = 0; i < couponActivityUpgrade.getNum(); i++) {
+                                UserCoupon userCoupon = new UserCoupon();
+                                userCoupon.setUserId(user.getUserId());
+                                userCoupon.setVipCardId(user.getVipCardId());
+                                userCoupon.setCouponActivityId(upgradeCouponActivity.getCouponActivityId());
+                                userCoupon.setCouponId(couponActivityUpgrade.getCouponId());
+                                userCoupon.setExpireTime(iCouponService.queryExpireDate(couponActivityUpgrade.getCouponId(), getDate));
+                                userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                                userCouponList.add(userCoupon);
+                            }
+                        }
                         //保存
                         iUserCouponService.batchAddUserCoupon(userCouponList);
                     }
@@ -382,20 +384,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 for (CouponActivityPea item : couponActivityPeaList) {
                     if (user.getAvaliablePeaNum() >= item.getNeedPeaNum()) {
                         needPeaNum = item.getNeedPeaNum();
-
-                        UserCoupon userCoupon = new UserCoupon();
-                        userCoupon.setUserId(user.getUserId());
-                        userCoupon.setVipCardId(user.getVipCardId());
-                        userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
-                        userCoupon.setCouponId(item.getCouponId());
-                        userCoupon.setNum(item.getNum());
-                        userCoupon.setAvailableNum(item.getNum());
-                        userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), peaCouponGetDate));
-                        userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                        userCouponList.add(userCoupon);
+                        for (int i = 0; i < item.getNum(); i++) {
+                            UserCoupon userCoupon = new UserCoupon();
+                            userCoupon.setUserId(user.getUserId());
+                            userCoupon.setVipCardId(user.getVipCardId());
+                            userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                            userCoupon.setCouponId(item.getCouponId());
+                            userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(), peaCouponGetDate));
+                            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                            userCouponList.add(userCoupon);
+                        }
                     }
                 }
-
                 //保存
                 iUserCouponService.batchAddUserCoupon(userCouponList);
 

@@ -194,18 +194,20 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             if (null != product) {
                 List<Coupon> couponList = product.getCouponList();
                 Date pickDate = new Date();
-                List<UserCoupon> userCouponList = couponList.stream().map(item ->{
-                    UserCoupon userCoupon = new UserCoupon();
-                    userCoupon.setUserId(purchaseHistory.getUserId());
-                    userCoupon.setVipCardId(purchaseHistory.getVipCardId());
-                    userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
-                    userCoupon.setCouponId(item.getCouponId());
-                    userCoupon.setNum(item.getNum());
-                    userCoupon.setAvailableNum(item.getNum());
-                    userCoupon.setExpireTime(iCouponService.queryExpireDate(item.getCouponId(),pickDate));
-                    userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                    return userCoupon;
-                }).collect(Collectors.toList());
+                List<UserCoupon> userCouponList = new ArrayList<>();
+                for (Coupon coupon: couponList) {
+                    for (int i = 0; i < coupon.getNum(); i++) {
+                        UserCoupon userCoupon = new UserCoupon();
+                        userCoupon.setUserId(purchaseHistory.getUserId());
+                        userCoupon.setVipCardId(purchaseHistory.getVipCardId());
+                        userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                        userCoupon.setCouponId(coupon.getCouponId());
+                        userCoupon.setExpireTime(iCouponService.queryExpireDate(coupon.getCouponId(),pickDate));
+                        userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                        userCouponList.add(userCoupon);
+                    }
+
+                }
                 //保存
                 iUserCouponService.batchAddUserCoupon(userCouponList);
             }

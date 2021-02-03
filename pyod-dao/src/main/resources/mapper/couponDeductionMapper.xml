@@ -12,7 +12,8 @@
         <result column="cousumption_record_id" property="cousumptionRecordId"/>
         <result column="order_no" property="orderNo"/>
         <result column="coupon_id" property="couponId"/>
-        <result column="num" property="num"/>
+        <result column="coupon_deduction_no" property="couponDeductionNo"/>
+        <result column="status" property="status"/>
         <result column="remark" property="remark"/>
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -51,12 +52,14 @@
         c.NAME c_name ,
         u.user_id u_user_id,
         u.qr_code_no u_qr_code_no
+
     FROM
         `t_coupon_deduction` cd
         LEFT JOIN t_coupon c ON cd.coupon_id = c.coupon_id
         LEFT JOIN t_user u on cd.user_id = u.user_id
         WHERE 1 = 1
         AND cd.shop_id = #{queryChargeOffRecordPageListDTO.shopId}
+        order by cd.create_time desc
     </select>
 
 
