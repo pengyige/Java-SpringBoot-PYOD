@@ -3,8 +3,11 @@ package top.yigege.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import top.yigege.config.RabbitMQConfig;
 import top.yigege.constant.ActivityTypeEnum;
 import top.yigege.constant.CdKeyStatusEnum;
 import top.yigege.constant.CouponStatusEnum;
@@ -69,6 +72,9 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
     @Autowired
     IUserService iUserService;
 
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
     @Override
     public int queryTotalAvailableCouponCount(Long userId) {
         LambdaQueryWrapper<UserCoupon> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -118,14 +124,15 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
         }
 
         //设置过期
-        String key = "";
+       /* String key = "";
         long expireTime = 86400*1000L;//默认一天
         SysDict sysDict = iSysDictService.queryDictByCode(DictCodeEnum.GIVE_USER_COUPON_RETURN_TIME.getCode());
         if (null != sysDict && StringUtils.isNotBlank(sysDict.getCode())) {
             expireTime = Long.parseLong(sysDict.getValue()) * 1000;
         }
         key = RedisKeyEnum.PEA_EXPIRE_EVENT.getKey() + userCoupon.getUserCouponId();
-        iRedisService.setObj(key,userCoupon.getUserCouponId(),expireTime);
+        iRedisService.setObj(key,userCoupon.getUserCouponId(),expireTime);*/
+        rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME,RabbitMQConfig.DELAY_QUEUEA_GIVE_COUPON_ROUTING_KEY,userCoupon.getUserCouponId()+"");
 
         //更新状态
         userCoupon.setStatus(CouponStatusEnum.SEND_UN_PICK.getCode());

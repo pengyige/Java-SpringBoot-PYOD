@@ -1,4 +1,4 @@
-package top.yigege.message;
+package top.yigege.message.redis;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

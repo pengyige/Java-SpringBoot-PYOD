@@ -8,10 +8,16 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import top.yigege.config.RabbitMQConfig;
 import top.yigege.config.WxConfig;
 import top.yigege.constant.ActivityTypeEnum;
 import top.yigege.constant.CouponStatusEnum;
@@ -128,6 +134,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     ICardCoverService iCardCoverService;
 
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
 
     public User queryUniqueUser(String openId,Long merchantId) {
         //根据openId判断用户是否已存在
@@ -226,9 +235,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
             save(newUser);
             if (null != newUser.getExpireTime()) {
-                //保存到redis,通过失效key事件处理
+                /*//保存到redis,通过失效key事件处理
                 key = RedisKeyEnum.PEA_EXPIRE_EVENT.getKey() + newUser.getUserId();
-                iRedisService.setObj(key, newUser.getUserId(), Long.parseLong(sysDict.getValue()));
+                iRedisService.setObj(key, newUser.getUserId(), Long.parseLong(sysDict.getValue()));*/
+                rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME,RabbitMQConfig.DELAY_QUEUEA_PEA_CLAER_ROUTING_KEY,user.getUserId());
             }
 
             //免费生成主卡
@@ -431,11 +441,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new BusinessException(ResultCodeEnum.USER_BIRTHDAY_MODIFY_LIMIT);
         }else if(null == user.getBirthday() && null != modifyUserInfoDTO.getBirthday()){
             user.setBirthday(modifyUserInfoDTO.getBirthday());
+
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME,RabbitMQConfig.DELAY_QUEUEA_USER_BIRTHDAY_ROUTING_KEY,user.getUserId()+"");
+
             //设置生日到期事件,到期后给用户赠送优惠券
-            String birthdayKey = RedisKeyEnum.USER_BIRTHDAY_EVENT.getKey() + user.getUserId();
+           /* String birthdayKey = RedisKeyEnum.USER_BIRTHDAY_EVENT.getKey() + user.getUserId();
             Date birthday = modifyUserInfoDTO.getBirthday();
             Date birthdayDate = DateUtil.offsetMonth(birthday, 12);
-            iRedisService.setObj(birthdayKey, user.getUserId(), birthdayDate.getTime() - birthday.getTime());
+            iRedisService.setObj(birthdayKey, user.getUserId(), birthdayDate.getTime() - birthday.getTime());*/
         }
         BeanUtil.copyProperties(modifyUserInfoDTO,user);
         updateById(user);
@@ -490,6 +503,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (null != currentLevel) {
          userLoginResDTO.setLevelName(currentLevel.getName());
          userLoginResDTO.setImageUrl(currentLevel.getImageUrl());
+         userLoginResDTO.setMinValue(currentLevel.getMinValue());
+         userLoginResDTO.setMinValue(currentLevel.getMaxValue());
         }
         if (null == nextLevel) {
             userLoginResDTO.setFullLevelFlag(true);

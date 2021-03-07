@@ -1,4 +1,4 @@
-package top.yigege.message;
+package top.yigege.message.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;

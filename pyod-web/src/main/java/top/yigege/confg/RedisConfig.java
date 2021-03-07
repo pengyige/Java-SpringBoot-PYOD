@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import top.yigege.config.RedisTopicTypeEnum;
-import top.yigege.message.RedisReceiver;
+import top.yigege.message.redis.RedisReceiver;
 
 /**
  * @ClassName: RedisConfig

@@ -131,6 +131,10 @@ public class UserLoginResDTO {
     @ApiModelProperty(value = "等级名称",dataType = "string",required = true,example = "咖啡新秀")
     private String levelName = "";
 
+    private Integer maxValue;
+
+    private Integer minValue;
+
     /**
      * 等级图标
      */

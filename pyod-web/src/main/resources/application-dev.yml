@@ -15,12 +15,13 @@ spring:
     maxActive: 20
     maxWait: 60000
     validationQuery: select version()
+  #缓存中间件
   redis:
     #数据库索引
     database: 0
     host: yigege.top
     port: 6379
-    password: Pyod@2020!
+    password: Pyod@2020
     jedis:
       pool:
         #最大连接数
@@ -45,3 +46,13 @@ spring:
     restart:
       # 热部署开关
       enabled: true
+  # 消息队列
+  rabbitmq:
+    host: yigege.top
+    port: 5672
+    username: root
+    password: Pyod@2020!
+    listener:
+      direct:
+        acknowledge-mode: manual
+

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author: yigege
  * @date: 2020年09月17日 11:18
  */
+@EnableRabbit
 @SpringBootApplication
 @MapperScan("top.yigege.dao.**")
 @Slf4j
