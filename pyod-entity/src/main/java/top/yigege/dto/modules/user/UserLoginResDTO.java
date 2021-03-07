@@ -72,6 +72,11 @@ public class UserLoginResDTO {
     private String mobile = "";
 
     /**
+     * 生日
+     */
+    private Date birthday;
+
+    /**
      * 可用积分
      */
     @ApiModelProperty(value = "可用积分",dataType = "int",required = true,example = "0")
@@ -125,6 +130,11 @@ public class UserLoginResDTO {
      */
     @ApiModelProperty(value = "等级名称",dataType = "string",required = true,example = "咖啡新秀")
     private String levelName = "";
+
+    /**
+     * 等级图标
+     */
+    private String imageUrl = "";
 
     /**
      * 升级提示

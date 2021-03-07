@@ -489,6 +489,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         if (null != currentLevel) {
          userLoginResDTO.setLevelName(currentLevel.getName());
+         userLoginResDTO.setImageUrl(currentLevel.getImageUrl());
         }
         if (null == nextLevel) {
             userLoginResDTO.setFullLevelFlag(true);

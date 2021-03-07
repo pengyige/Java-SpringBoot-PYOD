@@ -21,6 +21,8 @@ public class MerchantUserLoginResDTO {
 
     private String no;
 
+    private String password;
+
     private Integer sex;
 
     private String tel;

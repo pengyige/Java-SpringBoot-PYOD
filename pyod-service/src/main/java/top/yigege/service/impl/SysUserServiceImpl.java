@@ -151,7 +151,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         //刷新token
         merchantUserLoginResDTO.setToken(iTokenService.getToken(sysUser));
-
+        merchantUserLoginResDTO.setPassword(merchantUserLoginReqDTO.getPassword());
         sysUser.setLastLoginTime(new Date());
         updateById(sysUser);
         return merchantUserLoginResDTO;
