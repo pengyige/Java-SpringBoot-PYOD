@@ -140,7 +140,8 @@ public class ApiUserController {
         return ApiResultUtil.success();
     }
 
-    @ApiOperation("修改用户信息")
+    @ApiOperation(value = "修改用户信息")
+    @PostMapping("/modifyUserInfo")
     public ResultBean modifyUserInfo(@Valid  ModifyUserInfoDTO modifyUserInfoDTO, @RequestAttribute Long userId) {
         modifyUserInfoDTO.setUserId(userId);
         iUserService.modifyUserInfo(modifyUserInfoDTO);
