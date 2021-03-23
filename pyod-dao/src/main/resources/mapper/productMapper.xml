@@ -12,7 +12,7 @@
         <result column="update_time" property="updateTime" />
 
 
-        <association property="couponList" javaType="top.yigege.model.Coupon">
+        <collection property="couponList" ofType="top.yigege.model.Coupon">
             <id column="c_coupon_id" property="couponId"></id>
             <result column="c_name" property="name"></result>
             <result column="c_price" property="price"/>
@@ -29,22 +29,23 @@
             <result column="c_indate_end_time" property="indateEndTime"/>
             <result column="c_create_time" property="createTime"/>
             <result column="c_update_time" property="updateTime"/>
-            <result column="num" property="num"/>
-        </association>
+            <result column="cap_num" property="num"/>
+        </collection>
     </resultMap>
 
-    <select id="queryProductWithCoupon" resultMap="productMap" parameterType="java.lang.Long">
+    <select id="queryProductWithCoupon" resultMap="productMap">
        SELECT
             p.*,
             c.coupon_id c_coupon_id,
             c.NAME c_name,
-            cap.num num
+            cap.num cap_num
         FROM
             t_product p
             LEFT JOIN t_coupon_activity_product cap ON p.product_id = cap.product_id
             LEFT JOIN t_coupon c ON cap.coupon_id = c.coupon_id
         WHERE
-            cap.coupon_activity_id = #{value}
+            cap.coupon_activity_id = #{couponActivityId}
+            and p.merchant_id = #{merchantId}
     </select>
 
     <select id="queryProductDetailWithCoupon" resultMap="productMap" >
@@ -52,7 +53,7 @@
             p.*,
             c.coupon_id c_coupon_id,
             c.NAME c_name,
-            cap.num num
+            cap.num cap_num
         FROM
             t_product p
             LEFT JOIN t_coupon_activity_product cap ON p.product_id = cap.product_id

@@ -37,7 +37,8 @@ public class RedisConfig {
 
     }
 
-    @Bean
+    //暂时不需要发布/订阅
+   /* @Bean
     RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
                                             MessageListenerAdapter listenerAdapter) {
 
@@ -52,7 +53,7 @@ public class RedisConfig {
     MessageListenerAdapter listenerAdapter(RedisReceiver receiver) {
         return new MessageListenerAdapter(receiver, "onMessage");
     }
-
+*/
     @Bean
     StringRedisTemplate template(RedisConnectionFactory connectionFactory) {
         return new StringRedisTemplate(connectionFactory);

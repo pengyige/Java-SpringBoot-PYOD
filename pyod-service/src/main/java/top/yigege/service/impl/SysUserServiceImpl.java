@@ -2,6 +2,7 @@ package top.yigege.service.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -41,7 +42,10 @@ import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserService;
 import top.yigege.util.PageUtil;
 import top.yigege.util.Utils;
+import top.yigege.util.WeixinUtil;
 import top.yigege.vo.PageBean;
+import top.yigege.vo.wx.WxSendMessageDataBean;
+import top.yigege.vo.wx.WxValueBean;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -84,6 +88,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     IUserService iUserService;
 
+    @Autowired
+    WeixinUtil weixinUtil;
+
     @Override
     public List<SysUser> queryUserByNickname(List<String> nickname) {
         return sysUserMapper.queryUserByNickname(nickname);
@@ -99,6 +106,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         wxConfig.setMchId(sysUser.getWxMchId());
         wxConfig.setMchKey(sysUser.getWxMchKey());
         wxConfig.setNotifyUrl(PyodConstant.WeiXin.NOTIFY_URL);
+        wxConfig.setTemplateId(sysUser.getWxTemplateId());
         return wxConfig;
     }
 
@@ -170,12 +178,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         List<Integer> ids = Utils.parseIntegersList(Utils.splitStringToList(chargeOffReqDTO.getUserCouponIds()));
         List<UserCoupon> userCouponList = (List<UserCoupon>) iUserCouponService.listByIds(ids);
         String couponDeductionNo = iGenerateIDService.getNo("");
+        User tempUser = null;
         for (UserCoupon userCoupon : userCouponList) {
             if (null == userCoupon) {
                 throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
             }
 
             User user = iUserService.getById(userCoupon.getUserId());
+            tempUser = user;
             if (!user.getMerchantId().equals(merchantId)) {
                 throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
             }
@@ -198,6 +208,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             couponDeduction.setCouponId(userCoupon.getCouponId());
             couponDeduction.setStatus(ChareOffStatusEnum.FINISH.getCode());
             iCouponDeductionService.save(couponDeduction);
+        }
+        if (null != tempUser) {
+            WxSendMessageDataBean wxSendMessageDataBean = new WxSendMessageDataBean();
+            wxSendMessageDataBean.setThing1(new WxValueBean("核销优惠券"));
+            wxSendMessageDataBean.setThing7(new WxValueBean("商户会员平台"));
+            ;
+            wxSendMessageDataBean.setTime2(new WxValueBean(DateUtil.format(new Date(),"yyyy年MM月dd日 HH:mm")));
+            wxSendMessageDataBean.setCharacter_string5(new WxValueBean(couponDeductionNo));
+            wxSendMessageDataBean.setThing4(new WxValueBean("核销成功,前往小程序核实~"));
+
+            weixinUtil.sendWxMessage(queryWxConfigByMerchantId(merchantId),
+                    tempUser.getOpenid(),
+                    wxSendMessageDataBean);
         }
     }
 
@@ -227,6 +250,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 iUserCouponService.updateById(userCoupon);
             }
         }*/
+        User user = iUserService.getById(userCoupon.getUserId());
+        if (null != user) {
+            WxSendMessageDataBean wxSendMessageDataBean = new WxSendMessageDataBean();
+            wxSendMessageDataBean.setThing1(new WxValueBean("退还优惠券"));
+            wxSendMessageDataBean.setThing7(new WxValueBean("商户会员平台"));
+            wxSendMessageDataBean.setTime2(new WxValueBean(DateUtil.format(new Date(),"yyyy年MM月dd日 HH:mm")));
+            wxSendMessageDataBean.setCharacter_string5(new WxValueBean(couponDeduction.getCouponDeductionNo()));
+            wxSendMessageDataBean.setThing4(new WxValueBean("退还成功,前往小程序核实~"));
+
+            weixinUtil.sendWxMessage(queryWxConfigByMerchantId(user.getMerchantId()),
+                    user.getOpenid(),
+                    wxSendMessageDataBean);
+        }
     }
 
     @Override

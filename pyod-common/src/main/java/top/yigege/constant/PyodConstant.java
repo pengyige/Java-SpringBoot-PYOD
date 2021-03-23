@@ -85,6 +85,11 @@ public class PyodConstant {
          * 订单查询接口
          */
         String ORDER_QUERY_URL = "https://api.mch.weixin.qq.com/pay/orderquery";
+
+        /**
+         * 订阅消息发送
+         */
+        String MESSAGE_SUBSCRIBE_SEND = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token={access_token}";
     }
 
     /**

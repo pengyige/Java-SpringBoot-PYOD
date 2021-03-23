@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface ProductMapper extends BaseMapper<Product> {
 
-    List<Product> queryProductWithCoupon(Long couponActivityId);
+    List<Product> queryProductWithCoupon(Long couponActivityId,Long merchantId);
 
     Product queryProductDetailWithCoupon(Long couponActivityId, Long productId);
 

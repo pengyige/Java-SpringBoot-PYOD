@@ -80,8 +80,9 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        //接口文档地址不需要签名
-        if (!envConfig.isDev() && signConfig.isEnable() && !url.equals("/pyod/api/doc")) {
+        //接口文档地址、微信通知回调不需要签名
+        if (!envConfig.isDev() && signConfig.isEnable() && !url.equals("/pyod/api/doc")
+        && !url.equals("/pyod/api/wx/notify")) {
            //签名校验
            if (params.get(PyodConstant.ApiRequestCommonParam.TIMESTAMP) == null
                    || params.get(PyodConstant.ApiRequestCommonParam.NONCE) == null

@@ -34,7 +34,7 @@ public class AddProductDTO {
      * 价格
      */
     @NotNull(message = "商品价格不能为空")
-    private Integer price;
+    private Double price;
 
     /**
      * 商品类型(1-购买券包，2-充值返券)

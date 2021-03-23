@@ -140,7 +140,12 @@ public enum ResultCodeEnum {
 
     CHARGE_FAIL(1019,"核销失败"),
 
-    NO_COUPON_ACTIVITY(1020,"活动还未开始");
+    NO_COUPON_ACTIVITY(1020,"活动还未开始"),
+
+    /**
+     * 订单不存在
+     */
+    NO_ORDER (1021,"订单不存在");
 
 
     private Integer code;

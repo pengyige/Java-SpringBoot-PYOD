@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author yigege
@@ -25,6 +25,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 查询该商家下所有用户
+     *
      * @param merchantId
      * @return
      */
@@ -32,20 +33,31 @@ public interface IUserService extends IService<User> {
 
     /**
      * 查询商家下所有用户数量
+     *
      * @param merchantId
      * @return
      */
     Long queryUserNumByMerchantId(Long merchantId);
 
     /**
+     * 查询用户详情
+     * @param userId
+     * @return
+     */
+    UserLoginResDTO queryUserDetail(Long userId);
+
+
+    /**
      * 通过code登入
+     *
      * @param code
      * @return
      */
-    UserLoginResDTO loginByCode(WxConfig wxConfig,Long merchantId,String code);
+    UserLoginResDTO loginByCode(WxConfig wxConfig, Long merchantId, String code);
 
     /**
      * 通过用户基础信息注册并登入
+     *
      * @param userLoginDetailReqDTO
      * @return
      */
@@ -54,6 +66,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 绑定用户手机号
+     *
      * @param bindWxUserMobileReqDTO
      * @return
      */
@@ -61,6 +74,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 更新用户主卡
+     *
      * @param userId
      * @param primaryVipCardId
      */
@@ -68,13 +82,15 @@ public interface IUserService extends IService<User> {
 
     /**
      * 增加豆豆
+     *
      * @param userId
      * @param peaNum
      */
-    void addPea(Long userId,Double peaNum);
+    void addPea(Long userId, Double peaNum);
 
     /**
      * 退出登入
+     *
      * @param userId
      * @return
      */
@@ -82,18 +98,21 @@ public interface IUserService extends IService<User> {
 
     /**
      * 更新用户定位
+     *
      * @param updateLocationDTO
      */
     void updateLocation(UpdateLocationDTO updateLocationDTO);
 
     /**
      * 修改用户信息
+     *
      * @param modifyUserInfoDTO
      */
     void modifyUserInfo(ModifyUserInfoDTO modifyUserInfoDTO);
 
     /**
      * 通过手机号查询用户
+     *
      * @param merchantId
      * @param mobile
      * @return
@@ -102,8 +121,9 @@ public interface IUserService extends IService<User> {
 
     /**
      * 查询主页数据
+     *
      * @param merchantId
      * @return
      */
-    public QueryHomeDataResDTO queryHomeData(Integer merchantId) ;
+    public QueryHomeDataResDTO queryHomeData(Integer merchantId);
 }

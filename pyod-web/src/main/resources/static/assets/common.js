@@ -1,5 +1,6 @@
 var config = {
-    "ip" : "admin.yigege.top",
+    "ip" : "admin.fengyunfuwu.com",
+    //"ip" : "admin.yigege.top",
     //"ip" : "localhost",
     "port": "9999",
     "contextPath":"/pyod/web"
@@ -654,7 +655,7 @@ function getModifyCouponUrl() {
  * 删除优惠券
  */
 function getDeleteCouponByIdsUrl() {
-    return getBaseUrl() + "/cooupon/deleteCouponByIds";
+    return getBaseUrl() + "/coupon/deleteCouponByIds";
 }
 
 /**

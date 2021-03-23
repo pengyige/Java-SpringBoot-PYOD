@@ -138,7 +138,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     RabbitTemplate rabbitTemplate;
 
 
-    public User queryUniqueUser(String openId,Long merchantId) {
+    public User queryUniqueUser(String openId, Long merchantId) {
         //根据openId判断用户是否已存在
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getOpenid, openId);
@@ -162,14 +162,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public UserLoginResDTO loginByCode(WxConfig wxConfig,Long merchantId,String code) {
+    public UserLoginResDTO queryUserDetail(Long userId) {
+        UserLoginResDTO userLoginResDTO = new UserLoginResDTO();
+        fillData(getById(userId), userLoginResDTO);
+        return userLoginResDTO;
+    }
+
+    @Override
+    public UserLoginResDTO loginByCode(WxConfig wxConfig, Long merchantId, String code) {
         Code2SessionResultBean code2SessionResultBean = weixinUtil.getCode2Session(wxConfig, code);
         if (0 != code2SessionResultBean.getErrcode()) {
             throw new BusinessException(ResultCodeEnum.CALL_WEIXIN_API_ERROR.getCode(),
                     code2SessionResultBean.getErrcode() + "-" + code2SessionResultBean.getErrmsg());
         }
 
-        User user = queryUniqueUser(code2SessionResultBean.getOpenid(),merchantId);
+        User user = queryUniqueUser(code2SessionResultBean.getOpenid(), merchantId);
         UserLoginResDTO userLoginResDTO = new UserLoginResDTO();
         if (null != user) {
             fillData(user, userLoginResDTO);
@@ -238,7 +245,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 /*//保存到redis,通过失效key事件处理
                 key = RedisKeyEnum.PEA_EXPIRE_EVENT.getKey() + newUser.getUserId();
                 iRedisService.setObj(key, newUser.getUserId(), Long.parseLong(sysDict.getValue()));*/
-                rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME,RabbitMQConfig.DELAY_QUEUEA_PEA_CLAER_ROUTING_KEY,user.getUserId());
+                rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME, RabbitMQConfig.DELAY_QUEUEA_PEA_CLAER_ROUTING_KEY, newUser.getUserId());
             }
 
             //免费生成主卡
@@ -249,7 +256,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             newUser.setVipCardId(userVipCard.getVipCardId());
 
             //新用户注册赠券活动是否开启
-            CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(userLoginDetailReqDTO.getMerchantId(),ActivityTypeEnum.NEW_USER_REGISTER);
+            CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(userLoginDetailReqDTO.getMerchantId(), ActivityTypeEnum.NEW_USER_REGISTER);
             if (null != couponActivity) {
                 //查询对应券，赠送给用户
                 LambdaQueryWrapper<CouponActivityRegister> couponActivityRegisterLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -257,8 +264,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 List<CouponActivityRegister> couponActivityRegisters = iCouponActivityRegisterService.list(couponActivityRegisterLambdaQueryWrapper);
                 if (!couponActivityRegisters.isEmpty()) {
                     List<UserCoupon> userCouponList = new ArrayList<>();
-                    for (CouponActivityRegister couponActivityRegister: couponActivityRegisters) {
-                        for (int i = 0 ; i < couponActivityRegister.getNum(); i++) {
+                    for (CouponActivityRegister couponActivityRegister : couponActivityRegisters) {
+                        for (int i = 0; i < couponActivityRegister.getNum(); i++) {
                             UserCoupon userCoupon = new UserCoupon();
                             userCoupon.setUserId(newUser.getUserId());
                             userCoupon.setVipCardId(newUser.getVipCardId());
@@ -274,6 +281,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 }
             }
 
+            userLoginResDTO.setFirstRegisterFlag(true);
+            userLoginResDTO.setFirstRegisterDesc(couponActivity.getRemark());
             fillData(newUser, userLoginResDTO);
         }
 
@@ -293,7 +302,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         WxMobileDataBean wxMobileDataBean = JSONUtil.toBean(resultByte, WxMobileDataBean.class);
 
-        User user = queryUniqueUser(bindWxUserMobileReqDTO.getOpenid(),bindWxUserMobileReqDTO.getMerchantId());
+        User user = queryUniqueUser(bindWxUserMobileReqDTO.getOpenid(), bindWxUserMobileReqDTO.getMerchantId());
         UserLoginResDTO userLoginResDTO = new UserLoginResDTO();
 
         if (null == user) {
@@ -322,13 +331,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         Level currentLevel = iLevelService.getById(user.getLevelId());
         //TODO 1.增加累计豆豆，根据豆豆数据升级，升级时判断升级活动是否开启并赠券
-        user.setTotalPeaNum(NumberUtil.add(user.getTotalPeaNum(),peaNum));
-        user.setAvaliablePeaNum(NumberUtil.add(user.getAvaliablePeaNum(),peaNum));
+        user.setTotalPeaNum(NumberUtil.add(user.getTotalPeaNum(), peaNum));
+        user.setAvaliablePeaNum(NumberUtil.add(user.getAvaliablePeaNum(), peaNum));
 
         if (user.getTotalPeaNum() >= currentLevel.getMaxValue()) {
             //等级信息
             LambdaQueryWrapper<Level> levelLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            levelLambdaQueryWrapper.eq(Level::getMerchantId,user.getMerchantId());
+            levelLambdaQueryWrapper.eq(Level::getMerchantId, user.getMerchantId());
             List<Level> levelList = iLevelService.list(levelLambdaQueryWrapper);
             levelList.sort((level1, level2) -> {
                 return level1.getMinValue() - level2.getMinValue();
@@ -350,7 +359,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 updateById(user);
 
                 //升级赠券活动是否开启
-                CouponActivity upgradeCouponActivity = iCouponActivityService.queryUnderwayActivity(user.getMerchantId(),ActivityTypeEnum.UPGRADE);
+                CouponActivity upgradeCouponActivity = iCouponActivityService.queryUnderwayActivity(user.getMerchantId(), ActivityTypeEnum.UPGRADE);
                 Date getDate = new Date();
                 if (null != upgradeCouponActivity) {
                     //查询对应券，赠送给用户
@@ -380,7 +389,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         //2.积豆赠券活动是否开启,结合当前等级当前豆豆是否兑换券,若赠券则扣减可使用豆豆
-        CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(user.getMerchantId(),ActivityTypeEnum.PEA);
+        CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(user.getMerchantId(), ActivityTypeEnum.PEA);
         if (null != couponActivity) {
             //查询当前等级对应的兑换条件
             Date peaCouponGetDate = new Date();
@@ -411,7 +420,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
                 if (!userCouponList.isEmpty()) {
                     //若送券了,则扣减可使用豆豆
-                    user.setAvaliablePeaNum(NumberUtil.sub(user.getAvaliablePeaNum(),needPeaNum));
+                    user.setAvaliablePeaNum(NumberUtil.sub(user.getAvaliablePeaNum(), needPeaNum));
                     updateById(user);
                 }
             }
@@ -423,7 +432,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public UserLoginResDTO logout(Long userId) {
         UserLoginResDTO userLoginResDTO = new UserLoginResDTO();
         userLoginResDTO.setToken("");
-        return  userLoginResDTO;
+        return userLoginResDTO;
     }
 
     @Override
@@ -439,10 +448,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = getById(modifyUserInfoDTO.getUserId());
         if (null != user.getBirthday() && null != modifyUserInfoDTO.getBirthday()) {
             throw new BusinessException(ResultCodeEnum.USER_BIRTHDAY_MODIFY_LIMIT);
-        }else if(null == user.getBirthday() && null != modifyUserInfoDTO.getBirthday()){
+        } else if (null == user.getBirthday() && null != modifyUserInfoDTO.getBirthday()) {
             user.setBirthday(modifyUserInfoDTO.getBirthday());
 
-            rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME,RabbitMQConfig.DELAY_QUEUEA_USER_BIRTHDAY_ROUTING_KEY,user.getUserId()+"");
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME, RabbitMQConfig.DELAY_QUEUEA_USER_BIRTHDAY_ROUTING_KEY, user.getUserId() + "");
 
             //设置生日到期事件,到期后给用户赠送优惠券
            /* String birthdayKey = RedisKeyEnum.USER_BIRTHDAY_EVENT.getKey() + user.getUserId();
@@ -450,7 +459,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             Date birthdayDate = DateUtil.offsetMonth(birthday, 12);
             iRedisService.setObj(birthdayKey, user.getUserId(), birthdayDate.getTime() - birthday.getTime());*/
         }
-        BeanUtil.copyProperties(modifyUserInfoDTO,user);
+        BeanUtil.copyProperties(modifyUserInfoDTO, user);
         updateById(user);
 
 
@@ -501,10 +510,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             }
         }
         if (null != currentLevel) {
-         userLoginResDTO.setLevelName(currentLevel.getName());
-         userLoginResDTO.setImageUrl(currentLevel.getImageUrl());
-         userLoginResDTO.setMinValue(currentLevel.getMinValue());
-         userLoginResDTO.setMinValue(currentLevel.getMaxValue());
+            userLoginResDTO.setLevelName(currentLevel.getName());
+            userLoginResDTO.setImageUrl(currentLevel.getImageUrl());
+            userLoginResDTO.setMinValue(currentLevel.getMinValue());
+            userLoginResDTO.setMaxValue(currentLevel.getMaxValue());
         }
         if (null == nextLevel) {
             userLoginResDTO.setFullLevelFlag(true);
@@ -513,13 +522,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userLoginResDTO.setFullLevelFlag(false);
             String tipFormatStr = "再积%s颗可升级为%s";
             userLoginResDTO.setUpgradeTip(String.format(tipFormatStr
-                    , NumberUtil.decimalFormat(".#",(currentLevel.getMaxValue() - user.getTotalPeaNum())), nextLevel.getName()));
+                    , NumberUtil.decimalFormat(".#", (currentLevel.getMaxValue() - user.getTotalPeaNum())), nextLevel.getName()));
         }
 
         //主卡信息
         if (null != user.getVipCardId()) {
             UserVipCard userVipCard = iUserVipCardService.queryUserVipCard(user.getVipCardId());
-            userLoginResDTO.setPrimaryCardBalance(Double.parseDouble(NumberUtil.decimalFormat(".##",userVipCard.getBalance())));
+            userLoginResDTO.setPrimaryCardBalance(Double.parseDouble(NumberUtil.decimalFormat(".##", userVipCard.getBalance())));
             userLoginResDTO.setVipCardNum(iUserVipCardService.queryTotalUserVipCardCount(user.getUserId()));
         }
 

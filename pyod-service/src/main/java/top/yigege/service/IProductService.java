@@ -25,7 +25,7 @@ public interface IProductService extends IService<Product> {
      */
     List<Product> queryAllProductInfo(Long merchantId);
 
-    List<Product> queryProductWithCoupon(Long couponActivityId);
+    List<Product> queryProductWithCoupon(Long merchantId,Long couponActivityId);
 
     Product queryProductDetailWithCoupon(Long couponActivityId, Long productId);
 

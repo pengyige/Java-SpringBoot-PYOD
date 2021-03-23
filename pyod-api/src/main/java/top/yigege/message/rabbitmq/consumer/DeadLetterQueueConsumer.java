@@ -72,26 +72,39 @@ public class DeadLetterQueueConsumer {
 
     @RabbitListener(queues = RabbitMQConfig.DEAD_QUEUEA_GIVE_COUPON_NAME)
     public void receiveGiveCouponMsg(String content,Message message, Channel channel) throws IOException {
-        String msg = content;
-        log.info("赠送优惠券死信队列收到消息：{}", msg);
-        Long userCouponId = Long.parseLong(msg);
-        UserCoupon userCoupon = iUserCouponService.getById(userCouponId);
-        //更新状态为可使用
-        if (CouponStatusEnum.SEND_UN_PICK.getCode().equals(userCoupon.getStatus())) {
-            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-            iUserCouponService.updateById(userCoupon);
-            log.info("用户优惠券id:{},赠送优惠券未领取处更新为可使用成功",userCouponId);
+        try {
+            String msg = content;
+            log.info("赠送优惠券死信队列收到消息：{}", msg);
+            Long userCouponId = Long.parseLong(msg);
+            UserCoupon userCoupon = iUserCouponService.getById(userCouponId);
+            //更新状态为可使用
+            if (CouponStatusEnum.SEND_UN_PICK.getCode().equals(userCoupon.getStatus())) {
+                userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                iUserCouponService.updateById(userCoupon);
+                log.info("用户优惠券id:{},赠送优惠券未领取处更新为可使用成功",userCouponId);
+            }
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        }catch (Exception e) {
+            log.error("赠送优惠券死信队列【{}】,处理失败",content);
+            log.error(e.getMessage(), e);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+
     }
 
     @RabbitListener(queues = RabbitMQConfig.DEAD_QUEUEA_PEA_CLEAR_NAME)
     public void receivePeaClearMsg(String content,Message message, Channel channel) throws IOException {
         String msg = content;
+        try {
         log.info("豆豆清空死信队列收到消息：{}", msg);
         Long userId = Long.parseLong(msg);
 
         User user = iUserService.getById(userId);
+        if (null == user) {
+            log.error("用户ID:{}不存在", msg);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            return;
+        }
         //重置
         user.setAvaliablePeaNum(0d);
         user.setTotalPeaNum(0d);
@@ -114,45 +127,61 @@ public class DeadLetterQueueConsumer {
                 user.getTotalPeaNum(),
                 user.getExpireTime());
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        }catch (Exception e) {
+            log.error("豆豆到期死信队列【{}】,处理失败",content);
+            log.error(e.getMessage(), e);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        }
     }
 
     @RabbitListener(queues = RabbitMQConfig.DEAD_QUEUEA_USER_BIRTHDAY_NAME)
     public void receiveUserBirthdayMsg(String content,Message message, Channel channel) throws IOException {
         String msg = content;
-        log.info("用户生日死信队列收到消息：{}", msg);
-        Long userId = Long.parseLong(msg);
-        User user = iUserService.getById(userId);
-        Date getDate = new Date();
-        CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(user.getMerchantId(), ActivityTypeEnum.BIRTHDAY);
-        if (null != couponActivity) {
-            //获取活动对应的优惠券
-            LambdaQueryWrapper<CouponActivityBirthday> couponActivityBirthdayLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getCouponActivityId,couponActivity.getCouponActivityId());
-            couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getType, BirthdayTypeEnum.USER.getCode());
-            List<CouponActivityBirthday> couponActivityBirthdayList = iCouponActivityBirthdayService.list(couponActivityBirthdayLambdaQueryWrapper);
-            if (!couponActivityBirthdayList.isEmpty()) {
-                List<UserCoupon> userCouponList = new ArrayList<>();
-                for (CouponActivityBirthday couponActivityBirthday: couponActivityBirthdayList) {
-                    for (int i = 0;i < couponActivityBirthday.getNum();i++) {
-                        UserCoupon userCoupon = new UserCoupon();
-                        userCoupon.setUserId(userId);
-                        userCoupon.setVipCardId(user.getVipCardId());
-                        userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
-                        userCoupon.setCouponId(couponActivityBirthday.getCouponId());
-                        userCoupon.setExpireTime(iCouponService.queryExpireDate(couponActivityBirthday.getCouponId(),getDate));
-                        userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
-                        userCouponList.add(userCoupon);
-                    }
-                }
-
-                //保存
-                iUserCouponService.batchAddUserCoupon(userCouponList);
+        try {
+            log.info("用户生日死信队列收到消息：{}", msg);
+            Long userId = Long.parseLong(msg);
+            User user = iUserService.getById(userId);
+            if (null == user) {
+                log.error("用户ID:{}不存在", msg);
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+                return;
             }
-        }
+            Date getDate = new Date();
+            CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(user.getMerchantId(), ActivityTypeEnum.BIRTHDAY);
+            if (null != couponActivity) {
+                //获取活动对应的优惠券
+                LambdaQueryWrapper<CouponActivityBirthday> couponActivityBirthdayLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getCouponActivityId, couponActivity.getCouponActivityId());
+                couponActivityBirthdayLambdaQueryWrapper.eq(CouponActivityBirthday::getType, BirthdayTypeEnum.USER.getCode());
+                List<CouponActivityBirthday> couponActivityBirthdayList = iCouponActivityBirthdayService.list(couponActivityBirthdayLambdaQueryWrapper);
+                if (!couponActivityBirthdayList.isEmpty()) {
+                    List<UserCoupon> userCouponList = new ArrayList<>();
+                    for (CouponActivityBirthday couponActivityBirthday : couponActivityBirthdayList) {
+                        for (int i = 0; i < couponActivityBirthday.getNum(); i++) {
+                            UserCoupon userCoupon = new UserCoupon();
+                            userCoupon.setUserId(userId);
+                            userCoupon.setVipCardId(user.getVipCardId());
+                            userCoupon.setCouponActivityId(couponActivity.getCouponActivityId());
+                            userCoupon.setCouponId(couponActivityBirthday.getCouponId());
+                            userCoupon.setExpireTime(iCouponService.queryExpireDate(couponActivityBirthday.getCouponId(), getDate));
+                            userCoupon.setStatus(CouponStatusEnum.AVAILABLE.getCode());
+                            userCouponList.add(userCoupon);
+                        }
+                    }
 
-        //设置生日到期消息
-        rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME,RabbitMQConfig.DELAY_QUEUEA_USER_BIRTHDAY_ROUTING_KEY,userId+"");
-        log.info("用户id:{},vipCardId:{},用户生日处理完成",userId,user.getVipCardId());
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+                    //保存
+                    iUserCouponService.batchAddUserCoupon(userCouponList);
+                }
+            }
+
+            //设置生日到期消息
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DELAY_EXCHANGE_NAME, RabbitMQConfig.DELAY_QUEUEA_USER_BIRTHDAY_ROUTING_KEY, userId + "");
+            log.info("用户id:{},vipCardId:{},用户生日处理完成", userId, user.getVipCardId());
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        }catch (Exception e) {
+            log.error("用户生日死信队列【{}】,处理失败",content);
+            log.error(e.getMessage(), e);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        }
     }
 }

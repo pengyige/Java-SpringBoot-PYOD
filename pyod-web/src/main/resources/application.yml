@@ -52,7 +52,10 @@ request:
     - /pyod/api/user/loginByUserDetail
     - /pyod/api/shop/queryNearbyLatestShop
     - /pyod/api/doc
+    - /pyod/api/wx/notify
     - /pyod/app/user/login
+    - /pyod/app/user/login
+
 # 微信开放平台
 #wx:
 #  appId: wx0b4b633bfde7dcf3

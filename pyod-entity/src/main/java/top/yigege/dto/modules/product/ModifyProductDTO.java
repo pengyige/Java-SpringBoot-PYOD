@@ -25,10 +25,15 @@ public class ModifyProductDTO {
     /**
      * 价格
      */
-    private Integer price;
+    private Double price;
 
     /**
      * 商品类型(1-购买券包，2-充值返券)
      */
     private Integer productType;
+
+    /**
+     * 使用描述
+     */
+    private String useDesc;
 }

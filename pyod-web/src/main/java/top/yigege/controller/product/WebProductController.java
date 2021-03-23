@@ -53,7 +53,7 @@ public class WebProductController {
     public ResultBean addProduct(@Valid AddProductDTO addProductDTO){
         Product product = new Product();
         BeanUtil.copyProperties(addProductDTO, product);
-        product.setPrice(product.getPrice()*100);
+        product.setPrice((int)(addProductDTO.getPrice()*100));
         product.setMerchantId(Long.valueOf(SessionUtil.getUser().getUserId()));
         return ApiResultUtil.success(iProductService.save(product));
     };
@@ -63,7 +63,7 @@ public class WebProductController {
     public ResultBean modifyProduct(@Valid ModifyProductDTO modifyProductDTO) {
         Product Product = new Product();
         BeanUtil.copyProperties(modifyProductDTO, Product);
-        Product.setPrice(Product.getPrice()*100);
+        Product.setPrice((int)(modifyProductDTO.getPrice()*100));
         return ApiResultUtil.success(iProductService.updateById(Product));
     }
 

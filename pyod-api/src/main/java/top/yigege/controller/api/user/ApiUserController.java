@@ -147,4 +147,12 @@ public class ApiUserController {
         iUserService.modifyUserInfo(modifyUserInfoDTO);
         return ApiResultUtil.success();
     }
+
+    @ApiOperation(value = "查询用户信息")
+    @PostMapping("/queryUserDetail")
+    public ResultBean queryUserDetail( @RequestAttribute Long userId) {
+        return ApiResultUtil.success(iUserService.queryUserDetail(userId));
+    }
+
+
 }

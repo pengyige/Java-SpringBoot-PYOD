@@ -23,6 +23,8 @@ import top.yigege.config.WxConfig;
 import top.yigege.constant.PyodConstant;
 import top.yigege.vo.wx.Code2SessionResultBean;
 import top.yigege.vo.wx.WxPayInfoBean;
+import top.yigege.vo.wx.WxSendMessageBean;
+import top.yigege.vo.wx.WxSendMessageDataBean;
 
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
@@ -183,4 +185,29 @@ public class WeixinUtil {
 
         return false;
     }
+
+
+    /**
+     * 发送微信消息
+     * @param wxConfig
+     * @param openId
+     * @param wxSendMessageDataBean
+     */
+    public void sendWxMessage(WxConfig wxConfig,String openId,WxSendMessageDataBean wxSendMessageDataBean) {
+        String wxRequestUrl = "";
+        wxRequestUrl = PyodConstant.WeiXin.MESSAGE_SUBSCRIBE_SEND.replace("{access_token}",getToken(wxConfig));
+        WxSendMessageBean wxSendMessageBean = new WxSendMessageBean();
+        wxSendMessageBean.setTouser(openId);
+        wxSendMessageBean.setTemplate_id(wxConfig.getTemplateId());
+        wxSendMessageBean.setPage("index");
+        //TODO developer为开发版；trial为体验版；formal为正式版；默认为正式版
+        wxSendMessageBean.setPage("developer");
+
+        wxSendMessageBean.setData(wxSendMessageDataBean);
+        String requestBodyJson = JSONUtil.toJsonStr(wxSendMessageBean);
+        log.info("sendWxMessage requestBodyJson:{}",requestBodyJson);
+        String getRes = HttpUtil.post(wxRequestUrl,requestBodyJson);
+        log.info("sendWxMessage result:{}",getRes);
+    }
+
 }

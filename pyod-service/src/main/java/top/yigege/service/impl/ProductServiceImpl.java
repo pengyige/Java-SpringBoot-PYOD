@@ -22,6 +22,7 @@ import top.yigege.dao.ProductMapper;
 import top.yigege.model.PurchaseHistory;
 import top.yigege.model.User;
 import top.yigege.model.UserCoupon;
+import top.yigege.model.UserVipCard;
 import top.yigege.service.ICouponActivityProductService;
 import top.yigege.service.ICouponActivityService;
 import top.yigege.service.ICouponService;
@@ -104,7 +105,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         //判断当前购买送礼活动是否有开启
         CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(merchantId,ActivityTypeEnum.BUY_PRODUCT);
         if (null != couponActivity) {
-            productList = queryProductWithCoupon(couponActivity.getCouponActivityId());
+            productList = queryProductWithCoupon(merchantId,couponActivity.getCouponActivityId());
         }else {
             LambdaQueryWrapper<Product> productLambdaQueryWrapper = new LambdaQueryWrapper<>();
             productLambdaQueryWrapper.eq(Product::getMerchantId,merchantId);
@@ -114,8 +115,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
-    public List<Product> queryProductWithCoupon(Long couponActivityId) {
-        return productMapper.queryProductWithCoupon(couponActivityId);
+    public List<Product> queryProductWithCoupon(Long merchantId,Long couponActivityId) {
+        return productMapper.queryProductWithCoupon(couponActivityId,merchantId);
     }
 
     @Override
@@ -138,6 +139,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             throw  new BusinessException(ResultCodeEnum.NO_USER);
         }
 
+       UserVipCard userVipCard = iUserVipCardService.queryUserVipCard(vipCardId);
+        if (null == userVipCard) {
+            throw new BusinessException(ResultCodeEnum.NO_CARD);
+        }
 
         WxPayInfoBean wxPayInfoBean = new WxPayInfoBean();
 

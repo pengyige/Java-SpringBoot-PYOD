@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @author: yigege
  * @date: 2021年01月13日 13:40
  */
-@Component
+/*@Component*/
 @Slf4j
 public class RedisKeyExpirationListener  extends KeyExpirationEventMessageListener {
 

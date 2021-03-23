@@ -176,4 +176,10 @@ public class UserLoginResDTO {
     @ApiModelProperty("商家id")
     private Long merchantId;
 
+    @ApiModelProperty("首次注册标识")
+    private boolean firstRegisterFlag = false;
+
+    @ApiModelProperty("首次注册弹框提示")
+    private String firstRegisterDesc = "";
+
 }

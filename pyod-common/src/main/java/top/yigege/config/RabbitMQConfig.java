@@ -128,7 +128,7 @@ public class RabbitMQConfig {
         args.put("x-dead-letter-routing-key", DELAY_QUEUEA_PEA_CLAER_ROUTING_KEY);
         // x-message-ttl  声明队列的TTL
         //TODO 测试 正式一年
-        args.put("x-message-ttl", 3600*1000);
+        args.put("x-message-ttl", 31536000*1000);
         return QueueBuilder.durable(DELAY_QUEUEA_PEA_CLEAR_NAME).withArguments(args).build();
     }
 
@@ -145,7 +145,7 @@ public class RabbitMQConfig {
         args.put("x-dead-letter-routing-key", DELAY_QUEUEA_USER_BIRTHDAY_ROUTING_KEY);
         // x-message-ttl  声明队列的TTL
         //TODO 测试3600s 正式一年31536000
-        args.put("x-message-ttl",3600 *1000);
+        args.put("x-message-ttl",31536000 *1000);
         return QueueBuilder.durable(DELAY_QUEUEA_USER_BIRTHDAY_NAME).withArguments(args).build();
     }
 

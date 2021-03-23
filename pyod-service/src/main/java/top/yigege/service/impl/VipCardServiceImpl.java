@@ -45,7 +45,7 @@ public class VipCardServiceImpl extends ServiceImpl<VipCardMapper, VipCard> impl
         vipCard.setMerchantId(merchantId);
         vipCard.setCardCoverId(cardCoverId);
         vipCard.setCardNo(iGenerateIDService.getNo(""));
-        vipCard.setRemark("在线购卡系统自动生成");
+        vipCard.setRemark("生成VIP卡片");
         save(vipCard);
         return vipCard;
     }

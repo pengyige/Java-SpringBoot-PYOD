@@ -13,12 +13,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum BirthdayTypeEnum {
 
-        VIP_CARD(1,"会员卡"),
 
-        USER(2,"用户");
+    USER(1,"用户"),
+
+    VIP_CARD(2,"会员卡");
 
 
-        Integer code;
+    Integer code;
 
          String msg;
 }

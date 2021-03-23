@@ -29,4 +29,5 @@ public class WxConfig {
     //@Value("${wx.notify.domain}")
     private String notifyUrl;
 
+    private String templateId;
 }

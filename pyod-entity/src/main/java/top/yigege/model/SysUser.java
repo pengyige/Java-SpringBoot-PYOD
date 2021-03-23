@@ -102,6 +102,8 @@ public class SysUser extends Model<SysUser> {
 
     private String wxMchKey;
 
+    private String wxTemplateId;
+
     /**
      * 创建时间
      */

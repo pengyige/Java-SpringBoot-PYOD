@@ -67,7 +67,8 @@ public class LogAspect {
         // 请求类型
         String contentType = request.getHeader("Content-Type");
         String keyValue = "";
-        if (StringUtils.isNotBlank(contentType) && contentType.contains("application/x-www-form-urlencoded")) {
+        if (StringUtils.isNotBlank(contentType) && (contentType.contains("application/x-www-form-urlencoded")
+        || contentType.contains("multipart/form-data"))) {
             keyValue = JsonUtil.toJson(getParameterMap(request));
         }else {
             keyValue = getReqParameter(request);
@@ -135,7 +136,8 @@ public class LogAspect {
     }
 
     public String JsonReq(HttpServletRequest request) throws IOException {
-        BufferedReader br;
+        return "json  param print not support";
+       /* BufferedReader br;
         StringBuilder sb = null;
         String reqBody = null;
 
@@ -147,7 +149,7 @@ public class LogAspect {
         }
         reqBody = URLDecoder.decode(sb.toString(), "UTF-8");
         request.setAttribute("inputParam", reqBody);
-        return reqBody;
+        return reqBody;*/
 
     }
 }
