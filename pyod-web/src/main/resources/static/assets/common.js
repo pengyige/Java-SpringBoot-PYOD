@@ -1,6 +1,6 @@
 var config = {
-    "ip" : "admin.fengyunfuwu.com",
-    //"ip" : "admin.yigege.top",
+    //"ip" : "admin.fengyunfuwu.com",
+    "ip" : "admin.yigege.top",
     //"ip" : "localhost",
     "port": "9999",
     "contextPath":"/pyod/web"

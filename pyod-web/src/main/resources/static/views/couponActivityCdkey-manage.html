@@ -133,7 +133,11 @@
                 , {field: 'cdkey', title: '兑换码'}
                 , {field: 'couponId', title: '优惠券id'}
                 , {field: 'couponName', title: '优惠券名称',templet: function (d){
-                        return d.coupon.name;
+                        if (null != d.coupon) {
+                            return d.coupon.name;
+                        }else {
+                            return "";
+                        }
                     }}
                 , {field: 'num', title: '数量'}
                 , {field: 'status', title: '状态',templet: function (d){

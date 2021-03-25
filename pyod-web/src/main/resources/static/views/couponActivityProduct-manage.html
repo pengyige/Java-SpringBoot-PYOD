@@ -132,7 +132,11 @@
                 , {field: 'productId', title: '商品id'}
                 , {field: 'couponId', title: '优惠券id'}
                 , {field: 'couponName', title: '优惠券名称',templet: function (d){
-                        return d.coupon.name;
+                        if (null != d.coupon) {
+                            return d.coupon.name;
+                        }else {
+                            return "";
+                        }
                     }}
                 , {field: 'num', title: '数量'}
                 , {field: 'createTime', title: '创建时间', minWidth: 80}
