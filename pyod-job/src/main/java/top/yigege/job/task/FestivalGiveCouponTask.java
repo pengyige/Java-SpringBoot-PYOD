@@ -2,6 +2,7 @@ package top.yigege.job.task;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.yigege.constant.ActivityTypeEnum;
@@ -21,6 +22,7 @@ import top.yigege.service.IGenerateIDService;
 import top.yigege.service.ISysUserService;
 import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserService;
+import top.yigege.util.SolarTermsUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,41 +60,60 @@ public class FestivalGiveCouponTask {
     @Autowired
     IGenerateIDService iGenerateIDService;
 
-    /**
+/*    *//**
      * 中秋
-     */
+     *//*
     public void zhongQiu(){
         run(FestivalTypeEnum.ZHONG_QIU);
     }
 
-    /**
+    *//**
      * 元旦
-     */
+     *//*
     public void yuanDan(){
         run(FestivalTypeEnum.YUAN_DAN);
     }
 
-    /**
+    *//**
      * 双十一
-     */
+     *//*
     public void shuangShiYi() {
         run(FestivalTypeEnum.SHUANG_SHI_YI);
-    }
+    }*/
 
     /**
      * 执行方法
      */
-    public void run(FestivalTypeEnum festivalTypeEnum){
+    public void run(){
+        SolarTermsUtil l = new SolarTermsUtil(System.currentTimeMillis());
+        if (!l.isFestival()) {
+            log.info("不是节日");
+            return;
+        };
+
+        FestivalTypeEnum festivalTypeEnum = null;
+        if (StringUtils.isNotBlank(l.getSFestivalName())) {
+            log.info("节日={}",l.getSFestivalName());
+            festivalTypeEnum = FestivalTypeEnum.getByDesc(l.getSFestivalName());
+        }else if(StringUtils.isNotBlank(l.getLFestivalName())) {
+            log.info("节日={}",l.getLFestivalName());
+            festivalTypeEnum = FestivalTypeEnum.getByDesc(l.getLFestivalName());
+        };
+
+        if (null == festivalTypeEnum) {
+            return;
+        }
         log.info("{}节日送券run...",festivalTypeEnum.getDesc());
         //获取所有的商家
         List<SysUser> sysUserList = iSysUserService.querySysUserByRoleNo(PyodConstant.Default.MERCHANT_ROLE_NO);
+        FestivalTypeEnum finalFestivalTypeEnum = festivalTypeEnum;
         sysUserList.forEach(sysUser -> {
             CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(Long.valueOf(sysUser.getUserId()),ActivityTypeEnum.SOLAR_TERM);
             if (null != couponActivity) {
                 //查询对应券，赠送给用户
                 LambdaQueryWrapper<CouponActivityFestival> couponActivityFestivalLambdaQueryWrapper = new LambdaQueryWrapper<>();
                 couponActivityFestivalLambdaQueryWrapper.eq(CouponActivityFestival::getCouponActivityId, couponActivity.getCouponActivityId());
-                couponActivityFestivalLambdaQueryWrapper.eq(CouponActivityFestival::getType, festivalTypeEnum.getCode());
+                couponActivityFestivalLambdaQueryWrapper.eq(CouponActivityFestival::getType, finalFestivalTypeEnum.getCode());
                 List<CouponActivityFestival> couponActivityFestivalList = iCouponActivityFestivalService.list(couponActivityFestivalLambdaQueryWrapper);
                 if (!couponActivityFestivalList.isEmpty()) {
                     List<User> userList = iUserService.queryUserByMerchantId(Long.valueOf(sysUser.getUserId()));
@@ -116,7 +137,7 @@ public class FestivalGiveCouponTask {
                     }
                     //保存
                     iUserCouponService.batchAddUserCoupon(totalUserCouponList);
-                    log.info("商家编号:{}，节日:{},送券完成,赠送{}张券",sysUser.getNo(),festivalTypeEnum.getDesc(),totalUserCouponList.size());
+                    log.info("商家编号:{}，节日:{},送券完成,赠送{}张券",sysUser.getNo(), finalFestivalTypeEnum.getDesc(),totalUserCouponList.size());
                 }
             }
         });

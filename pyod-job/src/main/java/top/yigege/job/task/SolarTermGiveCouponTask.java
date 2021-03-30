@@ -2,6 +2,7 @@ package top.yigege.job.task;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.yigege.constant.ActivityTypeEnum;
@@ -19,6 +20,7 @@ import top.yigege.service.ICouponService;
 import top.yigege.service.ISysUserService;
 import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserService;
+import top.yigege.util.SolarTermsUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,7 +59,12 @@ public class SolarTermGiveCouponTask {
      * 执行方法
      */
     public void run(){
-        log.info("节气送券run...");
+        SolarTermsUtil l = new SolarTermsUtil(System.currentTimeMillis());
+        String term = l.getTermString();
+        if (StringUtils.isBlank(term)) {
+            return;
+        }
+        log.info("{}节气送券run...",term);
         List<SysUser> sysUserList = iSysUserService.querySysUserByRoleNo(PyodConstant.Default.MERCHANT_ROLE_NO);
         sysUserList.forEach(sysUser -> {
             CouponActivity couponActivity = iCouponActivityService.queryUnderwayActivity(Long.valueOf(sysUser.getUserId()),ActivityTypeEnum.SOLAR_TERM);
@@ -89,7 +96,7 @@ public class SolarTermGiveCouponTask {
                     }
                     //保存
                     iUserCouponService.batchAddUserCoupon(totalUserCouponList);
-                    log.info("商家编号:{}，节日送券完成,赠送{}张券",sysUser.getNo(),totalUserCouponList.size());
+                    log.info("商家编号:{}，节气送券完成,赠送{}张券",sysUser.getNo(),totalUserCouponList.size());
                 }
 
 
