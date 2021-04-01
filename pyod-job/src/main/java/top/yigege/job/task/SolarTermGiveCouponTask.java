@@ -62,6 +62,7 @@ public class SolarTermGiveCouponTask {
         SolarTermsUtil l = new SolarTermsUtil(System.currentTimeMillis());
         String term = l.getTermString();
         if (StringUtils.isBlank(term)) {
+            log.info("不是节气");
             return;
         }
         log.info("{}节气送券run...",term);

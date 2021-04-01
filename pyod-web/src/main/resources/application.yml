@@ -54,7 +54,6 @@ request:
     - /pyod/api/doc
     - /pyod/api/wx/notify
     - /pyod/app/user/login
-    - /pyod/app/user/login
 
 # 微信开放平台
 #wx:

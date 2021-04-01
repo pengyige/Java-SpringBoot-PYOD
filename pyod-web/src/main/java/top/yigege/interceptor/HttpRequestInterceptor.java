@@ -70,7 +70,7 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
             token = tokenParam.toString();
         }
 
-        if (envConfig.isDev()) {
+ /*       if (envConfig.isDev()) {
             //TODO 开发环境下不需要签名和验证token，需指定token
             if (StringUtils.isNotBlank(token)) {
                 req.setAttribute(PyodConstant.JWT.USER_ID, iTokenService.getUserId(token));
@@ -78,7 +78,7 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
                 req.setAttribute(PyodConstant.JWT.USER_ID, 1);
             }
             return true;
-        }
+        }*/
 
         //接口文档地址、微信通知回调不需要签名
         if (!envConfig.isDev() && signConfig.isEnable() && !url.equals("/pyod/api/doc")

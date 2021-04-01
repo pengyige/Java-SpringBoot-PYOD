@@ -95,7 +95,10 @@ public class AppMerchantUserController {
         if (!userQrCodeDTO.getMerchantId().equals(userId)) {
             throw new BusinessException(ResultCodeEnum.QRCODE_INVALID);
         }
-        //TODO 展示不处理二维码过期时间字段
+
+        if (System.currentTimeMillis() >= userQrCodeDTO.getExpireTime()){
+            throw new BusinessException(ResultCodeEnum.QRCODE_INVALID);
+        };
 
         return ApiResultUtil.success(iTokenService.getUserId(userQrCodeDTO.getToken()));
     }
