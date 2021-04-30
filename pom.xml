@@ -10,7 +10,7 @@
     <!-- 项目说明：父工程 -->
     <groupId>top.yigege</groupId>
     <artifactId>pyod</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <!-- 继承说明：这里继承SpringBoot提供的父工程 -->
     <parent>
@@ -31,8 +31,8 @@
         <module>pyod-api</module>
         <module>pyod-job</module>
         <module>pyod-merchant-app</module>
+        <module>pyod-crawler</module>
     </modules>
-
 
 
     <!-- 版本管理-->
@@ -41,6 +41,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
+        <pyod.version>1.0</pyod.version>
         <pyod-common.version>1.0</pyod-common.version>
         <pyod-dao.version>1.0</pyod-dao.version>
         <pyod-entity.version>1.0</pyod-entity.version>
@@ -49,20 +50,10 @@
         <pyod-api.version>1.0</pyod-api.version>
         <pyod-job.version>1.0</pyod-job.version>
         <pyod-merchant-app.version>1.0</pyod-merchant-app.version>
+        <pyod-crawle.version>1.0</pyod-crawle.version>
 
         <mybatis-plus-boot-starter.version>3.0.6</mybatis-plus-boot-starter.version>
-        <!--<mybatis-plus.version>3.3.0</mybatis-plus.version>
-        <mybatis-plus-core.version>3.3.0</mybatis-plus-core.version>
-        <mybatis-plus-generate.version>2.2.0</mybatis-plus-generate.version>
-        <mybatis-plus-support.version>2.3</mybatis-plus-support.version>
-        <mybatis-plus-extension.version>3.3.0</mybatis-plus-extension.version>
-        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>-->
 
-
-
-<!--
-        <mysql-connector.version>8.0.11</mysql-connector.version>
--->
         <mysql-connector.version>5.1.13</mysql-connector.version>
         <druid.version>1.1.9</druid.version>
 
@@ -79,7 +70,7 @@
         <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
 
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
-       <!-- <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>-->
+        <!-- <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>-->
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
 
         <swagger-model.version>1.6.0</swagger-model.version>
@@ -95,6 +86,8 @@
         <zxing-javase.version>3.3.0</zxing-javase.version>
 
         <wxpay-sdk.version>0.0.3</wxpay-sdk.version>
+        <webmagic-core.version>0.7.3</webmagic-core.version>
+        <webmagic-extension.version>0.7.3</webmagic-extension.version>
     </properties>
 
     <!-- 版本说明：这里统一管理依赖的版本号 -->
@@ -141,8 +134,13 @@
                 <artifactId>pyod-merchant-app</artifactId>
                 <version>${pyod-merchant-app.version}</version>
             </dependency>
-            <!-- module end -->
 
+            <dependency>
+                <groupId>top.yigege</groupId>
+                <artifactId>pyod-crawler</artifactId>
+                <version>${pyod-crawle.version}</version>
+            </dependency>
+            <!-- module end -->
 
 
             <!-- shiro start -->
@@ -228,11 +226,11 @@
                 <artifactId>springfox-swagger2</artifactId>
                 <version>${springfox-swagger2.version}</version>
             </dependency>
-          <!-- <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${springfox-swagger-ui.version}</version>
-            </dependency>-->
+            <!-- <dependency>
+                  <groupId>io.springfox</groupId>
+                  <artifactId>springfox-swagger-ui</artifactId>
+                  <version>${springfox-swagger-ui.version}</version>
+              </dependency>-->
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-models</artifactId>
@@ -267,11 +265,11 @@
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
-       <!--     <dependency>
-                <groupId>com.google.zxing</groupId>
-                <artifactId>core</artifactId>
-                <version>3.3.0<version>
-            </dependency>-->
+            <!--     <dependency>
+                     <groupId>com.google.zxing</groupId>
+                     <artifactId>core</artifactId>
+                     <version>3.3.0<version>
+                 </dependency>-->
             <!-- https://mvnrepository.com/artifact/com.google.zxing/javase -->
             <dependency>
                 <groupId>com.google.zxing</groupId>
@@ -292,6 +290,17 @@
                 <version>${wxpay-sdk.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>us.codecraft</groupId>
+                <artifactId>webmagic-core</artifactId>
+                <version>${webmagic-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>us.codecraft</groupId>
+                <artifactId>webmagic-extension</artifactId>
+                <version>${webmagic-extension.version}</version>
+            </dependency>
 
 
         </dependencies>

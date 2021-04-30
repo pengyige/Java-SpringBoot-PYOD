@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="pyod-api" />
         <module name="pyod-common" />
+        <module name="pyod-crawler" />
         <module name="pyod-dao" />
         <module name="pyod-entity" />
         <module name="pyod-job" />
@@ -26,6 +27,7 @@
       <module name="pyod-api" options="-parameters" />
       <module name="pyod-batchjob" options="-parameters" />
       <module name="pyod-common" options="-parameters" />
+      <module name="pyod-crawler" options="-parameters" />
       <module name="pyod-dao" options="-parameters" />
       <module name="pyod-entity" options="-parameters" />
       <module name="pyod-job" options="-parameters" />
