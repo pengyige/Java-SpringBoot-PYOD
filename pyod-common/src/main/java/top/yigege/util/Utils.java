@@ -56,5 +56,19 @@ public class Utils {
         return IntegerList;
     }
 
+    /**
+     *
+     * @param StringList
+     * @return
+     */
+    public static List<Long> parseLongList(List<String> StringList) {
+        List<Long> longList = new ArrayList<Long>();
+        for (String x : StringList) {
+            Long z = Long.parseLong(x);
+            longList.add(z);
+        }
+        return longList;
+    }
+
 
 }

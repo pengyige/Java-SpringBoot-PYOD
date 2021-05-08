@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../assets/css/layui.css">
+    <link rel="stylesheet" href="../../assets/css/view.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_2127148_ycxx8cqoks.css">
+    <title></title>
+</head>
+<body class="layui-view-body">
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">查询Quartz系统任务</div>
+            <form id="form" class="layui-form layui-card-body" action="">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Spring Bean名称:</label>
+                    <div class="layui-input-inline">
+                        <input id="beanName" name="beanName" type="text" required lay-verify="required" placeholder="请输入Spring Bean名称"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">参数:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="params" name="params" lay-verify="confirmPassword" placeholder="请输入参数" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">表达式:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="cronExpression" name="cronExpression" lay-verify="confirmPassword" placeholder="请输入表达式" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">任务状态:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="0" title="暂停" checked>
+                        <input type="radio" name="status" value="1" title="正常" >
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="remark" name="remark" lay-verify="confirmPassword" placeholder="请输入备注" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item" style="margin-top: 10px">
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../assets/layui.all.js"></script>
+<script src="../../assets/jquery.js"></script>
+<script src="../../assets/common.js"></script>
+
+<script>
+    var form = layui.form;
+    var layer = layui.layer;
+    var id = null;
+
+    form.on('submit()', function(data){
+
+        return false;     //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+    });
+
+    /**
+     * 加载详情
+     */
+    function loadDetail() {
+        $.ajax({
+            url: getQueryQuartzSysJobDetailUrl() + "?id=" + id,
+            method: 'post',
+            success: function (res) {
+                if (200 == res.code) {
+                    var sysJob = res.data;
+                    $("#beanName").val(sysJob.beanName);
+                    $("#params").val(sysJob.params);
+                    $("#cronExpression").val(sysJob.cronExpression);
+                    $("#remark").val(sysJob.remark);
+
+                    var index = sysJob.status;
+                    $("input[name=status]").eq(index).attr("checked", 'checked');
+
+                    form.render();
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    }
+
+
+    $(function () {
+        id = getUrlParam("id");
+
+        loadDetail();
+    });
+
+</script>
+
+</body>
+</html>

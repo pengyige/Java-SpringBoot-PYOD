@@ -1,7 +1,7 @@
 var config = {
-    "ip" : "admin.fengyunfuwu.com",
+    //"ip" : "admin.fengyunfuwu.com",
     //"ip" : "admin.yigege.top",
-    //"ip" : "localhost",
+    "ip" : "localhost",
     "port": "9999",
     "contextPath":"/pyod/web"
 };
@@ -436,6 +436,84 @@ function getDeleteSysJobByIdsUrl() {
 }
 
 /**************任务模块 end****************/
+
+/**************Quartz定时任务模块 start****************/
+/**
+ * 查询任务列表
+ * @returns {string}
+ */
+function getQueryQuartzSysJobPageListUrl() {
+    return getBaseUrl() + "/schedule/queryQuartzSysJobPageList";
+}
+
+/**
+ * 查询任务详情
+ */
+function getQueryQuartzSysJobDetailUrl() {
+    return getBaseUrl() + "/schedule/queryQuartzSysJobDetail";
+
+}
+
+/**
+ * 添加任务
+ * @returns {string}
+ */
+function getAddQuartzSysJobUrl() {
+    return getBaseUrl() + "/schedule/addQuartzSysJob";
+}
+
+/**
+ * 修改任务
+ */
+function getModifyQuartzSysJobUrl() {
+    return getBaseUrl() + "/schedule/modifyQuartzSysJob";
+
+}
+
+/**
+ * 删除任务
+ */
+function getDeleteQuartzSysJobByIdsUrl() {
+    return getBaseUrl() + "/schedule/deleteQuartzSysJobByIds";
+}
+
+/**
+ * 暂停任务
+ */
+function getStopQuartzJobUrl() {
+
+    return getBaseUrl() + "/schedule/stop";
+}
+
+/**
+ * 恢复任务
+ */
+function getResumeQuartzJobUrl() {
+
+    return getBaseUrl() + "/schedule/resume";
+}
+
+/**
+ * 立即执行
+ */
+function getRunQuartzJobUrl() {
+
+    return getBaseUrl() + "/schedule/run";
+}
+
+/**************Quartz任务模块 end****************/
+
+/**************Quartz任务日志模块 start****************/
+/**
+ * 查询任务日志列表
+ * @returns {string}
+ */
+function getQueryQuartzSysJobLogPageListUrl() {
+    return getBaseUrl() + "/scheduleLog/queryQuartzSysJobLogPageList";
+}
+
+/**************Quartz任务日志模块 end****************/
+
 
 
 /**************标签模块 start****************/

@@ -18,13 +18,13 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @ClassName: PyodSchedulingConfigurer
- * @Description:TODO
+ * @Description:TODO 基于Spring Boot Scheduling 简单定时任务实现
  * @author: yigege
  * @date: 2021年01月19日 14:46
  */
 @Configuration
 @Slf4j
-@EnableScheduling
+//@EnableScheduling
 public class PyodSchedulingConfigurer implements SchedulingConfigurer {
 
     @Autowired

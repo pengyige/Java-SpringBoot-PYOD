@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Slf4j
-public class FestivalGiveCouponTask {
+public class FestivalGiveCouponTask implements ITask {
 
     @Autowired
     ICouponActivityService iCouponActivityService;
@@ -84,7 +84,8 @@ public class FestivalGiveCouponTask {
     /**
      * 执行方法
      */
-    public void run(){
+    @Override
+    public void run(String param){
         SolarTermsUtil l = new SolarTermsUtil(System.currentTimeMillis());
         if (!l.isFestival()) {
             log.info("不是节日");

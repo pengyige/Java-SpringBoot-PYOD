@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Slf4j
-public class SolarTermGiveCouponTask {
+public class SolarTermGiveCouponTask implements ITask{
 
     @Autowired
     ICouponActivityService iCouponActivityService;
@@ -58,7 +58,8 @@ public class SolarTermGiveCouponTask {
     /**
      * 执行方法
      */
-    public void run(){
+    @Override
+    public void run(String param){
         SolarTermsUtil l = new SolarTermsUtil(System.currentTimeMillis());
         String term = l.getTermString();
         if (StringUtils.isBlank(term)) {

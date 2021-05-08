@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="top.yigege.dao.ScheduleJobMapper">
+
+    <resultMap id="sheduleJobMap" type="top.yigege.model.ScheduleJobEntity">
+        <id column="id" property="id"></id>
+        <result column="bean_name" property="beanName"/>
+        <result column="params" property="params"/>
+        <result column="cron_expression" property="cronExpression"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="pageList" parameterType="top.yigege.dto.modules.scheduleJob.QueryScheduleJobPageListDTO" resultMap="sheduleJobMap">
+      select * from schedule_job
+    </select>
+
+</mapper>

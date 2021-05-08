@@ -54,7 +54,7 @@
 
         <mybatis-plus-boot-starter.version>3.0.6</mybatis-plus-boot-starter.version>
 
-        <mysql-connector.version>5.1.13</mysql-connector.version>
+        <mysql-connector.version>8.0.20</mysql-connector.version>
         <druid.version>1.1.9</druid.version>
 
         <commons-lang3.version>3.9</commons-lang3.version>
@@ -155,6 +155,12 @@
                 <version>${thymeleaf-extras-shiro.version}</version>
             </dependency>
             <!-- shiro end -->
+
+            <!--Quartz 定时任务-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-quartz</artifactId>
+            </dependency>
 
             <!-- mybatis plus start-->
             <dependency>
