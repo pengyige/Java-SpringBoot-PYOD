@@ -11,5 +11,6 @@
     <file url="file://$PROJECT_DIR$/pyod-merchant-app" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/pyod-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/pyod-web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/pyod-workflow" charset="UTF-8" />
   </component>
 </project>

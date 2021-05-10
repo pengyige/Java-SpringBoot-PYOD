@@ -10,6 +10,7 @@ import top.yigege.dto.modules.sysUser.AddUserDTO;
 import top.yigege.dto.modules.sysUser.MerchantUserLoginReqDTO;
 import top.yigege.dto.modules.sysUser.MerchantUserLoginResDTO;
 import top.yigege.dto.modules.sysUser.QueryUserPageListDTO;
+import top.yigege.dto.modules.userVipCard.GatheringReqDTO;
 import top.yigege.model.SysMenu;
 import top.yigege.model.SysUser;
 
@@ -129,4 +130,16 @@ public interface ISysUserService extends IService<SysUser> {
      * @param couponDeductionId
      */
      void backChargeOff(Long couponDeductionId);
+
+    /**
+     * 收款
+     * @param gatheringReqDTO
+     */
+    void gathering(GatheringReqDTO gatheringReqDTO);
+
+    /**
+     * 退回收款
+     * @param couponDeductionId
+     */
+    void backGathering(Long couponDeductionId);
 }

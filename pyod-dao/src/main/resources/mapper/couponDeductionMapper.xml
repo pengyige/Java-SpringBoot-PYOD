@@ -15,6 +15,8 @@
         <result column="coupon_deduction_no" property="couponDeductionNo"/>
         <result column="status" property="status"/>
         <result column="remark" property="remark"/>
+        <result column="gathering_amount" property="gatheringAmount"/>
+        <result column="type" property="type"/>
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
 
@@ -59,6 +61,7 @@
         LEFT JOIN t_user u on cd.user_id = u.user_id
         WHERE 1 = 1
         AND cd.shop_id = #{queryChargeOffRecordPageListDTO.shopId}
+        AND cd.type = #{queryChargeOffRecordPageListDTO.type}
         order by cd.create_time desc
     </select>
 

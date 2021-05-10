@@ -15,5 +15,10 @@ public class QueryChargeOffRecordPageListDTO {
 
     int pageSize = 10;
 
+    /**
+     * 类型(1-核销,2-收款)
+     */
+    int type = 1;
+
     Long shopId;
 }

@@ -82,6 +82,16 @@ public class CouponDeduction extends Model {
     private Integer status;
 
     /**
+     * 类型(1-核销,2-收款)
+     */
+    private Integer type;
+
+    /**
+     * 收款金额
+     */
+    private Double gatheringAmount;
+
+    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)

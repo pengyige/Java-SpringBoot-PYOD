@@ -22,6 +22,7 @@ import top.yigege.dto.modules.coupon.QueryUserCouponPageListDTO;
 import top.yigege.dto.modules.couponDeduction.QueryChargeOffRecordPageListDTO;
 import top.yigege.dto.modules.sysUser.MerchantUserLoginReqDTO;
 import top.yigege.dto.modules.user.UserQrCodeDTO;
+import top.yigege.dto.modules.userVipCard.GatheringReqDTO;
 import top.yigege.exception.BusinessException;
 import top.yigege.model.SysUser;
 import top.yigege.model.User;
@@ -66,6 +67,8 @@ public class AppMerchantUserController {
 
     @Autowired
     ICouponDeductionService iCouponDeductionService;
+
+
 
     @ApiOperation("商家登入")
     @PostMapping("/login")
@@ -138,11 +141,33 @@ public class AppMerchantUserController {
         return ApiResultUtil.success();
     }
 
-
     @ApiOperation("查询核销记录")
     @PostMapping("/queryChargeOffRecordPageList")
     public ResultBean queryChargeOffRecordPageList(@Valid QueryChargeOffRecordPageListDTO queryChargeOffRecordPageListDTO
                                                    ) {
         return ApiResultUtil.success(iCouponDeductionService.queryChargeOffRecordPageList(queryChargeOffRecordPageListDTO));
     }
+
+    @ApiOperation("查询用户二维码基本信息")
+    @PostMapping("/queryUserQrCodeBaseInfo")
+    public ResultBean queryUserQrCodeBaseInfo(@NotNull(message = "会员用户ID不能为空") Long userId){
+        return ApiResultUtil.success(iUserService.queryUserQrCodeBaseInfo(userId));
+    }
+
+    @ApiOperation("收款")
+    @PostMapping("/gathering")
+    public ResultBean gathering(@Valid GatheringReqDTO gatheringReqDTO){
+        iSysUserService.gathering(gatheringReqDTO);
+        return ApiResultUtil.success();
+    }
+
+    @ApiOperation("退回收款")
+    @PostMapping("/backGathering")
+    public ResultBean backGathering(@NotNull(message = "核销记录id不能为空") Long couponDeductionId) {
+        iSysUserService.backGathering(couponDeductionId);
+        return ApiResultUtil.success();
+    }
+
+
+
 }

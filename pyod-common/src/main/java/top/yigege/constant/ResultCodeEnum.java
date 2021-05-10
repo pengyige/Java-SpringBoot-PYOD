@@ -142,6 +142,8 @@ public enum ResultCodeEnum {
 
     NO_COUPON_ACTIVITY(1020,"活动还未开始"),
 
+    NOT_SUFFICIENT_FUNDS(1021,"余额不足"),
+
     /**
      * 订单不存在
      */

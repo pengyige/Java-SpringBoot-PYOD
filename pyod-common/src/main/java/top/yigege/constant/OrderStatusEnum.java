@@ -15,7 +15,9 @@ public enum OrderStatusEnum {
 
     ALREADY_ORDERS(1,"已下单"),
 
-    ALREADY_PAY(2,"已支付");
+    ALREADY_PAY(2,"已支付"),
+
+    ALREADY_BACK(3,"已退款");
 
     Integer code;
 

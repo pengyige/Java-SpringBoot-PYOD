@@ -5,6 +5,7 @@ import top.yigege.config.WxConfig;
 import top.yigege.dto.modules.console.QueryHomeDataResDTO;
 import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
 import top.yigege.dto.modules.user.ModifyUserInfoDTO;
+import top.yigege.dto.modules.user.QueryUserQrCodeBaseInfoResDTO;
 import top.yigege.dto.modules.user.UpdateLocationDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserLoginResDTO;
@@ -126,4 +127,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     public QueryHomeDataResDTO queryHomeData(Integer merchantId);
+
+    /**
+     * 查询用户二维码基本信息
+     * @param userId
+     * @return
+     */
+    QueryUserQrCodeBaseInfoResDTO queryUserQrCodeBaseInfo(Long userId);
 }

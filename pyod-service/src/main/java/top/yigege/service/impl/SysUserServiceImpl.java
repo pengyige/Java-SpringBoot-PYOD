@@ -15,6 +15,7 @@ import top.yigege.config.WxConfig;
 import top.yigege.constant.BusinessFlagEnum;
 
 import top.yigege.constant.ChareOffStatusEnum;
+import top.yigege.constant.ConsumeRecordTypeEnum;
 import top.yigege.constant.CouponStatusEnum;
 import top.yigege.constant.PyodConstant;
 import top.yigege.constant.ResultCodeEnum;
@@ -23,6 +24,7 @@ import top.yigege.dto.modules.sysUser.AddUserDTO;
 import top.yigege.dto.modules.sysUser.MerchantUserLoginReqDTO;
 import top.yigege.dto.modules.sysUser.MerchantUserLoginResDTO;
 import top.yigege.dto.modules.sysUser.QueryUserPageListDTO;
+import top.yigege.dto.modules.userVipCard.GatheringReqDTO;
 import top.yigege.exception.BusinessException;
 import top.yigege.model.CouponActivity;
 import top.yigege.model.CouponDeduction;
@@ -32,6 +34,7 @@ import top.yigege.model.SysUser;
 
 import top.yigege.model.User;
 import top.yigege.model.UserCoupon;
+import top.yigege.model.UserVipCard;
 import top.yigege.service.ICouponDeductionService;
 import top.yigege.service.IGenerateIDService;
 import top.yigege.service.IShopService;
@@ -40,6 +43,7 @@ import top.yigege.dao.*;
 import top.yigege.service.ITokenService;
 import top.yigege.service.IUserCouponService;
 import top.yigege.service.IUserService;
+import top.yigege.service.IUserVipCardService;
 import top.yigege.util.PageUtil;
 import top.yigege.util.Utils;
 import top.yigege.util.WeixinUtil;
@@ -87,6 +91,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     IUserService iUserService;
+
+    @Autowired
+    IUserVipCardService iUserVipCardService;
 
     @Autowired
     WeixinUtil weixinUtil;
@@ -177,7 +184,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public void chargeOff(ChargeOffReqDTO chargeOffReqDTO, Long merchantId) {
         List<Integer> ids = Utils.parseIntegersList(Utils.splitStringToList(chargeOffReqDTO.getUserCouponIds()));
         List<UserCoupon> userCouponList = (List<UserCoupon>) iUserCouponService.listByIds(ids);
-        String couponDeductionNo = iGenerateIDService.getNo("");
+        String couponDeductionNo = iGenerateIDService.getNo(BusinessFlagEnum.COUPON_CHARGE_OFF.getMsg());
         User tempUser = null;
         for (UserCoupon userCoupon : userCouponList) {
             if (null == userCoupon) {
@@ -207,9 +214,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             couponDeduction.setVipCardId(userCoupon.getVipCardId());
             couponDeduction.setCouponId(userCoupon.getCouponId());
             couponDeduction.setStatus(ChareOffStatusEnum.FINISH.getCode());
+            couponDeduction.setType(ConsumeRecordTypeEnum.CHARGE.getCode());
             iCouponDeductionService.save(couponDeduction);
         }
-        if (null != tempUser) {
+       /* if (null != tempUser) {
             WxSendMessageDataBean wxSendMessageDataBean = new WxSendMessageDataBean();
             wxSendMessageDataBean.setThing1(new WxValueBean("核销优惠券"));
             wxSendMessageDataBean.setThing7(new WxValueBean("商户会员平台"));
@@ -221,7 +229,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             weixinUtil.sendWxMessage(queryWxConfigByMerchantId(merchantId),
                     tempUser.getOpenid(),
                     wxSendMessageDataBean);
-        }
+        }*/
     }
 
     @Transactional
@@ -250,7 +258,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 iUserCouponService.updateById(userCoupon);
             }
         }*/
-        User user = iUserService.getById(userCoupon.getUserId());
+       /* User user = iUserService.getById(userCoupon.getUserId());
         if (null != user) {
             WxSendMessageDataBean wxSendMessageDataBean = new WxSendMessageDataBean();
             wxSendMessageDataBean.setThing1(new WxValueBean("退还优惠券"));
@@ -262,6 +270,46 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             weixinUtil.sendWxMessage(queryWxConfigByMerchantId(user.getMerchantId()),
                     user.getOpenid(),
                     wxSendMessageDataBean);
+        }*/
+    }
+
+    @Transactional
+    @Override
+    public void gathering(GatheringReqDTO gatheringReqDTO) {
+        UserVipCard userVipCard = iUserVipCardService.queryUserVipCard(gatheringReqDTO.getVipCardId());
+        if (userVipCard.getBalance() < gatheringReqDTO.getAmount()) {
+            throw new BusinessException(ResultCodeEnum.NOT_SUFFICIENT_FUNDS);
+        }
+
+        userVipCard.setBalance(userVipCard.getBalance() - gatheringReqDTO.getAmount());
+        iUserVipCardService.updateById(userVipCard);
+
+        String couponDeductionNo = iGenerateIDService.getNo(BusinessFlagEnum.GATHERING.getMsg());
+        CouponDeduction couponDeduction = new CouponDeduction();
+        couponDeduction.setCouponDeductionNo(couponDeductionNo);
+        couponDeduction.setShopId(gatheringReqDTO.getShopId());
+        couponDeduction.setUserId(userVipCard.getUserId());
+        couponDeduction.setVipCardId(userVipCard.getVipCardId());
+        couponDeduction.setGatheringAmount(gatheringReqDTO.getAmount());
+        couponDeduction.setStatus(ChareOffStatusEnum.FINISH.getCode());
+        couponDeduction.setType(ConsumeRecordTypeEnum.GATHERING.getCode());
+        iCouponDeductionService.save(couponDeduction);
+    }
+
+    @Transactional
+    @Override
+    public void backGathering(Long couponDeductionId) {
+        CouponDeduction couponDeduction = iCouponDeductionService.getById(couponDeductionId);
+        if (null == couponDeduction) {
+            throw new BusinessException(ResultCodeEnum.ILLEGAL_BUSINESS);
+        }
+        UserVipCard userVipCard = iUserVipCardService.queryUserVipCard(couponDeduction.getVipCardId());
+        if (null != userVipCard) {
+            userVipCard.setBalance(userVipCard.getBalance()+couponDeduction.getGatheringAmount());
+            iUserVipCardService.updateById(userVipCard);
+
+            couponDeduction.setStatus(ChareOffStatusEnum.BACK.getCode());
+            iCouponDeductionService.updateById(couponDeduction);
         }
     }
 

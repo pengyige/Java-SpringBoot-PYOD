@@ -29,10 +29,12 @@ import top.yigege.dao.UserMapper;
 import top.yigege.dto.modules.console.QueryHomeDataResDTO;
 import top.yigege.dto.modules.user.BindWxUserMobileReqDTO;
 import top.yigege.dto.modules.user.ModifyUserInfoDTO;
+import top.yigege.dto.modules.user.QueryUserQrCodeBaseInfoResDTO;
 import top.yigege.dto.modules.user.UpdateLocationDTO;
 import top.yigege.dto.modules.user.UserLoginDetailReqDTO;
 import top.yigege.dto.modules.user.UserLoginResDTO;
 import top.yigege.exception.BusinessException;
+import top.yigege.exception.IPyodException;
 import top.yigege.model.Coupon;
 import top.yigege.model.CouponActivity;
 import top.yigege.model.CouponActivityPea;
@@ -476,6 +478,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public QueryHomeDataResDTO queryHomeData(Integer merchantId) {
         return userMapper.queryHomeData(merchantId);
+    }
+
+    @Override
+    public QueryUserQrCodeBaseInfoResDTO queryUserQrCodeBaseInfo(Long userId) {
+        User user = getById(userId);
+        if (null == user) {
+            throw  new BusinessException(NO_USER);
+        }
+
+        QueryUserQrCodeBaseInfoResDTO queryUserQrCodeBaseInfoResDTO = new QueryUserQrCodeBaseInfoResDTO();
+        UserVipCard userVipCard = iUserVipCardService.queryUserVipCard(user.getVipCardId());
+        queryUserQrCodeBaseInfoResDTO.setPrimaryVipCardId(userVipCard.getVipCardId());
+        queryUserQrCodeBaseInfoResDTO.setCardNo(userVipCard.getCardNo());
+        queryUserQrCodeBaseInfoResDTO.setBalance(userVipCard.getBalance());
+
+        queryUserQrCodeBaseInfoResDTO.setAvailableCouponNum(iUserCouponService.queryTotalAvailableCouponCount(userId));
+
+        return queryUserQrCodeBaseInfoResDTO;
     }
 
 

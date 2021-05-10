@@ -16,6 +16,7 @@
         <module name="pyod-merchant-app" />
         <module name="pyod-service" />
         <module name="pyod-web" />
+        <module name="pyod-workflow" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -34,6 +35,7 @@
       <module name="pyod-merchant-app" options="-parameters" />
       <module name="pyod-service" options="-parameters" />
       <module name="pyod-web" options="-parameters" />
+      <module name="pyod-workflow" options="-parameters" />
     </option>
   </component>
 </project>

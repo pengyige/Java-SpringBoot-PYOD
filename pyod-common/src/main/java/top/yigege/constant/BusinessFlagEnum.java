@@ -14,7 +14,13 @@ public enum BusinessFlagEnum {
     ROLE(1, "R"),
 
     CDKEY(3,"CDKEY"),
+
+    COUPON_CHARGE_OFF(4,"CCO"),
+
+    GATHERING(5,"G"),
     PRODUCT(2, "P");
+
+
 
     //VIP_CARD(3, "C");
 

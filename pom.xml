@@ -32,6 +32,7 @@
         <module>pyod-job</module>
         <module>pyod-merchant-app</module>
         <module>pyod-crawler</module>
+        <module>pyod-workflow</module>
     </modules>
 
 
@@ -51,6 +52,7 @@
         <pyod-job.version>1.0</pyod-job.version>
         <pyod-merchant-app.version>1.0</pyod-merchant-app.version>
         <pyod-crawle.version>1.0</pyod-crawle.version>
+        <pyod-workflow.version>1.0</pyod-workflow.version>
 
         <mybatis-plus-boot-starter.version>3.0.6</mybatis-plus-boot-starter.version>
 
@@ -139,6 +141,12 @@
                 <groupId>top.yigege</groupId>
                 <artifactId>pyod-crawler</artifactId>
                 <version>${pyod-crawle.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>top.yigege</groupId>
+                <artifactId>pyod-workflow</artifactId>
+                <version>${pyod-workflow.version}</version>
             </dependency>
             <!-- module end -->
 
@@ -307,6 +315,10 @@
                 <artifactId>webmagic-extension</artifactId>
                 <version>${webmagic-extension.version}</version>
             </dependency>
+
+
+
+
 
 
         </dependencies>
