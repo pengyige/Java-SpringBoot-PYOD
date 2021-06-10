@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.yigege.constant.ProductTypeEnum;
 import top.yigege.dto.modules.city.QueryCityDataResDTO;
+import top.yigege.dto.modules.product.ApiQueryProductListRespDTO;
 import top.yigege.model.Level;
+import top.yigege.model.Product;
 import top.yigege.service.IBannerService;
 import top.yigege.service.ICardCoverService;
 import top.yigege.service.ICityService;
@@ -97,6 +100,15 @@ public class ApiCommonController {
     @ApiOperation("查询所有商品数据列表")
     @PostMapping("/queryProductData")
     public ResultBean queryProductData(@NotNull(message = "商户ID不能为空") Long merchantId) {
-        return ApiResultUtil.success(iProductService.queryAllProductInfo(merchantId));
+        List<Product> productList = iProductService.queryAllProductInfo(merchantId);
+        ApiQueryProductListRespDTO apiQueryProductListRespDTO = new ApiQueryProductListRespDTO();
+        for (Product product : productList) {
+            if (ProductTypeEnum.BUG_TICKET.getCode().equals(product.getProductType())) {
+                apiQueryProductListRespDTO.getTicketProductList().add(product);
+            }else {
+                apiQueryProductListRespDTO.getRechargeProductList().add(product);
+            }
+        }
+        return ApiResultUtil.success(apiQueryProductListRespDTO);
     }
 }

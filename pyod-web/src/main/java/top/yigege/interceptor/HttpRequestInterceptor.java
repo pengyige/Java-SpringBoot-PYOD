@@ -64,6 +64,11 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
         String url = req.getRequestURI();
         log.info("url:{}",url);
 
+        //不需要登入校验的接口
+        if (requestConfig.getExcludeUrl().contains(url)) {
+            return true;
+        }
+
         Object tokenParam = params.get(PyodConstant.ApiRequestCommonParam.TOKEN);
         String token = "";
         if (null != tokenParam) {
@@ -107,13 +112,12 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
            }
        }
 
-        //登入需要校验的接口
-        if (!requestConfig.getExcludeUrl().contains(url)) {
-            // 校验token
-            if (iTokenService.checkToken(token)) {
-                req.setAttribute(PyodConstant.JWT.USER_ID, iTokenService.getUserId(token));
-            }
+        // 校验token
+        if (iTokenService.checkToken(token)) {
+            req.setAttribute(PyodConstant.JWT.USER_ID, iTokenService.getUserId(token));
         }
+
+
 
         return true;
     }

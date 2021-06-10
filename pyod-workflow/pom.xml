@@ -12,4 +12,11 @@
     <artifactId>pyod-workflow</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring-boot-starter-basic</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

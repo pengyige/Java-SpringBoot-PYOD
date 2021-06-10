@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 设置log4j2的自身log级别为warn -->
+<!-- OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<!-- Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出。 -->
+<!-- monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数。 -->
+<Configuration monitorInterval="30">
+
+    <Properties>
+        <Property name="log.basedir">./crawler-platform/logs</Property>
+        <Property name="log.layout">%d %-5p %t (%c:%L) - %m%n</Property>
+    </Properties>
+    <!--先定义所有的appender-->
+    <Appenders>
+        <!--这个输出控制台的配置-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!--这个都知道是输出日志的格式-->
+            <PatternLayout pattern="${log.layout}"/>
+        </Console>
+
+        <!--处理DEBUG级别的日志，并把该日志放到logs/debug.log文件中-->
+        <!--打印出DEBUG级别日志，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFileDebug" fileName="${log.basedir}/debug.log"
+                     filePattern="${log.basedir}/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="DEBUG"/>
+                <!-- 只打印DEBUG级别日志 -->
+                <!-- <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+            </Filters>
+            <PatternLayout pattern="${log.layout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${log.basedir}/$${date:yyyy-MM}/" maxDepth="2">
+                    <IfFileName glob="*.log.gz"/>
+                    <!-- 只保留近2天日志 -->
+                    <IfLastModified age="2d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--处理INFO级别的日志，并把该日志放到logs/info.log文件中-->
+        <RollingFile name="RollingFileInfo" fileName="${log.basedir}/info.log"
+                     filePattern="${log.basedir}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <!-- 打印INFO级别日志 -->
+                <ThresholdFilter level="INFO"/>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout pattern="${log.layout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${log.basedir}/$${date:yyyy-MM}/" maxDepth="2">
+                    <IfFileName glob="*.log.gz"/>
+                    <!-- 只保留近2天日志 -->
+                    <IfLastModified age="2d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--处理WARN级别的日志，并把该日志放到logs/warn.log文件中-->
+        <RollingFile name="RollingFileWarn" fileName="${log.basedir}/warn.log"
+                     filePattern="${log.basedir}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <!-- 只打印WARN级别日志 -->
+                <ThresholdFilter level="WARN"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout pattern="${log.layout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${log.basedir}/$${date:yyyy-MM}/" maxDepth="2">
+                    <IfFileName glob="*.log.gz"/>
+                    <!-- 只保留近2天日志 -->
+                    <IfLastModified age="2d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--处理error级别的日志，并把该日志放到logs/error.log文件中-->
+        <RollingFile name="RollingFileError" fileName="${log.basedir}/error.log"
+                     filePattern="${log.basedir}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz">
+            <ThresholdFilter level="ERROR"/>
+            <PatternLayout pattern="${log.layout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${log.basedir}/$${date:yyyy-MM}/" maxDepth="2">
+                    <IfFileName glob="*.log.gz"/>
+                    <!-- 只保留近2天日志 -->
+                    <IfLastModified age="2d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--处理trace级别的日志，并把该日志放到logs/trace.log文件中-->
+        <RollingFile name="RollingFileTrace" fileName="${log.basedir}/trace.log"
+                     filePattern="${log.basedir}/$${date:yyyy-MM}/trace-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <!-- 只打印TRACE级别日志 -->
+                <ThresholdFilter level="TRACE"/>
+                <ThresholdFilter level="DEBUG" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout pattern="${log.layout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${log.basedir}/$${date:yyyy-MM}/" maxDepth="2">
+                    <IfFileName glob="*.log.gz"/>
+                    <!-- 只保留近2天日志 -->
+                    <IfLastModified age="2d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <Loggers>
+        <!--建立一个默认的root的logger-->
+        <Root level="INFO">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFileDebug"/>
+            <appender-ref ref="RollingFileInfo"/>
+            <appender-ref ref="RollingFileWarn"/>
+            <appender-ref ref="RollingFileError"/>
+        </Root>
+
+        <logger name="com.xfgs" level="TRACE" additivity="false">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFileTrace"/>
+            <appender-ref ref="RollingFileDebug"/>
+            <appender-ref ref="RollingFileInfo"/>
+            <appender-ref ref="RollingFileWarn"/>
+            <appender-ref ref="RollingFileError"/>
+        </logger>
+    </Loggers>
+</Configuration>

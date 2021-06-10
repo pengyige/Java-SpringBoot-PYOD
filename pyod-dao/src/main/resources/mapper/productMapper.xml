@@ -44,7 +44,7 @@
             LEFT JOIN t_coupon_activity_product cap ON p.product_id = cap.product_id
             LEFT JOIN t_coupon c ON cap.coupon_id = c.coupon_id
         WHERE
-            cap.coupon_activity_id = #{couponActivityId}
+            (cap.coupon_activity_id = #{couponActivityId} or cap.coupon_activity_id is null)
             and p.merchant_id = #{merchantId}
     </select>
 

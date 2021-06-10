@@ -16,7 +16,9 @@ import top.yigege.constant.RedisKeyEnum;
 import top.yigege.constant.ResultCodeEnum;
 import top.yigege.dto.modules.coupon.QueryUserCouponPageListDTO;
 import top.yigege.dto.modules.userCoupon.GiveCouponResDTO;
+import top.yigege.dto.modules.userCoupon.QueryUserCouponDetailRespDTO;
 import top.yigege.exception.BusinessException;
+import top.yigege.model.Coupon;
 import top.yigege.model.CouponActivity;
 import top.yigege.model.CouponActivityCdkey;
 import top.yigege.model.SysDict;
@@ -160,7 +162,7 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
             throw new BusinessException(ResultCodeEnum.NO_USER);
         }
 
-        addUserCoupon(userCoupon.getUserId(),user.getVipCardId(),couponActivityId,userCoupon.getCouponId(),new Date());
+        addUserCoupon(userId,user.getVipCardId(),couponActivityId,userCoupon.getCouponId(),new Date());
         //更新状态
         userCoupon.setStatus(CouponStatusEnum.SEND_SUCCESS.getCode());
         updateById(userCoupon);
@@ -206,6 +208,30 @@ public class UserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCou
         couponActivityCdkey.setUserId(userId);
         iCouponActivityCdkeyService.updateById(couponActivityCdkey);
 
+    }
+
+    @Override
+    public QueryUserCouponDetailRespDTO queryUserCouponDetail(Long userCouponId) {
+        QueryUserCouponDetailRespDTO queryUserCouponDetailRespDTO = new QueryUserCouponDetailRespDTO();
+
+        UserCoupon userCoupon = getById(userCouponId);
+        if (null == userCoupon) {
+            throw new BusinessException(ResultCodeEnum.NO_USER_COUPON);
+        }
+
+        Coupon coupon = iCouponService.getById(userCoupon.getCouponId());
+        queryUserCouponDetailRespDTO.setCouponName(coupon.getName());
+        queryUserCouponDetailRespDTO.setExpireTime(userCoupon.getExpireTime());
+
+        if (!CouponStatusEnum.SEND_UN_PICK.getCode().equals(userCoupon.getStatus()) ||
+                userCoupon.getExpireTime().before(new Date())
+        ) {
+            queryUserCouponDetailRespDTO.setGiveFlag(false);
+        }else {
+            queryUserCouponDetailRespDTO.setGiveFlag(true);
+        }
+
+        return queryUserCouponDetailRespDTO;
     }
 
     /**

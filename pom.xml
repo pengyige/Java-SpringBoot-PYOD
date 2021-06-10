@@ -90,6 +90,8 @@
         <wxpay-sdk.version>0.0.3</wxpay-sdk.version>
         <webmagic-core.version>0.7.3</webmagic-core.version>
         <webmagic-extension.version>0.7.3</webmagic-extension.version>
+
+        <activiti.version>6.0.0</activiti.version>
     </properties>
 
     <!-- 版本说明：这里统一管理依赖的版本号 -->
@@ -316,6 +318,12 @@
                 <version>${webmagic-extension.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring-boot-starter-basic</artifactId>
+                <version>${activiti.version}</version>
+            </dependency>
 
 
 

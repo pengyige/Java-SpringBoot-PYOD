@@ -89,4 +89,14 @@ public class ApiCouponController {
     }
 
 
+    @ApiOperation("查询用户赠送的优惠券详情")
+    @PostMapping("/queryUserCouponDetail")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userCouponId", value = "userCouponId", required = true, dataType = "string")
+    })
+    public ResultBean queryUserCouponDetail(@NotNull(message = "用户优惠券id不能为空") Long userCouponId) {
+        return ApiResultUtil.success(iUserCouponService.queryUserCouponDetail(userCouponId));
+    }
+
+
 }

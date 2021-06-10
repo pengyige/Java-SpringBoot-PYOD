@@ -2,6 +2,7 @@ package top.yigege.service;
 
 import top.yigege.dto.modules.coupon.QueryUserCouponPageListDTO;
 import top.yigege.dto.modules.userCoupon.GiveCouponResDTO;
+import top.yigege.dto.modules.userCoupon.QueryUserCouponDetailRespDTO;
 import top.yigege.model.UserCoupon;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.yigege.vo.PageBean;
@@ -52,4 +53,10 @@ public interface IUserCouponService extends IService<UserCoupon> {
     void exchangeCDkey(String cdkey, Long userId);
 
 
+    /**
+     * 查询用户优惠券详情
+     * @param userCouponId
+     * @return
+     */
+    QueryUserCouponDetailRespDTO queryUserCouponDetail(Long userCouponId);
 }
