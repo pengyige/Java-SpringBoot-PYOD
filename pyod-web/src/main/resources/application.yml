@@ -91,7 +91,7 @@ sign:
 # qrCode secret
 qrCode:
   secret: 7oU7m0aFpbOaJunl
-  duration: 180
+  duration: 18000
 
 # gaode
 gaode:

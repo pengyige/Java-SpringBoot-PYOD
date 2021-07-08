@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class MerchantUserLoginReqDTO {
 
-    @NotBlank(message = "编号不能为空")
+    @NotBlank(message = "编号/手机号不能为空")
     private String no;
 
     @NotBlank(message = "密码不能为空")

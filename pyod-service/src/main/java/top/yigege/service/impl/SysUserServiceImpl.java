@@ -150,7 +150,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         MerchantUserLoginResDTO merchantUserLoginResDTO = new MerchantUserLoginResDTO();
 
         LambdaQueryWrapper<SysUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(SysUser::getNo, merchantUserLoginReqDTO.getNo());
+        lambdaQueryWrapper.eq(SysUser::getTel, merchantUserLoginReqDTO.getNo());
         lambdaQueryWrapper.eq(SysUser::getPassword, DigestUtil.md5Hex(merchantUserLoginReqDTO.getPassword()));
 
         SysUser sysUser = getOne(lambdaQueryWrapper);
