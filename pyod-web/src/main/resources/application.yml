@@ -57,12 +57,12 @@ request:
 
 # 微信开放平台
 #wx:
-#  appId: wx0b4b633bfde7dcf3
-#  secret: a96eb6169581a9a588bfad749fc5b906
+#  appId: ??
+#  secret: ？？
 #  mchId: 1605923032
-#  mchKey: 122gjvjtyuu343fgfgfg12ghggasoqw1
+#  mchKey: ??
 #  notify:
-#    domain: https://api.yigege.top/wx/notify
+#    domain: https://localhost/wx/notify
 
 # 天气
 weather:
@@ -72,8 +72,8 @@ weather:
 # aliyun oss
 aliyun:
   oss:
-    accessKeyID: LTAI4GG75vh7B68Hq3eqkygt
-    accessKeySecret: KqAPkdvYT2echYssqGgjTmViw8dGKg
+    accessKeyID: ??
+    accessKeySecret: ??
     endPoint: https://oss-cn-beijing.aliyuncs.com
     buckets: pyod-platform
     prefix: pyod-platform/
